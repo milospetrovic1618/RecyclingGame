@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using OutlineFx;
 
 public enum TrashType
+//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
 {
     CrumpledPaper,
     Cardboard,
@@ -77,12 +78,12 @@ public class Trash : MonoBehaviour
     }
     public RecyclingType GetRecyclingType()
     {
-        return Data.trashItem_bin[trashType];
+        return GameplayData.trash_bin[trashType];
     }
 
     public TrashType GetRandomTrashType()
     {
-        List<TrashType> keys = new List<TrashType>(Data.trashItem_bin.Keys);
+        List<TrashType> keys = new List<TrashType>(GameplayData.trash_bin.Keys);
 
         int randomIndex = UnityEngine.Random.Range(0, keys.Count);
 
@@ -113,30 +114,4 @@ public class Trash : MonoBehaviour
         //rigidbody.AddForce(Vector2.right * 2f, ForceMode2D.Impulse);
     }
 
-    /*
-    public void LaunchTrashProjectile(Vector2 goal, float angleDegrees)
-    {
-        Vector2 start = this.transform.position;
-        float gravity = Mathf.Abs(Physics2D.gravity.y);
-        float angleRad = angleDegrees * Mathf.Deg2Rad;
-
-        float distance = Vector2.Distance(start, goal);
-        float dx = goal.x - start.x;
-        float dy = goal.y - start.y;
-
-        float cosAngle = Mathf.Cos(angleRad);
-        float sinAngle = Mathf.Sin(angleRad);
-
-        float speedSquared = (gravity * distance * distance) /
-                             (2 * (dy - Mathf.Tan(angleRad) * dx) * cosAngle * cosAngle);
-
-        if (speedSquared <= 0) return; // no valid solution
-
-        float speed = Mathf.Sqrt(speedSquared);
-
-        Vector2 dir = new Vector2(cosAngle, sinAngle).normalized;
-        Vector2 velocity = dir * speed;
-
-        rigidbody.velocity = velocity;
-    }*/
 }

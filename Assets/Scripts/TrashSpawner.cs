@@ -37,7 +37,7 @@ public class TrashSpawner : MonoBehaviour
 
         for (int i = 0; i < 10; i ++)
         {
-            SpawnNew();
+            SpawnTrash();
         }
     }
 
@@ -47,7 +47,7 @@ public class TrashSpawner : MonoBehaviour
         if (timer > 2f)
         {
             timer = 0;
-            SpawnNew();
+            SpawnTrash();
             
         }
         timer += Time.deltaTime;
@@ -65,24 +65,11 @@ public class TrashSpawner : MonoBehaviour
         }
         reusableGameObjects.Clear();
     }
-    public void SpawnNew()
+    public void SpawnTrash()
     {
         if (reusableGameObjects.Count == 0)
         {
-            GameObject gameObject = new GameObject();
-            Trash newTrash = gameObject.AddComponent<Trash>();
-            trashList.Add(newTrash);
-            float randomX = Random.Range(minX, maxX);
-            float randomY = Random.Range(minY, maxY); 
-            
-            //float launchingX = Random.value < 0.5f ? lauchingMinX : lauchingMaxX;
-            Vector2 randomPosition = new Vector2(randomX, randomY);
-            gameObject.transform.position = randomPosition;
-            //newTrash.LaunchTrashProjectile(new Vector2(randomX,randomY), 45);
-
-
-            //!!!!!!!!!!!!!!!!!! brisi todo
-            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+            SpawnNewGameObject();
         }
         else
         {
@@ -93,5 +80,28 @@ public class TrashSpawner : MonoBehaviour
         {
             GameOver();
         }
+    }
+    public void SpawnNewGameObject()
+    {
+        GameObject gameObject = new GameObject();
+        Trash newTrash = gameObject.AddComponent<Trash>();
+        float randomX = Random.Range(minX, maxX);
+        float randomY = Random.Range(minY, maxY);
+
+        //float launchingX = Random.value < 0.5f ? lauchingMinX : lauchingMaxX;
+        Vector2 randomPosition = new Vector2(randomX, randomY);
+        gameObject.transform.position = randomPosition;
+        //newTrash.LaunchTrashProjectile(new Vector2(randomX,randomY), 45);
+
+        gameObject.AddComponent<Throw>();
+
+        trashList.Add(newTrash);
+
+        //!!!!!!!!!!!!!!!!!! brisi todo
+        gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+    }
+    public void SpawnReusableGameObject()
+    {
+
     }
 }

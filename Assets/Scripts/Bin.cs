@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum RecyclingType
+//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
 {
     Paper,
     Plastic,
@@ -12,7 +13,7 @@ public enum RecyclingType
     Organic
 }
 
-public class Bin : MonoBehaviour
+public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijante... a za trash sam direktno iz runtime-a dodavao komponente jer ih spwanujem i tako mi je prirodnije, a bins vec postoje
 {
     public RecyclingType binType;
     public SpriteRenderer spriteRenderer;
@@ -44,10 +45,10 @@ public class Bin : MonoBehaviour
     public void AddScore(int points)
     {
         //to do
-        string scoreString = BootGameplay.Instance.scoreText.text;
+        string scoreString = GameplayData.Instance.scoreText.text;
         int score = int.Parse(scoreString);
         score += points;
-        BootGameplay.Instance.scoreText.text = score.ToString();
+        GameplayData.Instance.scoreText.text = score.ToString();
     }
     public void Select()
     {
