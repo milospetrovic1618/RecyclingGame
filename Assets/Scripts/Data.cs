@@ -9,7 +9,16 @@ public enum SortingLayer
 }
 public enum Layer
 {
-    Trash
+    Trash,//trash ne iteraguje sa tresh
+    BinsTrashColliders,//bins ne interaguje sa trash
+    BinsDetectors,//interaguje sa tresh
+    BinsSelectingColliders
+}
+public enum Scenes
+{
+    Menu,
+    Gameplay,
+    Boot
 }
 public static class Data
 {

@@ -10,6 +10,6 @@ public class Boot : MonoBehaviour
     public void Awake()
     {
         Instance = this;
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene(Scenes.Gameplay.ToString());
     }
 }

@@ -5,6 +5,7 @@ using UnityEditor.EditorTools;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class BootGameplay : MonoBehaviour
 {
@@ -12,14 +13,16 @@ public class BootGameplay : MonoBehaviour
     public GameObject CameraPrefab;
     public GameObject EventSystemPrefab;
     public static BootGameplay Instance;
+    public Text scoreText;
 
     public void Awake()
     {
         Instance = this;
+         scoreText = GameObject.Find("Score").GetComponent<Text>();
 
         GameObject camObj = Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity);
-        Camera cam = camObj.GetComponent<Camera>();
-        CreateWalls(cam);
+        //Camera cam = camObj.GetComponent<Camera>();
+        //CreateWalls(cam);
         Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
         /*
         playerMovement = Instantiate(playerPrefab, Vector3.zero, quaternion.identity).GetComponent<PlayerMovement>();

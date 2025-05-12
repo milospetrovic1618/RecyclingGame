@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class PlayerSelection : MonoBehaviour
 {
     public bool press = false;//sama rec kaze
-    //public bool pressedPrevFrame = false;//pressedPrevFrame je press u proslom frejmu... cini mi se da mu je jedina uloga prepoznavanje releasa
+    public bool pressedPrevFrame = false;//pressedPrevFrame je press u proslom frejmu... cini mi se da mu je jedina uloga prepoznavanje releasa
     public bool release;
     public Vector2 releasedWorldPosition;
     public Vector2 curWorldPosition;//nisi koristio mozda ce da ti treba
@@ -73,43 +73,92 @@ public class PlayerSelection : MonoBehaviour
             }
         }
 
-        /*if (pressedPrevFrame && !press) ovo mi ne treba
+        if (pressedPrevFrame && !press)
         {
             release = true;
         }
 
-        pressedPrevFrame = press;*/
+        pressedPrevFrame = press;
 
         CheckPressOverTrash();
     }
-    Trash curentlyHovering = null;
+    Trash selectedTrash = null;
+    Bin selectedBin = null;
     public void CheckPressOverTrash() //moras da zamenis ako se objkti overlappuju
     {
         if (press)
         {
-            LayerMask layerMask = LayerMask.GetMask(Layer.Trash.ToString());
-            RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
 
-            if (hit.collider == null)
+            if (selectedTrash != null)
             {
-                if (curentlyHovering != null)
+                selectedTrash.transform.position = curWorldPosition;
+                //Debug.Log((selectedTrash.rigidbody == null).ToString());
+                selectedTrash.ToggleRigidBody(false);
+
+
+                LayerMask layerMask = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
+                RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
+                Debug.Log("+++++++++==");
+
+                if (hit.collider == null)
                 {
-                    curentlyHovering.DeSelect();
-                    curentlyHovering = null;
+                    if (selectedBin != null)
+                    {
+                        selectedBin.DeSelect();
+                        selectedBin = null;
+                    }
+                }
+                else
+                {
+                    if (selectedBin == null)
+                    {
+                        selectedBin = hit.collider.transform.parent.GetComponent<Bin>();//ovde je parent jer je na child-u collider za selecting (BinsSelectingColliders)
+                        selectedBin.Select();
+                    }
+                    //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
+
                 }
             }
             else
             {
-                if (curentlyHovering == null)
-                {
-                    curentlyHovering = hit.collider.gameObject.GetComponent<Trash>();
-                    curentlyHovering.Select();
-                }
-                curentlyHovering.transform.position = curWorldPosition;
-                curentlyHovering.rigidbody.bodyType = RigidbodyType2D.Static;
+                LayerMask layerMask = LayerMask.GetMask(Layer.Trash.ToString());
+                RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
 
+                if (hit.collider == null)
+                {
+                    if (selectedTrash != null)
+                    {
+                        selectedTrash.DeSelect();
+                        selectedTrash = null;
+                    }
+                }
+                else
+                {
+                    if (selectedTrash == null)
+                    {
+                        selectedTrash = hit.collider.gameObject.GetComponent<Trash>();
+                        selectedTrash?.Select();//ne vidim razlog za ? ali dobijao sam null bug ovde
+                    }
+                    //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
+
+                }
             }
         }
+        else
+        {
+            if (selectedTrash != null && selectedBin != null )
+            {
+                selectedBin.PutInBin(selectedTrash);//ovo ne radi ne znam zasto
+            }
+            selectedTrash?.ToggleRigidBody(true);
+            selectedTrash?.DeSelect();
+            selectedTrash = null;
+
+            //ovde treba da se odselektuje i kad nije curposition over
+            selectedBin?.DeSelect();
+            selectedBin = null;
+        }
+
         
     }
 }

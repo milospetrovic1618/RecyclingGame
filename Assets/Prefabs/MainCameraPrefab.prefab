@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6894370646405247739}
   - component: {fileID: 8279493928595220144}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MainCameraPrefab
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.9771077, g: 1, b: 0.7688679, a: 0}
+  m_BackGroundColor: {r: 0.18039216, g: 0.06666667, b: 0.05882353, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
