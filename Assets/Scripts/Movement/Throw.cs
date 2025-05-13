@@ -1,0 +1,121 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Throw : MonoBehaviour
+{
+    //assigned externaly
+    public Vector2 targetPosition;
+
+    public float maxRadiusAddition = 2.5f;//random se dodaje od 0 do maxRadiusAddition na radius kruga po kom treba da se krece
+    public float radius;
+    public float minSpeed = 60f;   // At top (90°)
+    public float maxSpeed = 130f;   // At sides (0° and 180°)
+    public bool clockwise = false;
+
+    private float rotationSpeed = 360f;
+
+    private Vector2 centerPosition;
+    private float angleDegrees = 90f;
+    //private Coroutine movementCoroutine;
+
+    void Start()
+    {
+        clockwise = Random.Range(0, 2) == 0;
+        //radius = Random.Range(minRadius, maxRadius);
+
+        float radiusAdditon = Random.Range(0, maxRadiusAddition);
+        float minRadius = Mathf.Abs((clockwise ? DataGameplay.Instance.viewLeftX : DataGameplay.Instance.viewRightX) - targetPosition.x) + 1f;
+
+        radius = minRadius + radiusAdditon;
+        //radius = DataGameplay.Instance.viewWidth + 1;
+
+
+        centerPosition = new Vector2(targetPosition.x + (clockwise ? -radius : radius), targetPosition.y);
+
+        transform.Rotate(0f, 0f, Random.Range(0f, 360f));//ovo je pocetna rotacija koje je random
+        rotationSpeed = Random.Range(360f, 720f);
+        //StartMovement();
+    }
+
+    private void Update()
+    {
+        transform.Rotate(0f, 0f, (clockwise ? -rotationSpeed : rotationSpeed) * Time.deltaTime);
+
+        float angleRadians = angleDegrees * Mathf.Deg2Rad;
+        float speed = Mathf.Lerp(minSpeed, maxSpeed, Mathf.Abs(Mathf.Cos(angleRadians)));
+        float directionMultiplier = clockwise ? -1f : 1f;
+        angleDegrees += speed * directionMultiplier * Time.deltaTime;
+
+        if (angleDegrees >= 360f) angleDegrees -= 360f;
+        if (angleDegrees < 0f) angleDegrees += 360f;
+
+        if (angleDegrees >= 180f && angleDegrees <= 360f)
+        {
+            Destroy(this);
+        }
+
+        float x = Mathf.Cos(angleRadians) * radius;
+        float y = Mathf.Sin(angleRadians) * radius;
+
+        transform.position = centerPosition + new Vector2(x, y);
+    }
+
+    // Starts the movement
+    /*public void StartMovement() //hteo sam da stavim ove korutine direktno na trash ali ovako mi urednije i lakse
+    {
+        if (movementCoroutine == null)
+        {
+            movementCoroutine = StartCoroutine(MoveInCircle());
+        }
+    }
+
+    // Stops the movement and destroys the component
+    public void StopMovement()//ovo treba i kad se doda rigid body, tj kad se klikne na objekat
+    {
+        if (movementCoroutine != null)
+        {
+            StopCoroutine(movementCoroutine);
+            movementCoroutine = null;
+        }
+
+        //Destroy(this);  // Destroys the component itself
+    }
+
+    // Coroutine that handles circular movement
+    private IEnumerator MoveInCircle()//simulira bacanje
+    {
+        while (angleDegrees >= 180 && angleDegrees <= 360)
+        {
+            transform.Rotate(0f, 0f, (clockwise ? -rotationSpeed : rotationSpeed) * Time.deltaTime);
+
+
+            float angleRadians = angleDegrees * Mathf.Deg2Rad;
+
+            // Smooth speed variation: min at 90°, max at 0° & 180°
+            float speed = Mathf.Lerp(minSpeed, maxSpeed, Mathf.Abs(Mathf.Cos(angleRadians)));
+
+            // Direction adjustment
+            float directionMultiplier = clockwise ? -1f : 1f;
+
+            // Apply variable speed
+            angleDegrees += speed * directionMultiplier * Time.deltaTime;
+
+            if (angleDegrees >= 360f) angleDegrees -= 360f;
+            if (angleDegrees < 0f) angleDegrees += 360f;
+
+            //if (angleDegrees >= 180 && angleDegrees <= 360)
+            //{
+            //    StopMovement();
+            //}
+
+
+            float x = Mathf.Cos(angleRadians) * radius;
+            float y = Mathf.Sin(angleRadians) * radius;
+
+            transform.position = centerPosition + new Vector2(x, y);
+
+            yield return null;
+        }
+    }*/
+}

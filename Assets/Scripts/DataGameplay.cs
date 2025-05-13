@@ -23,9 +23,11 @@ public enum Scenes
     Gameplay,
     Boot
 }
-public class GameplayData: MonoBehaviour
+//redosled u executionOrder - prvo boot, pa Data, pa ostalo
+//binsManager pre TrashManager  jer se koristi za random
+public class DataGameplay: MonoBehaviour
 {
-    public static GameplayData Instance;
+    public static DataGameplay Instance;
     //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
     public static Dictionary<TrashType, RecyclingType> trash_bin = new Dictionary<TrashType, RecyclingType>()
     {
@@ -64,18 +66,20 @@ public class GameplayData: MonoBehaviour
     public float viewWidth;
     public float viewRightX;
     public float viewLeftX;
+    public float viewBottomY;
 
-    private void Start()
+    private void Awake()
     {
         Instance = this; 
 
         scoreText = GameObject.Find("Score").GetComponent<Text>();
 
         Camera cam = BootGameplay.Instance.CameraInstantiated.GetComponent<Camera>();//mora camera instatiated da bi dobilo tacan width
-        Vector2 screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-        Vector2 screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
-        viewLeftX = screenBottomLeft.x;
-        viewRightX = screenTopRight.x;
-        viewWidth = screenTopRight.x - screenBottomLeft.x;
+        Vector2 viewBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
+        Vector2 viewTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
+        viewLeftX = viewBottomLeft.x;
+        viewRightX = viewTopRight.x; 
+        viewBottomY = viewBottomLeft.y;
+        viewWidth = viewRightX - viewLeftX;
     }
 }

@@ -15,7 +15,7 @@ public class TrashDetector : MonoBehaviour
         Trash trash = other.GetComponent<Trash>();
         if (trash != null)
         {
-            Debug.Log(bin.MatchesBin(trash));
+            //Debug.Log(bin.MatchesBin(trash));
             bin.PutInBin(trash);
         }
     }

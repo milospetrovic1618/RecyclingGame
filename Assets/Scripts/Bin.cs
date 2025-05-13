@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum RecyclingType
-//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
+//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary... i u BinsManager u switch GetBinFromRecyclingType
 {
     Paper,
     Plastic,
@@ -13,12 +13,16 @@ public enum RecyclingType
     Organic
 }
 
-public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijante... a za trash sam direktno iz runtime-a dodavao komponente jer ih spwanujem i tako mi je prirodnije, a bins vec postoje
+public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijante jer je fiksan broj... a za trash sam direktno iz runtime-a dodavao komponente jer ih spwanujem i tako mi je prirodnije i lakse(brze odradim tipove u odnosu da pravim varijante), a bins vec postoje
 {
     public RecyclingType binType;
     public SpriteRenderer spriteRenderer;
     public PolygonCollider2D collider;
     public OutlineFx.OutlineFx outline;
+    public int count = 0;
+    public bool isFull = false; 
+    [SerializeField]
+    public int maxTrashCount = 5;
     private void Awake()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -29,26 +33,38 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     {
         if (MatchesBin(trashItem))
         {
-            AddScore(1);
+            IncreaseScore();
+            count++;
+            if (count < maxTrashCount)
+            {
+                count++;
+            }
+            else
+            {
+                BinsManager.Instance.ReplaceBin(this);//ovo treba da ide tek kad se klikne ali neka za sad, a uz to treba i da se zaustavi animacija shaking
+                isFull = true;
+            }
+            TrashManager.Instance.trashList.Remove(trashItem);
+            Destroy(trashItem.gameObject);
         }
         else
         {
-            AddScore(-1);
+            SendToPosition sendTrashToPositionInstance = trashItem.gameObject.AddComponent<SendToPosition>();
+            sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
+            trashItem.ToggleRigidBody(false);
         }
-        TrashSpawner.Instance.trashList.Remove(trashItem);
-        Destroy(trashItem.gameObject);
     }
     public bool MatchesBin(Trash trashItem)
     {
         return trashItem.GetRecyclingType() == binType;
     }
-    public void AddScore(int points)
+    public void IncreaseScore()
     {
         //to do
-        string scoreString = GameplayData.Instance.scoreText.text;
+        string scoreString = DataGameplay.Instance.scoreText.text;
         int score = int.Parse(scoreString);
-        score += points;
-        GameplayData.Instance.scoreText.text = score.ToString();
+        score ++;
+        DataGameplay.Instance.scoreText.text = score.ToString();
     }
     public void Select()
     {

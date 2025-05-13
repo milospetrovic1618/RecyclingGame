@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -89,7 +90,7 @@ public class PlayerSelection : MonoBehaviour
         if (press)
         {
 
-            if (selectedTrash != null)
+            if (TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash) != null) //ovo je isto kao selectedTrash != null
             {
                 selectedTrash.transform.position = curWorldPosition;
                 //Debug.Log((selectedTrash.rigidbody == null).ToString());
@@ -98,7 +99,7 @@ public class PlayerSelection : MonoBehaviour
 
                 LayerMask layerMask = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
                 RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
-                Debug.Log("+++++++++==");
+                //Debug.Log("+++++++++==");
 
                 if (hit.collider == null)
                 {
@@ -150,8 +151,14 @@ public class PlayerSelection : MonoBehaviour
             {
                 selectedBin.PutInBin(selectedTrash);//ovo ne radi ne znam zasto
             }
-            selectedTrash?.ToggleRigidBody(true);
-            selectedTrash?.DeSelect();
+            if (curWorldPosition.x > TrashManager.Instance.maxXJankArea || 
+                curWorldPosition.x < TrashManager.Instance.minXJankArea ||
+                curWorldPosition.y > TrashManager.Instance.maxYJankArea ||
+                curWorldPosition.y < TrashManager.Instance.minYJankArea)//rigid body se stavlja samo ako nije u trashArea
+            {
+                TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash)?.ToggleRigidBody(true);// selectedTrash?.ToggleRigidBody(true);
+            }
+            TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash)?.DeSelect();//inace ovde je bilo selectedTrash?.DeSelect()
             selectedTrash = null;
 
             //ovde treba da se odselektuje i kad nije curposition over

@@ -47,7 +47,7 @@ public class Trash : MonoBehaviour
         //ToggleRigidBody(true);
         DeSelect();
     }
-    void OnEnable()
+    void OnEnable()//zbog object poolinga
     {
         Set(GetRandomTrashType());
     }
@@ -78,17 +78,26 @@ public class Trash : MonoBehaviour
     }
     public RecyclingType GetRecyclingType()
     {
-        return GameplayData.trash_bin[trashType];
+        return DataGameplay.trash_bin[trashType];
     }
 
     public TrashType GetRandomTrashType()
     {
-        List<TrashType> keys = new List<TrashType>(GameplayData.trash_bin.Keys);
+        /*List<TrashType> keys = new List<TrashType>(DataGameplay.trash_bin.Keys);
 
         int randomIndex = UnityEngine.Random.Range(0, keys.Count);
 
-        Debug.Log(keys[randomIndex].ToString());
-        return keys[randomIndex];
+        //Debug.Log(keys[randomIndex].ToString());
+        return keys[randomIndex];*/
+        RecyclingType randomBin = BinsManager.Instance.availableBins[Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
+
+        // Get the trash list for that RecyclingType
+        List<TrashType> trashList = DataGameplay.bin_trashList[randomBin];
+
+        // Get a random TrashType from that list
+        TrashType randomTrash = trashList[Random.Range(0, trashList.Count)];
+
+        return randomTrash;
     }
     public void Select()
     {
@@ -104,8 +113,8 @@ public class Trash : MonoBehaviour
     public void ToggleRigidBody(bool active)//za rigidbody nema enable disable
     {
         if (active)
-        { 
-            rigidbody = gameObject?.AddComponent<Rigidbody2D>(); 
+        {
+            rigidbody = gameObject.AddComponent<Rigidbody2D>(); //ovde dobijas bug kad se izbrisu svi objekti sa ekrana a ti i dalje drzis objekat.. to ces da resis tako sto ces da proveris da li i dalje postoji unutar trash list... sto proveravas ali player selection
         }
         else
         {
@@ -113,5 +122,16 @@ public class Trash : MonoBehaviour
         }
         //rigidbody.AddForce(Vector2.right * 2f, ForceMode2D.Impulse);
     }
-
+    
+    //animations
+    /*ove funkcije ne mogu da budu ovde jer se aktiviraju tek u sledecem frame-u kad se pozovu externo, a kad se u istom frame
+    public void Throw()
+    {
+        gameObject.AddComponent<Throw>();
+    }
+    public void SendToPosition(Vector3 target)
+    {
+        SendToPosition sendTrashToPositionInstance = gameObject.AddComponent<SendToPosition>();
+        sendTrashToPositionInstance.targetPosition = target;
+    }*/
 }
