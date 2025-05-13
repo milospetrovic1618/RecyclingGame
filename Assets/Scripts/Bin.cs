@@ -19,8 +19,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     public SpriteRenderer spriteRenderer;
     public PolygonCollider2D collider;
     public OutlineFx.OutlineFx outline;
-    public int count = 0;
-    public bool isFull = false; 
+    public int trashCount = 0;
     [SerializeField]
     public int maxTrashCount = 5;
     private void Awake()
@@ -33,26 +32,33 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     {
         if (MatchesBin(trashItem))
         {
-            IncreaseScore();
-            count++;
-            if (count < maxTrashCount)
+            if (trashCount < maxTrashCount)
             {
-                count++;
+                IncreaseScore();
+                trashCount++;
+                Destroy(trashItem.gameObject);
+                TrashManager.Instance.trashList.Remove(trashItem);
+                if (trashCount == maxTrashCount)
+                {
+                    //shaking
+                }
             }
             else
             {
-                BinsManager.Instance.ReplaceBin(this);//ovo treba da ide tek kad se klikne ali neka za sad, a uz to treba i da se zaustavi animacija shaking
-                isFull = true;
+                ReturnTrash(trashItem);
             }
-            TrashManager.Instance.trashList.Remove(trashItem);
-            Destroy(trashItem.gameObject);
         }
         else
         {
-            SendToPosition sendTrashToPositionInstance = trashItem.gameObject.AddComponent<SendToPosition>();
-            sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
-            trashItem.ToggleRigidBody(false);
+            ReturnTrash(trashItem);
         }
+    }
+    public void ReturnTrash(Trash trashItem)
+    {
+
+        SendToPosition sendTrashToPositionInstance = trashItem.gameObject.AddComponent<SendToPosition>();
+        sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
+        trashItem.ToggleRigidBody(false);
     }
     public bool MatchesBin(Trash trashItem)
     {

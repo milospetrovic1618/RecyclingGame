@@ -144,6 +144,36 @@ public class PlayerSelection : MonoBehaviour
 
                 }
             }
+            Debug.Log(" ppppppp " + pressedPrevFrame);
+            LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
+            RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
+            //Debug.Log("+++++++++==");
+
+            if (hit0.collider != null)
+            {
+                Debug.Log(" ddddd " + pressedPrevFrame);
+                Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
+                if (bin.trashCount >= bin.maxTrashCount)
+                {
+                    BinsManager.Instance.ReplaceBin(bin);
+                }
+            }
+            /*if (pressedPrevFrame == false)
+            {
+                LayerMask layerMask = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
+                RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
+                //Debug.Log("+++++++++==");
+
+                if (hit.collider != null)
+                {
+                    Debug.Log(" ddddd " + pressedPrevFrame);
+                    Bin bin = hit.collider.transform.parent.GetComponent<Bin>();
+                    if (bin.trashCount >= bin.maxTrashCount)
+                    {
+                        BinsManager.Instance.ReplaceBin(bin);
+                    }
+                }
+            }*/
         }
         else
         {

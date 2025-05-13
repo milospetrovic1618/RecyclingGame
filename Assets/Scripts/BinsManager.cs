@@ -122,5 +122,26 @@ public class BinsManager : MonoBehaviour
         SendToPosition sendToPositionInstance1 = nextBin.gameObject.AddComponent<SendToPosition>();
         sendToPositionInstance1.targetPosition = visibleRowPositions[binIndex];
         sendToPositionInstance1.moveDuration = 1.2f;
+
+        availableBins[binIndex] = nextBin;
+        binOrder.Enqueue(bin);
+
+        bin.trashCount = 0;
+
+        List<Trash> toRemove = new List<Trash>();
+        foreach (Trash trash in TrashManager.Instance.trashList)
+        {
+            if (DataGameplay.trash_bin[trash.trashType] == bin.binType)
+            {
+                toRemove.Add(trash);
+            }
+        }
+        foreach (Trash trash in toRemove)
+        {
+            TrashManager.Instance.trashList.Remove(trash);
+            Destroy(trash.gameObject);
+        }
+
+        //ugasi shaking
     }
 }
