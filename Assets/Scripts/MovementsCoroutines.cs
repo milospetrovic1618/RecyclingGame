@@ -15,12 +15,12 @@ public class MovementsCoroutines : MonoBehaviour
     {
         if (movementCoroutine == null)
         {
-            movementCoroutine = StartCoroutine(MoveInCircle());
+            movementCoroutine = StartCoroutine(Throw());
         }
     }
 
     // Stops the movement and destroys the component
-    public void StopMovement()//ovo treba i kad se doda rigid body, tj kad se klikne na objekat
+    public void StopCoroutineMovement()//ovo treba i kad se doda rigid body, tj kad se klikne na objekat
     {
         if (movementCoroutine != null)
         {
@@ -32,9 +32,9 @@ public class MovementsCoroutines : MonoBehaviour
     }*/
 
     // Coroutine that handles circular movement
-    public IEnumerator Throw(Vector2 targetPosition, Transform transformToAnimate)//simulira bacanje.. ovo je zapravo MoveInCircle ali delom
+    public IEnumerator Throw(Vector2 targetPosition, Transform transformToAnimate)//simulira bacanje.. ovo je zapravo Throw ali delom
     {
-
+        Debug.Log("uslo je");
         float maxRadiusAddition = 2.5f;//random se dodaje od 0 do maxRadiusAddition na radius kruga po kom treba da se krece
         float minSpeed = 60f;   // At top (90°)
         float maxSpeed = 130f;   // At sides (0° and 180°)
@@ -45,6 +45,7 @@ public class MovementsCoroutines : MonoBehaviour
 
 
         clockwise = UnityEngine.Random.Range(0, 2) == 0;
+        float directionMultiplier = clockwise ? -1f : 1f;
         //radius = Random.Range(minRadius, maxRadius);
 
         float radiusAdditon = UnityEngine.Random.Range(0, maxRadiusAddition);
@@ -54,11 +55,14 @@ public class MovementsCoroutines : MonoBehaviour
         //radius = DataGameplay.Instance.viewWidth + 1;
 
         centerPosition = new Vector2(targetPosition.x + (clockwise ? -radius : radius), targetPosition.y);
+        //Debug.Log(centerPosition.ToString());
 
         transformToAnimate.Rotate(0f, 0f, UnityEngine.Random.Range(0f, 360f));//ovo je pocetna rotacija koje je random
         rotationSpeed = UnityEngine.Random.Range(360f, 720f);
-        while (angleDegrees >= 180 && angleDegrees <= 360)
+        //Debug.Log(angleDegrees);
+        while (angleDegrees < 180)
         {
+            //Debug.Log("1");
             transformToAnimate.Rotate(0f, 0f, (clockwise ? -rotationSpeed : rotationSpeed) * Time.deltaTime);
 
 
@@ -68,7 +72,6 @@ public class MovementsCoroutines : MonoBehaviour
             float speed = Mathf.Lerp(minSpeed, maxSpeed, Mathf.Abs(Mathf.Cos(angleRadians)));
 
             // Direction adjustment
-            float directionMultiplier = clockwise ? -1f : 1f;
 
             // Apply variable speed
             angleDegrees += speed * directionMultiplier * Time.deltaTime;
@@ -78,7 +81,7 @@ public class MovementsCoroutines : MonoBehaviour
 
             //if (angleDegrees >= 180 && angleDegrees <= 360)
             //{
-            //    StopMovement();
+            //    StopCoroutineMovement();
             //}
 
 
@@ -140,9 +143,9 @@ public class MovementsCoroutines : MonoBehaviour
         yield return StartCoroutine(coroutine);
         callback?.Invoke(args);
     }*/
-    public Coroutine StartCoroutineWithCallback(IEnumerator coroutine, Action callback)
+    public Coroutine StartCoroutineWithCallback(IEnumerator enumerator, Action callback)
     {
-        return StartCoroutine(RunCoroutineAndCallback(coroutine, callback));
+        return StartCoroutine(RunCoroutineAndCallback(enumerator, callback));
     }
 
     private IEnumerator RunCoroutineAndCallback(IEnumerator coroutine, Action callback )
@@ -166,10 +169,79 @@ public class MovementsCoroutines : MonoBehaviour
             transformToAnimate.position = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
-        //resava bug da kad se draguje u kantu objekat padne
-        Trash trash = transformToAnimate.GetComponent<Trash>();
-        trash?.ToggleRigidBody(false);
 
-        Destroy(this);
+    }
+    public IEnumerator ShakingIndefinitely(Transform transformToAnimate)
+    {
+        float magnitude = 0.1f; 
+        float delay = 0.05f;//da se ne shakuje previse brzo
+
+        Vector3 originalPosition = transformToAnimate.localPosition;
+
+        float elapsed = 0f;
+
+        while (true)
+        {
+            float offsetX = UnityEngine.Random.Range(-0.5f, 0.5f) * magnitude;
+            float offsetY = UnityEngine.Random.Range(-0.5f, 0.5f) * magnitude;
+
+            transformToAnimate.localPosition = originalPosition + new Vector3(offsetX, offsetY, 0f);
+
+            elapsed += Time.deltaTime;
+            yield return new WaitForSeconds(delay);
+        }
+    }
+
+    public IEnumerator CurveMoveFollow(Transform transformToFollow, Transform transformToAnimate)
+    {
+        Vector2 startPos = transformToAnimate.position;
+        float duration = 0.7f;
+
+        float curveHeightReference = 4f;
+        float curveHeightCameraSizeReference = 10f;
+        float curveHeight = curveHeightReference * BootGameplay.Instance.camera.orthographicSize / curveHeightCameraSizeReference;
+
+        bool clockwise = UnityEngine.Random.value < 0.5f;
+
+
+        Vector2 direction = ((Vector2)transformToFollow.position - startPos).normalized;
+        Vector2 perpendicular = clockwise ? new Vector2(-direction.y, direction.x) : new Vector2(direction.y, -direction.x); // 90 stepeni rotira
+        Vector2 control = (startPos + (Vector2)transformToFollow.position) / 2 + perpendicular * curveHeight;
+
+        //napravi da se izabere Vector2 perpendicular = new Vector2(-direction.y, direction.x);  ili new Vector2(direction.y, -direction.x)
+
+        float elapsed = 0f;
+        //Vector2 endPos = PickingResourcesManager.Instance.GetUIIconWorldPos(resourceDropType);
+
+        while (elapsed < duration)//neke stvari bi bile iznad da je je endPos fiksiran
+        {
+            float t = Mathf.Clamp01(elapsed / duration);
+
+
+            // Quadratic Bezier interpolation
+            Vector2 position = Mathf.Pow(1 - t, 2) * startPos +
+                               2 * (1 - t) * t * control +
+                               Mathf.Pow(t, 2) * (Vector2)transformToFollow.position;
+
+            //ovu proveru si morao da dodas zbog buga gde se izbrise tah gameobject sa tim transformom
+            if (transformToAnimate != null)
+            {
+                transformToAnimate.position = position;
+            }
+            else
+            {
+                break;
+            }    
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (transformToAnimate != null)
+        //ovu proveru si morao da dodas zbog buga gde se izbrise tah gameobject sa tim transformom
+        {
+            transformToAnimate.position = (Vector2)transformToFollow.position;
+        }
+
     }
 }

@@ -66,12 +66,12 @@ public class Throw : MonoBehaviour
     {
         if (movementCoroutine == null)
         {
-            movementCoroutine = StartCoroutine(MoveInCircle());
+            movementCoroutine = StartCoroutine(Throw());
         }
     }
 
     // Stops the movement and destroys the component
-    public void StopMovement()//ovo treba i kad se doda rigid body, tj kad se klikne na objekat
+    public void StopCoroutineMovement()//ovo treba i kad se doda rigid body, tj kad se klikne na objekat
     {
         if (movementCoroutine != null)
         {
@@ -83,7 +83,7 @@ public class Throw : MonoBehaviour
     }
 
     // Coroutine that handles circular movement
-    private IEnumerator MoveInCircle()//simulira bacanje
+    private IEnumerator Throw()//simulira bacanje
     {
         while (angleDegrees >= 180 && angleDegrees <= 360)
         {
@@ -106,7 +106,7 @@ public class Throw : MonoBehaviour
 
             //if (angleDegrees >= 180 && angleDegrees <= 360)
             //{
-            //    StopMovement();
+            //    StopCoroutineMovement();
             //}
 
 

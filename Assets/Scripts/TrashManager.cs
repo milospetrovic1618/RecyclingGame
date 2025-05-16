@@ -48,16 +48,11 @@ public class TrashManager : MonoBehaviour
     }
     public void GameOver()
     {
-        foreach (Trash trash in trashList)
+        List<Trash> toRemove = new List<Trash>(trashList);
+        foreach (Trash trash in toRemove)
         {
-            Destroy(trash.gameObject);
+            DeactivateTrash(trash);
         }
-        trashList.Clear();
-        foreach (Trash trash in reusableTrashObjectPooling)
-        {
-            Destroy(trash.gameObject);
-        }
-        reusableTrashObjectPooling.Clear();
     }
     public void ThrowTrash()
     {
@@ -68,12 +63,12 @@ public class TrashManager : MonoBehaviour
         }
         else
         {
-            // todo
+            newTrash = reusableTrashObjectPooling.Dequeue();
+            newTrash.gameObject.SetActive(true);
         }
-        GameObject newGameObject = newTrash.gameObject;
 
-        Throw throwInstance = newGameObject.AddComponent<Throw>();
-        throwInstance.targetPosition = GetRandomPositionInJunkArea();
+        newTrash.gameObject.transform.position = new Vector2(DataGameplay.Instance.viewRightX + 10f, 0);//da se ne bi videlo u screenu
+        newTrash.Throw(GetRandomPositionInJunkArea());
         trashList.Add(newTrash);
 
         if (trashList.Count > maxTrash)
@@ -92,9 +87,9 @@ public class TrashManager : MonoBehaviour
     {
         GameObject newGameObject = new GameObject();
         Trash newTrash = newGameObject.AddComponent<Trash>();
-        newGameObject.transform.position = new Vector2(DataGameplay.Instance.viewRightX + 10f,0);//ovo stavljam jer na 1 frame kad se kreira gameobject vidi se da mu je pozicija stavljena na 0,0
+        //ovo stavljam jer na 1 frame kad se kreira gameobject vidi se da mu je pozicija stavljena na 0,0
         //!!!!!!!!!!!!!!!!!! brisi todo
-        newGameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1);
+        newGameObject.transform.localScale = new Vector3(0.5f, 0.5f, 1);
 
         return newTrash;
     }
@@ -115,9 +110,14 @@ public class TrashManager : MonoBehaviour
         }
         return null;
     }
-    public void DeleteTrash(Trash trash)
+    public void DeactivateTrash(Trash trash)
     {
-        trashList.Remove(trash);
-        Destroy(trash.gameObject);
+        if (trashList.Contains(trash))//da ga ne sadrzi znacilo bi da je izbrisano
+        {
+            trashList.Remove(trash);
+            trash.gameObject.SetActive(false);
+            reusableTrashObjectPooling.Enqueue(trash);
+            //Destroy(trash.gameObject);
+        }
     }
 }

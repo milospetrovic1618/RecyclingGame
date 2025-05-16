@@ -38,11 +38,19 @@ public class PlayerSelection : MonoBehaviour
     }
     void Update()
     {
-        if (EventSystem.current.IsPointerOverGameObject())//ovo je za ako je preko ui
-            return;
-        Inputs();
+        if (!IsOnUI())
+        {
+            Inputs();
+        }
     }
-
+    public bool IsOnUI()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())//UI IMA SVOJ EVENT SYSTEM
+        { 
+            return true; 
+        }
+        return false;
+    }
     //temp, izbrisi kasnije kada onemogucis da u isto vreme bude u building inputMode , ovo je za onaj donji if skroz, mozes ti posebno svaki inputMode da odradis ali ne bi bilo lose da napravis prioritetet i tako smanjis broj if-ova tako sto koristis if else
     public void Inputs()
     {
@@ -79,32 +87,23 @@ public class PlayerSelection : MonoBehaviour
             release = true;
         }
 
-        pressedPrevFrame = press;
 
+        Activities();
+
+        pressedPrevFrame = press;//mora da bude ispod activities
+
+    }
+    public void Activities() //moras da zamenis ako se objkti overlappuju
+    {
         CheckPressOverTrash();
     }
     Trash selectedTrash = null;
     Bin selectedBin = null;
+    bool wasTrashHeldPrevFrame = false;
     public void CheckPressOverTrash() //moras da zamenis ako se objkti overlappuju
     {
-        if (release)
-        {
-            Debug.Log(" ppppppp " + pressedPrevFrame);
-            LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
-            RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
-            //Debug.Log("+++++++++==");
 
-            if (hit0.collider != null)
-            {
-                Debug.Log(" ddddd " + pressedPrevFrame);
-                Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
-                if (bin.trashCount >= bin.maxTrashCount)
-                {
-                    BinsManager.Instance.ReplaceBin(bin);
-                }
-            }
-        }
-        else if (press)
+        if (press)
         {
             if (TrashManager.Instance.ReturnNullIfDestroyed(selectedTrash) != null) //ovo je isto kao selectedTrash != null
             {
@@ -155,6 +154,7 @@ public class PlayerSelection : MonoBehaviour
                     {
                         selectedTrash = hit.collider.gameObject.GetComponent<Trash>();
                         selectedTrash?.Select();//ne vidim razlog za ? ali dobijao sam null bug ovde
+                        wasTrashHeldPrevFrame = true;
                     }
                     //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
 
@@ -177,8 +177,29 @@ public class PlayerSelection : MonoBehaviour
                 }
             }*/
         }
-        else
+        else if (release )
         {
+            if (!wasTrashHeldPrevFrame)//wasTrashHeldPrevFrame zato sto si imao bug da kad se privuce trash takodje aktivira usisavanje kante... a release i press nisu u istom frame-u nikad
+            {
+                Debug.Log(" ppppppp " + pressedPrevFrame);
+                LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
+                RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
+                //Debug.Log("+++++++++==");
+
+                if (hit0.collider != null)
+                {
+                    Debug.Log(" ddddd " + pressedPrevFrame);
+                    Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
+                    if (bin.trashCount >= bin.maxTrashCount)
+                    {
+                        BinsManager.Instance.ReplaceBin(bin);
+                    }
+                }
+            }
+            wasTrashHeldPrevFrame = false;
+
+
+
             if (selectedTrash != null && selectedBin != null )
             {
                 selectedBin.PutInBin(selectedTrash);//ovo ne radi ne znam zasto
@@ -198,6 +219,6 @@ public class PlayerSelection : MonoBehaviour
             selectedBin = null;
         }
 
-        
+
     }
 }

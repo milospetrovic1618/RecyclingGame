@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using OutlineFx;
 using System;
+using static UnityEngine.GraphicsBuffer;
 
 public enum TrashType
 //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
@@ -59,6 +60,10 @@ public class Trash : MonoBehaviour
         {
             this.trashType = trashType;
             spriteRenderer.sprite = Resources.Load<Sprite>("Trash/" + trashType.ToString());
+            if (spriteRenderer.sprite == null)
+            {
+                Debug.Log(trashType);
+            }
 
             /*PolygonCollider2D[] colliders = collider.GetComponents<PolygonCollider2D>();
             foreach (PolygonCollider2D collider in colliders)
@@ -126,9 +131,7 @@ public class Trash : MonoBehaviour
     }
     public void ReturnToJunkArea()
     {
-        SendToPosition sendTrashToPositionInstance = gameObject.AddComponent<SendToPosition>();
-        sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
-        ToggleRigidBody(false);
+        MoveToPosition(TrashManager.Instance.GetRandomPositionInJunkArea(), false);
     }
     public Bin GetBin()
     {
@@ -136,14 +139,52 @@ public class Trash : MonoBehaviour
     }
     public void FlyToBin()
     {
-        IEnumerator enumerator = MovementsCoroutines.Instance.CurveMove(GetBin().transform.position, transform);
+        IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform, transform);
         Action myAction = () =>
         {
             DataGameplay.Instance.IncreaseScore();
-            TrashManager.Instance.DeleteTrash(this);
+            TrashManager.Instance.DeactivateTrash(this);
         };
-        movementCoroutine = MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, myAction);
+
+        AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, myAction));
         //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
+    }
+    public void MoveToPosition(Vector2 target, bool toggleRigidBody)
+    {
+        ToggleRigidBody(false);
+
+        //isto treba i na kraju da se pozove turn of mora ovako jer kad se draguje u kantu a rigidBody se reaktivira objekat padne, umesto da se fiksira
+        Action toggleRigidBodyAction = () =>
+        {
+            ToggleRigidBody(toggleRigidBody);
+        };
+
+        IEnumerator enumerator = MovementsCoroutines.Instance.MoveToPosition(target, this.transform, 0.5f);
+        AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, toggleRigidBodyAction));
+
+        //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
+    }
+    public void AssignMovementCoroutine(Coroutine newCoroutine) //hteo sam da stavim ove korutine direktno na trash ali ovako mi urednije i lakse
+    {
+        StopCoroutineMovement();//posto kod trash moze samo jedno pomeranje
+        movementCoroutine = newCoroutine;
+    }
+
+    public void Throw(Vector2 target)
+    {
+        IEnumerator enumerator = MovementsCoroutines.Instance.Throw(target, this.transform);
+        //Debug.Log("nooooonooooooooolapolizia");
+        AssignMovementCoroutine(StartCoroutine(enumerator));
+    }
+
+    // Stops the movement and destroys the component
+    public void StopCoroutineMovement()
+    {
+        if (movementCoroutine != null)
+        {
+            StopCoroutine(movementCoroutine);
+            movementCoroutine = null;
+        }
     }
     //animations
     /*ove funkcije ne mogu da budu ovde jer se aktiviraju tek u sledecem frame-u kad se pozovu externo, a kad se u istom frame
