@@ -5,11 +5,11 @@ using UnityEditor.EditorTools;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
-public class BootGameplay : MonoBehaviour
+public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde pr camera
 {
 
     public GameObject CameraPrefab;
-    public GameObject CameraInstantiated;
+    public Camera camera;
     public GameObject EventSystemPrefab;
     public static BootGameplay Instance;
 
@@ -17,8 +17,8 @@ public class BootGameplay : MonoBehaviour
     {
         Instance = this;
 
-        CameraInstantiated = Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity);
-        //Camera cam = camObj.GetComponent<Camera>();
+        camera = (Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity)).GetComponent<Camera>();
+        //camera cam = camObj.GetComponent<camera>();
         //CreateWalls(cam);
         Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
         /*
@@ -34,7 +34,7 @@ public class BootGameplay : MonoBehaviour
     /* ne koristim
     public float wallThickness = 1f;
     public float zPosition = 0f;
-    public void CreateWalls(Camera cam)
+    public void CreateWalls(camera cam)
     {
         Vector2 screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
         Vector2 screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));

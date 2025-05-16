@@ -34,7 +34,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         {
             if (trashCount < maxTrashCount)
             {
-                IncreaseScore();
+                DataGameplay.Instance.IncreaseScore();
                 trashCount++;
                 Destroy(trashItem.gameObject);
                 TrashManager.Instance.trashList.Remove(trashItem);
@@ -45,32 +45,17 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
             }
             else
             {
-                ReturnTrash(trashItem);
+                trashItem.ReturnToJunkArea();
             }
         }
         else
         {
-            ReturnTrash(trashItem);
+            trashItem.ReturnToJunkArea();
         }
-    }
-    public void ReturnTrash(Trash trashItem)
-    {
-
-        SendToPosition sendTrashToPositionInstance = trashItem.gameObject.AddComponent<SendToPosition>();
-        sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
-        trashItem.ToggleRigidBody(false);
     }
     public bool MatchesBin(Trash trashItem)
     {
         return trashItem.GetRecyclingType() == binType;
-    }
-    public void IncreaseScore()
-    {
-        //to do
-        string scoreString = DataGameplay.Instance.scoreText.text;
-        int score = int.Parse(scoreString);
-        score ++;
-        DataGameplay.Instance.scoreText.text = score.ToString();
     }
     public void Select()
     {

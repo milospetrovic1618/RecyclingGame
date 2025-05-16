@@ -45,14 +45,14 @@ public class BinsManager : MonoBehaviour
         Debug.Log("___ "+ partWidth + " " + DataGameplay.Instance.viewLeftX);
 
         float visibleRowY = DataGameplay.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana
-        float hiddenRowY = DataGameplay.Instance.viewBottomY - GetObjectHeight(PaperBin) - 0.15f;//-0.15 je da se osigura da se ne vidi
+        float hiddenRowY = DataGameplay.Instance.viewBottomY - GetBinHeight(PaperBin) - 0.4f;//- 0.4 je da se osigura da se ne vidi, cak i kad ima outline
 
         visibleRowPositions = new Vector2[3]{ new Vector2(firstX, visibleRowY), new Vector2(secondX, visibleRowY),new Vector2(thirdX, visibleRowY)};
         hiddenRowPositions = new Vector2[3] { new Vector2(firstX, hiddenRowY), new Vector2(secondX, hiddenRowY), new Vector2(thirdX, hiddenRowY) };
-        notAvailableBinsPosition = new Vector2(0, DataGameplay.Instance.viewBottomY - (GetObjectHeight(PaperBin) + 0.15f)*2.1f);
+        notAvailableBinsPosition = new Vector2(0, DataGameplay.Instance.viewBottomY - (GetBinHeight(PaperBin) + 0.4f)*2.1f);
 
         SetInitialPositions();
-        Debug.Log(GetObjectHeight(PaperBin) + " +++++++");
+        Debug.Log(GetBinHeight(PaperBin) + " +++++++");
     }
     public void SetInitialPositions()
     {
@@ -93,7 +93,7 @@ public class BinsManager : MonoBehaviour
             list.RemoveAt(randomIndex);
         }
     }*/
-    public float GetObjectHeight(Bin bin)
+    public float GetBinHeight(Bin bin)//ovde treba da zamenis da nema argumenti i da se stavlja reference sprite, ali ako imas i onaj otvorena kanta... i samo jednom iskoristi funkciju da assignujes value
     {
         SpriteRenderer sr = bin.gameObject.GetComponent<SpriteRenderer>();
         float spriteHeight = sr.sprite.bounds.size.y;
@@ -138,8 +138,7 @@ public class BinsManager : MonoBehaviour
         }
         foreach (Trash trash in toRemove)
         {
-            TrashManager.Instance.trashList.Remove(trash);
-            Destroy(trash.gameObject);
+            trash.FlyToBin();
         }
 
         //ugasi shaking

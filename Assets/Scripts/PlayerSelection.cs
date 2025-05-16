@@ -87,10 +87,26 @@ public class PlayerSelection : MonoBehaviour
     Bin selectedBin = null;
     public void CheckPressOverTrash() //moras da zamenis ako se objkti overlappuju
     {
-        if (press)
+        if (release)
         {
+            Debug.Log(" ppppppp " + pressedPrevFrame);
+            LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
+            RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
+            //Debug.Log("+++++++++==");
 
-            if (TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash) != null) //ovo je isto kao selectedTrash != null
+            if (hit0.collider != null)
+            {
+                Debug.Log(" ddddd " + pressedPrevFrame);
+                Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
+                if (bin.trashCount >= bin.maxTrashCount)
+                {
+                    BinsManager.Instance.ReplaceBin(bin);
+                }
+            }
+        }
+        else if (press)
+        {
+            if (TrashManager.Instance.ReturnNullIfDestroyed(selectedTrash) != null) //ovo je isto kao selectedTrash != null
             {
                 selectedTrash.transform.position = curWorldPosition;
                 //Debug.Log((selectedTrash.rigidbody == null).ToString());
@@ -144,20 +160,6 @@ public class PlayerSelection : MonoBehaviour
 
                 }
             }
-            Debug.Log(" ppppppp " + pressedPrevFrame);
-            LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
-            RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
-            //Debug.Log("+++++++++==");
-
-            if (hit0.collider != null)
-            {
-                Debug.Log(" ddddd " + pressedPrevFrame);
-                Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
-                if (bin.trashCount >= bin.maxTrashCount)
-                {
-                    BinsManager.Instance.ReplaceBin(bin);
-                }
-            }
             /*if (pressedPrevFrame == false)
             {
                 LayerMask layerMask = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
@@ -186,9 +188,9 @@ public class PlayerSelection : MonoBehaviour
                 curWorldPosition.y > TrashManager.Instance.maxYJankArea ||
                 curWorldPosition.y < TrashManager.Instance.minYJankArea)//rigid body se stavlja samo ako nije u trashArea
             {
-                TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash)?.ToggleRigidBody(true);// selectedTrash?.ToggleRigidBody(true);
+                TrashManager.Instance.ReturnNullIfDestroyed(selectedTrash)?.ToggleRigidBody(true);// selectedTrash?.ToggleRigidBody(true);
             }
-            TrashManager.Instance.ReturnNullIfNull_Trash(selectedTrash)?.DeSelect();//inace ovde je bilo selectedTrash?.DeSelect()
+            TrashManager.Instance.ReturnNullIfDestroyed(selectedTrash)?.DeSelect();//inace ovde je bilo selectedTrash?.DeSelect()
             selectedTrash = null;
 
             //ovde treba da se odselektuje i kad nije curposition over

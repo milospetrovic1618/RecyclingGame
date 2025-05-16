@@ -27,6 +27,10 @@ public class SendToPosition : MonoBehaviour
 
         if (t >= 1f)
         {
+            //resava bug da kad se draguje u kantu objekat padne
+            Trash trash= gameObject.GetComponent<Trash>();
+            trash?.ToggleRigidBody(false);
+
             Destroy(this);
         }
     }

@@ -59,7 +59,7 @@ MonoBehaviour:
   _event: 600
   _solid: 0.019
   _thickness: 0.4
-  _alphaCutout: 0.257
+  _alphaCutout: 0.094
   _mode: 0
   _filter: 1
   _attachDepth: 1

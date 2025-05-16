@@ -102,7 +102,7 @@ public class TrashManager : MonoBehaviour
     {
         return null;
     }
-    public Trash ReturnNullIfNull_Trash(Trash trash)
+    public Trash ReturnNullIfDestroyed(Trash trash)
     // Onaj problem sto si imao za null mozda mozes da resis tako sto proveravas da li postoji u listi posto nekad nije dovoljno da proveravas null jer tek u sledecem rame-u postaju null
     {
         if (trash == null)
@@ -114,5 +114,10 @@ public class TrashManager : MonoBehaviour
             return trash;
         }
         return null;
+    }
+    public void DeleteTrash(Trash trash)
+    {
+        trashList.Remove(trash);
+        Destroy(trash.gameObject);
     }
 }

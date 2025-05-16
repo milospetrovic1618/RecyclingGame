@@ -25,7 +25,7 @@ public enum Scenes
 }
 //redosled u executionOrder - prvo boot, pa Data, pa ostalo
 //binsManager pre TrashManager  jer se koristi za random
-public class DataGameplay: MonoBehaviour
+public class DataGameplay: MonoBehaviour//ima podatke i funkcije koje se koriste u Gameplay sceni, imas i BootGameplay ali on ima samo podatke koji za instancirane objekte zbog executionOrdera
 {
     public static DataGameplay Instance;
     //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
@@ -74,12 +74,20 @@ public class DataGameplay: MonoBehaviour
 
         scoreText = GameObject.Find("Score").GetComponent<Text>();
 
-        Camera cam = BootGameplay.Instance.CameraInstantiated.GetComponent<Camera>();//mora camera instatiated da bi dobilo tacan width
+        Camera cam = BootGameplay.Instance.camera.GetComponent<Camera>();//mora camera instatiated da bi dobilo tacan width
         Vector2 viewBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
         Vector2 viewTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
         viewLeftX = viewBottomLeft.x;
         viewRightX = viewTopRight.x; 
         viewBottomY = viewBottomLeft.y;
         viewWidth = viewRightX - viewLeftX;
+    }
+    public void IncreaseScore()
+    {
+        //to do
+        string scoreString = DataGameplay.Instance.scoreText.text;
+        int score = int.Parse(scoreString);
+        score++;
+        scoreText.text = score.ToString();
     }
 }

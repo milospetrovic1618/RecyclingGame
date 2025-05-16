@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using OutlineFx;
+using System;
 
 public enum TrashType
 //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
@@ -37,6 +38,7 @@ public class Trash : MonoBehaviour
     public PolygonCollider2D collider;
     public Rigidbody2D rigidbody;
     public OutlineFx.OutlineFx outline;
+    public Coroutine movementCoroutine;
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer(Layer.Trash.ToString());
@@ -89,13 +91,13 @@ public class Trash : MonoBehaviour
 
         //Debug.Log(keys[randomIndex].ToString());
         return keys[randomIndex];*/
-        RecyclingType randomBin = BinsManager.Instance.availableBins[Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
+        RecyclingType randomBin = BinsManager.Instance.availableBins[UnityEngine.Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
 
         // Get the trash list for that RecyclingType
         List<TrashType> trashList = DataGameplay.bin_trashList[randomBin];
 
         // Get a random TrashType from that list
-        TrashType randomTrash = trashList[Random.Range(0, trashList.Count)];
+        TrashType randomTrash = trashList[UnityEngine.Random.Range(0, trashList.Count)];
 
         return randomTrash;
     }
@@ -122,7 +124,27 @@ public class Trash : MonoBehaviour
         }
         //rigidbody.AddForce(Vector2.right * 2f, ForceMode2D.Impulse);
     }
-    
+    public void ReturnToJunkArea()
+    {
+        SendToPosition sendTrashToPositionInstance = gameObject.AddComponent<SendToPosition>();
+        sendTrashToPositionInstance.targetPosition = TrashManager.Instance.GetRandomPositionInJunkArea();
+        ToggleRigidBody(false);
+    }
+    public Bin GetBin()
+    {
+        return BinsManager.Instance.GetBinFromRecyclingType(GetRecyclingType());
+    }
+    public void FlyToBin()
+    {
+        IEnumerator enumerator = MovementsCoroutines.Instance.CurveMove(GetBin().transform.position, transform);
+        Action myAction = () =>
+        {
+            DataGameplay.Instance.IncreaseScore();
+            TrashManager.Instance.DeleteTrash(this);
+        };
+        movementCoroutine = MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, myAction);
+        //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
+    }
     //animations
     /*ove funkcije ne mogu da budu ovde jer se aktiviraju tek u sledecem frame-u kad se pozovu externo, a kad se u istom frame
     public void Throw()
