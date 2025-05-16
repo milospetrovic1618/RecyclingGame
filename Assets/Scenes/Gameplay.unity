@@ -872,7 +872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1566b64b648d1ee48832ca24d906b954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 0}
+  scoreText: {fileID: 1604810035}
   viewWidth: 0
   viewRightX: 0
   viewLeftX: 0
@@ -903,11 +903,17 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
-  hiddenRowPositions:
+  appearFromPositions:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  hidePositions:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   notAvailableBinsPosition: {x: 0, y: 0}
+  binHeight: 0
+  binWidth: 0
 --- !u!114 &1062292636
 MonoBehaviour:
   m_ObjectHideFlags: 0
