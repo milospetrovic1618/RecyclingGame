@@ -43,23 +43,23 @@ public class BinsManager : MonoBehaviour
         availableBins[2] = GetNextBin();
 
 
-        float partWidth = DataGameplay.Instance.viewWidth / 3f;
-        float firstX = DataGameplay.Instance.viewLeftX + partWidth * 0.7f;
-        float secondX = DataGameplay.Instance.viewLeftX + partWidth * 1.5f;
-        float thirdX = DataGameplay.Instance.viewLeftX + partWidth * 2.3f;
-        Debug.Log("___ "+ partWidth + " " + DataGameplay.Instance.viewLeftX);
+        float partWidth = GameplayManager.Instance.viewWidth / 3f;
+        float firstX = GameplayManager.Instance.viewLeftX + partWidth * 0.7f;
+        float secondX = GameplayManager.Instance.viewLeftX + partWidth * 1.5f;
+        float thirdX = GameplayManager.Instance.viewLeftX + partWidth * 2.3f;
+        Debug.Log("___ "+ partWidth + " " + GameplayManager.Instance.viewLeftX);
 
-        float visibleRowY = DataGameplay.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana
-        float hiddenRowY = DataGameplay.Instance.viewBottomY - binHeight - 0.4f;//- 0.4 je da se osigura da se ne vidi, cak i kad ima outline
+        float visibleRowY = GameplayManager.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana
+        float hiddenRowY = GameplayManager.Instance.viewBottomY - binHeight - 0.4f;//- 0.4 je da se osigura da se ne vidi, cak i kad ima outline
 
         visibleRowPositions = new Vector2[3]{ new Vector2(firstX, visibleRowY), new Vector2(secondX, visibleRowY),new Vector2(thirdX, visibleRowY)};
 
         //ako hoces jedno ispod drugo
 
         hidePositions = new Vector2[3] { new Vector2(firstX , hiddenRowY), new Vector2(secondX, hiddenRowY), new Vector2(thirdX, hiddenRowY) };
-        appearFromPositions = new Vector2[3] { new Vector2(DataGameplay.Instance.viewLeftX - binWidth, visibleRowY), new Vector2(secondX, hiddenRowY), new Vector2(DataGameplay.Instance.viewRightX + binWidth, visibleRowY) };
+        appearFromPositions = new Vector2[3] { new Vector2(GameplayManager.Instance.viewLeftX - binWidth, visibleRowY), new Vector2(secondX, hiddenRowY), new Vector2(GameplayManager.Instance.viewRightX + binWidth, visibleRowY) };
 
-        notAvailableBinsPosition = new Vector2(0, DataGameplay.Instance.viewBottomY - (AssignBinHeight(PaperBin) + 0.4f)*2.1f);
+        notAvailableBinsPosition = new Vector2(0, GameplayManager.Instance.viewBottomY - (AssignBinHeight(PaperBin) + 0.4f)*2.1f);
 
         SetInitialPositions();
         Debug.Log(AssignBinHeight(PaperBin) + " +++++++");
@@ -147,7 +147,7 @@ public class BinsManager : MonoBehaviour
         List<Trash> toRemove = new List<Trash>();
         foreach (Trash trash in TrashManager.Instance.trashList)
         {
-            if (DataGameplay.trash_bin[trash.trashType] == bin.binType)
+            if (GameplayManager.trash_bin[trash.trashType] == bin.binType)
             {
                 toRemove.Add(trash);
             }

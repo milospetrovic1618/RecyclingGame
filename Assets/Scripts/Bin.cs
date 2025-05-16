@@ -37,7 +37,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         {
             if (trashCount < maxTrashCount)
             {
-                DataGameplay.Instance.IncreaseScore();
+                GameplayManager.Instance.CurrentScore++;
                 trashCount++;
                 Destroy(trashItem.gameObject);
                 TrashManager.Instance.trashList.Remove(trashItem);

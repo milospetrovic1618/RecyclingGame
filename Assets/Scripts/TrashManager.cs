@@ -13,7 +13,7 @@ public class TrashManager : MonoBehaviour
     public float minYJankArea;
     
     public List<Trash> trashList = new List<Trash>();
-    public Queue<Trash> reusableTrashObjectPooling = new Queue<Trash>();//posle ces da dodas object pooling... samo gledaj gde si koristio destroy
+    public Queue<Trash> deactivatedTrashObjectPooling = new Queue<Trash>();//posle ces da dodas object pooling... samo gledaj gde si koristio destroy
     public int maxTrash = 20;
     private float offset = 0.3f;
 
@@ -57,21 +57,21 @@ public class TrashManager : MonoBehaviour
     public void ThrowTrash()
     {
         Trash newTrash = null;
-        if (reusableTrashObjectPooling.Count == 0)
+        if (deactivatedTrashObjectPooling.Count == 0)
         {
             newTrash = SpawnNewTrash();
         }
         else
         {
-            newTrash = reusableTrashObjectPooling.Dequeue();
+            newTrash = deactivatedTrashObjectPooling.Dequeue();
             newTrash.gameObject.SetActive(true);
         }
 
-        newTrash.gameObject.transform.position = new Vector2(DataGameplay.Instance.viewRightX + 10f, 0);//da se ne bi videlo u screenu
+        newTrash.gameObject.transform.position = new Vector2(GameplayManager.Instance.viewRightX + 10f, 0);//da se ne bi videlo u screenu
         newTrash.Throw(GetRandomPositionInJunkArea());
         trashList.Add(newTrash);
 
-        if (trashList.Count > maxTrash)
+        if (trashList.Count > maxTrash)//> a ne >= zato sto spavnuje trash van vidokruga i player uopste ne moze da reaguje 
         {
             GameOver();
         }
@@ -116,7 +116,7 @@ public class TrashManager : MonoBehaviour
         {
             trashList.Remove(trash);
             trash.gameObject.SetActive(false);
-            reusableTrashObjectPooling.Enqueue(trash);
+            deactivatedTrashObjectPooling.Enqueue(trash);
             //Destroy(trash.gameObject);
         }
     }

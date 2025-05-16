@@ -85,12 +85,12 @@ public class Trash : MonoBehaviour
     }
     public RecyclingType GetRecyclingType()
     {
-        return DataGameplay.trash_bin[trashType];
+        return GameplayManager.trash_bin[trashType];
     }
 
     public TrashType GetRandomTrashType()
     {
-        /*List<TrashType> keys = new List<TrashType>(DataGameplay.trash_bin.Keys);
+        /*List<TrashType> keys = new List<TrashType>(GameplayManager.trash_bin.Keys);
 
         int randomIndex = UnityEngine.Random.Range(0, keys.Count);
 
@@ -99,7 +99,7 @@ public class Trash : MonoBehaviour
         RecyclingType randomBin = BinsManager.Instance.availableBins[UnityEngine.Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
 
         // Get the trash list for that RecyclingType
-        List<TrashType> trashList = DataGameplay.bin_trashList[randomBin];
+        List<TrashType> trashList = GameplayManager.bin_trashList[randomBin];
 
         // Get a random TrashType from that list
         TrashType randomTrash = trashList[UnityEngine.Random.Range(0, trashList.Count)];
@@ -142,7 +142,7 @@ public class Trash : MonoBehaviour
         IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform, transform);
         Action myAction = () =>
         {
-            DataGameplay.Instance.IncreaseScore();
+            GameplayManager.Instance.CurrentScore++;
             TrashManager.Instance.DeactivateTrash(this);
         };
 

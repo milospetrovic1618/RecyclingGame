@@ -49,10 +49,10 @@ public class MovementsCoroutines : MonoBehaviour
         //radius = Random.Range(minRadius, maxRadius);
 
         float radiusAdditon = UnityEngine.Random.Range(0, maxRadiusAddition);
-        float minRadius = Mathf.Abs((clockwise ? DataGameplay.Instance.viewLeftX : DataGameplay.Instance.viewRightX) - targetPosition.x) + 1f;
+        float minRadius = Mathf.Abs((clockwise ? GameplayManager.Instance.viewLeftX : GameplayManager.Instance.viewRightX) - targetPosition.x) + 1f;
 
         float radius = minRadius + radiusAdditon;
-        //radius = DataGameplay.Instance.viewWidth + 1;
+        //radius = GameplayManager.Instance.viewWidth + 1;
 
         centerPosition = new Vector2(targetPosition.x + (clockwise ? -radius : radius), targetPosition.y);
         //Debug.Log(centerPosition.ToString());
