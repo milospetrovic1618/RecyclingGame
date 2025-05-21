@@ -18,14 +18,6 @@ public enum Layer
     BinsDetectors,//interaguje sa tresh
     BinsSelectingColliders
 }
-public enum Scenes
-{
-    Menu,
-    Gameplay,
-    Boot
-}
-//redosled u executionOrder - prvo boot, pa Data, pa ostalo
-//binsManager pre TrashManager  jer se koristi za random
 public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se koriste u Gameplay sceni, imas i BootGameplay ali on ima samo podatke koji za instancirane objekte zbog executionOrdera
 {
     public static GameplayManager Instance;
@@ -59,20 +51,12 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
         { RecyclingType.Plastic, new List<TrashType> { TrashType.Bottle, TrashType.Cup, TrashType.Straw } },
         { RecyclingType.Metal, new List<TrashType> { TrashType.BottleCap, TrashType.FoodCan, TrashType.SodaCan } },
         { RecyclingType.Glass, new List<TrashType> { TrashType.Jar, TrashType.ClearBottle, TrashType.GreenBottle } },
-        { RecyclingType.Organic, new List<TrashType> { TrashType.AppleCore, TrashType.BananaPeel, TrashType.StaleBread } }
+        { RecyclingType.Organic, new List<TrashType> { TrashType.AppleCore, TrashType.BananaPeel, TrashType.StaleBread } },
+        { RecyclingType.matchNever, new List<TrashType> {} }
     };
 
-    public Text scoreText;
-
-    public float viewWidth;
-    public float viewRightX;
-    public float viewLeftX;
-    public float viewBottomY;
-
-    public Action<int> onScoreChanged; 
-    
+    public Action<int> onScoreChanged;     
     private int currentScore;
-
     public int CurrentScore
     {
         get => currentScore;
@@ -84,18 +68,11 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
         }
     }
 
+
     private void Awake()
     {
         Instance = this; 
 
-        Camera cam = BootGameplay.Instance.camera.GetComponent<Camera>();//mora camera instatiated da bi dobilo tacan width
-        Vector2 viewBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-        Vector2 viewTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
-        viewLeftX = viewBottomLeft.x;
-        viewRightX = viewTopRight.x; 
-        viewBottomY = viewBottomLeft.y;
-        viewWidth = viewRightX - viewLeftX;
-
-        onScoreChanged = score => scoreText.text = score.ToString();
+        onScoreChanged = score => BootGameplay.Instance.scoreText.text = score.ToString();
     }
 }

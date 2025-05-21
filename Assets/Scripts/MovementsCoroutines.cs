@@ -36,8 +36,8 @@ public class MovementsCoroutines : MonoBehaviour
     {
         Debug.Log("uslo je");
         float maxRadiusAddition = 2.5f;//random se dodaje od 0 do maxRadiusAddition na radius kruga po kom treba da se krece
-        float minSpeed = 60f;   // At top (90°)
-        float maxSpeed = 130f;   // At sides (0° and 180°)
+        float minSpeed = 60f;   // At top (90ï¿½)
+        float maxSpeed = 130f;   // At sides (0ï¿½ and 180ï¿½)
         bool clockwise = false;
         float rotationSpeed = 360f;
         Vector2 centerPosition;
@@ -49,7 +49,7 @@ public class MovementsCoroutines : MonoBehaviour
         //radius = Random.Range(minRadius, maxRadius);
 
         float radiusAdditon = UnityEngine.Random.Range(0, maxRadiusAddition);
-        float minRadius = Mathf.Abs((clockwise ? GameplayManager.Instance.viewLeftX : GameplayManager.Instance.viewRightX) - targetPosition.x) + 1f;
+        float minRadius = Mathf.Abs((clockwise ? BootMain.Instance.viewLeftX : BootMain.Instance.viewRightX) - targetPosition.x) + 1f;
 
         float radius = minRadius + radiusAdditon;
         //radius = GameplayManager.Instance.viewWidth + 1;
@@ -68,7 +68,7 @@ public class MovementsCoroutines : MonoBehaviour
 
             float angleRadians = angleDegrees * Mathf.Deg2Rad;
 
-            // Smooth speed variation: min at 90°, max at 0° & 180°
+            // Smooth speed variation: min at 90ï¿½, max at 0ï¿½ & 180ï¿½
             float speed = Mathf.Lerp(minSpeed, maxSpeed, Mathf.Abs(Mathf.Cos(angleRadians)));
 
             // Direction adjustment
@@ -100,7 +100,7 @@ public class MovementsCoroutines : MonoBehaviour
 
         float curveHeightReference = 4f;
         float curveHeightCameraSizeReference = 10f;
-        float curveHeight = curveHeightReference * BootGameplay.Instance.camera.orthographicSize / curveHeightCameraSizeReference;
+        float curveHeight = curveHeightReference * Camera.main.orthographicSize / curveHeightCameraSizeReference;
         
         bool clockwise = UnityEngine.Random.value < 0.5f;
 
@@ -199,7 +199,7 @@ public class MovementsCoroutines : MonoBehaviour
 
         float curveHeightReference = 4f;
         float curveHeightCameraSizeReference = 10f;
-        float curveHeight = curveHeightReference * BootGameplay.Instance.camera.orthographicSize / curveHeightCameraSizeReference;
+        float curveHeight = curveHeightReference * Camera.main.orthographicSize / curveHeightCameraSizeReference;
 
         bool clockwise = UnityEngine.Random.value < 0.5f;
 

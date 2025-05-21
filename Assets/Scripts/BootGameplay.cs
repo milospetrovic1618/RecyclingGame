@@ -1,34 +1,41 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor.EditorTools;
+#endif
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde pr camera
 {
-
-    public GameObject CameraPrefab;
-    public Camera camera;
-    public GameObject EventSystemPrefab;
     public static BootGameplay Instance;
+    //kante
+    //junk Area
+    //ui
+    //gameplay script Holder
+    public Text scoreText;
+    public GameObject PauseUI;
+    public GameObject PauseButton;
+    public GameObject GameOverUI;
+    public UnityEngine.UI.Image SoundToggle;
+    public Sprite SoundOnTex;
+    public Sprite SoundOffTex;
 
     public void Awake()
     {
         Instance = this;
+        SoundManager.Instance.PlayBGM(SoundManager.Instance.gameplayBackgroundMusic);
 
-        camera = (Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity)).GetComponent<Camera>();
-        //camera cam = camObj.GetComponent<camera>();
-        //CreateWalls(cam);
-        Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
-        /*
-        playerMovement = Instantiate(playerPrefab, Vector3.zero, quaternion.identity).GetComponent<PlayerMovement>();
-        Instantiate(townPrefab, Vector3.zero, quaternion.identity);
-        Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
-        Instantiate(Grass, Vector3.zero, quaternion.identity);
-        login = Instantiate(Login, Vector3.zero, quaternion.identity).GetComponent<Login>();
-        Instantiate(Put, new Vector3(1, -1.3f, 0), quaternion.identity);
-        Instantiate(Ambient, Vector3.zero, quaternion.identity);*/
+        if (SoundManager.Instance.IsSilent())
+        {
+            SoundToggle.sprite = SoundOffTex;
+        }
+        else
+        {
+            SoundToggle.sprite = SoundOnTex;
+        }
     }
 
     /* ne koristim

@@ -1,0 +1,10 @@
+
++  odradi kad se promasi kanta  
+imaj detector kad se ne ubaci ni u jednu kantu tj ispadne skroz da ga vrati u trashArea
+
++ kako ce da radi animation
+imas coroutins
+na svakom objeltu imaces public courutinu koja ce da se zove movement
+imaces stopMovement i imaces AssignNewMovement gde ce stari da se brise
+imaces i akcije koje ce da se assignuju na kraju
+vidi da li u c# mozes da stavis  da funkcija nema ili ima argument

@@ -12,7 +12,8 @@ public enum RecyclingType
     Plastic,
     Metal,
     Glass,
-    Organic
+    Organic,
+    matchNever
 }
 
 public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijante jer je fiksan broj... a za trash sam direktno iz runtime-a dodavao komponente jer ih spwanujem i tako mi je prirodnije i lakse(brze odradim tipove u odnosu da pravim varijante), a bins vec postoje
@@ -37,6 +38,8 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         {
             if (trashCount < maxTrashCount)
             {
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.enterBin);
+                TrashManager.Instance.AddNewPlayerInterval();
                 GameplayManager.Instance.CurrentScore++;
                 trashCount++;
                 Destroy(trashItem.gameObject);

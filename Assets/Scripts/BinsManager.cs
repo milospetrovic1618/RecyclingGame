@@ -11,6 +11,7 @@ public class BinsManager : MonoBehaviour
     public Bin PlasticBin;
     public Bin MetalBin;
     public Bin OrganicBin;
+    public Bin Missed;
     public static BinsManager Instance;
     public Bin[] availableBins = new Bin[3];
     public int neededBins = 3;//za tutorijale treba 1 i 2
@@ -32,6 +33,35 @@ public class BinsManager : MonoBehaviour
         binHeight = AssignBinHeight(PaperBin);//example paperbin
         binWidth = AssignBinWidth(PaperBin);
 
+        
+
+
+        float partWidth = BootMain.Instance.viewWidth / 3f;
+        float firstX = BootMain.Instance.viewLeftX + partWidth * 0.7f;
+        float secondX = BootMain.Instance.viewLeftX + partWidth * 1.5f;
+        float thirdX = BootMain.Instance.viewLeftX + partWidth * 2.3f;
+        Debug.Log("___ "+ partWidth + " " + BootMain.Instance.viewLeftX);
+
+        float visibleRowY = BootMain.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana
+        float hiddenRowY = BootMain.Instance.viewBottomY - binHeight - 0.4f;//- 0.4 je da se osigura da se ne vidi, cak i kad ima outline
+
+        visibleRowPositions = new Vector2[3]{ new Vector2(firstX, visibleRowY), new Vector2(secondX, visibleRowY),new Vector2(thirdX, visibleRowY)};
+
+        //ako hoces jedno ispod drugo
+
+        hidePositions = new Vector2[3] { new Vector2(firstX , hiddenRowY), new Vector2(secondX, hiddenRowY), new Vector2(thirdX, hiddenRowY) };
+        appearFromPositions = new Vector2[3] { new Vector2(BootMain.Instance.viewLeftX - binWidth, visibleRowY), new Vector2(secondX, hiddenRowY), new Vector2(BootMain.Instance.viewRightX + binWidth, visibleRowY) };
+
+        notAvailableBinsPosition = new Vector2(0, BootMain.Instance.viewBottomY - (binHeight + 0.4f)*2.1f);
+
+        Missed.transform.localScale = new Vector2((3* BootMain.Instance.viewWidth)/binWidth, 1);//3 * da se osigura da je dovoljno dugo
+
+        SetInitial();
+        //Debug.Log(AssignBinHeight(PaperBin) + " +++++++");
+    }
+    public void SetInitial()//Positions i order
+    {
+        nextBinOrder.Clear();
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Paper));
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Glass));
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Plastic));
@@ -42,31 +72,7 @@ public class BinsManager : MonoBehaviour
         availableBins[1] = GetNextBin();
         availableBins[2] = GetNextBin();
 
-
-        float partWidth = GameplayManager.Instance.viewWidth / 3f;
-        float firstX = GameplayManager.Instance.viewLeftX + partWidth * 0.7f;
-        float secondX = GameplayManager.Instance.viewLeftX + partWidth * 1.5f;
-        float thirdX = GameplayManager.Instance.viewLeftX + partWidth * 2.3f;
-        Debug.Log("___ "+ partWidth + " " + GameplayManager.Instance.viewLeftX);
-
-        float visibleRowY = GameplayManager.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana
-        float hiddenRowY = GameplayManager.Instance.viewBottomY - binHeight - 0.4f;//- 0.4 je da se osigura da se ne vidi, cak i kad ima outline
-
-        visibleRowPositions = new Vector2[3]{ new Vector2(firstX, visibleRowY), new Vector2(secondX, visibleRowY),new Vector2(thirdX, visibleRowY)};
-
-        //ako hoces jedno ispod drugo
-
-        hidePositions = new Vector2[3] { new Vector2(firstX , hiddenRowY), new Vector2(secondX, hiddenRowY), new Vector2(thirdX, hiddenRowY) };
-        appearFromPositions = new Vector2[3] { new Vector2(GameplayManager.Instance.viewLeftX - binWidth, visibleRowY), new Vector2(secondX, hiddenRowY), new Vector2(GameplayManager.Instance.viewRightX + binWidth, visibleRowY) };
-
-        notAvailableBinsPosition = new Vector2(0, GameplayManager.Instance.viewBottomY - (AssignBinHeight(PaperBin) + 0.4f)*2.1f);
-
-        SetInitialPositions();
-        Debug.Log(AssignBinHeight(PaperBin) + " +++++++");
-    }
-    public void SetInitialPositions()
-    {
-        for(int i = 0; i < availableBins.Length; i++)
+        for (int i = 0; i < availableBins.Length; i++)
         {
             availableBins[i].transform.position = visibleRowPositions[i];
         }
@@ -74,6 +80,8 @@ public class BinsManager : MonoBehaviour
         {
             bin.transform.position = notAvailableBinsPosition;
         }
+
+        Missed.transform.position = visibleRowPositions[1];//stavi ga na sredinu
     }
     public Bin GetBinFromRecyclingType(RecyclingType recyclingType)
     {
