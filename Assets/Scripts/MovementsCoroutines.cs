@@ -34,7 +34,7 @@ public class MovementsCoroutines : MonoBehaviour
     // Coroutine that handles circular movement
     public IEnumerator Throw(Vector2 targetPosition, Transform transformToAnimate)//simulira bacanje.. ovo je zapravo Throw ali delom
     {
-        Debug.Log("uslo je");
+        //Debug.Log("uslo je");
         float maxRadiusAddition = 2.5f;//random se dodaje od 0 do maxRadiusAddition na radius kruga po kom treba da se krece
         float minSpeed = 60f;   // At top (90�)
         float maxSpeed = 130f;   // At sides (0� and 180�)

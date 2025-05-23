@@ -37,9 +37,9 @@ public class BinsManager : MonoBehaviour
 
 
         float partWidth = BootMain.Instance.viewWidth / 3f;
-        float firstX = BootMain.Instance.viewLeftX + partWidth * 0.7f;
+        float firstX = BootMain.Instance.viewLeftX + partWidth * 0.6f;
         float secondX = BootMain.Instance.viewLeftX + partWidth * 1.5f;
-        float thirdX = BootMain.Instance.viewLeftX + partWidth * 2.3f;
+        float thirdX = BootMain.Instance.viewLeftX + partWidth * 2.4f;
         Debug.Log("___ "+ partWidth + " " + BootMain.Instance.viewLeftX);
 
         float visibleRowY = BootMain.Instance.viewBottomY + 0.15f;//-0.15 je da je kanta malo iznad bottom-a ekrana

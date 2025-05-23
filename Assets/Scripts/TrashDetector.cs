@@ -12,6 +12,7 @@ public class TrashDetector : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log(" TrashDetector ");
         Trash trash = other.GetComponent<Trash>();
         if (trash != null)
         {

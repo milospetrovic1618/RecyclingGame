@@ -13,6 +13,8 @@ public class PlayerSelection : MonoBehaviour
     public Vector2 curWorldPosition;//nisi koristio mozda ce da ti treba
     public Vector2 curScreenPosition;//nisi koristio mozda ce da ti treba
     public string deviceType = "";
+
+    public float maxDistanceClickTrash = 0.6f;
     void Start()
     {
         deviceType = WhichDeviceType();
@@ -66,9 +68,9 @@ public class PlayerSelection : MonoBehaviour
                 curWorldPosition = Camera.main.ScreenToWorldPoint(curScreenPosition);
             }
         }
-        else if (deviceType == "Mobile")
+        else if ( deviceType == "Mobile")
         {
-            if (Input.touchCount == 1 &&
+            /*if (Input.touchCount == 1 &&
             (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(0).phase == TouchPhase.Stationary))
             {
                 press = true;
@@ -79,6 +81,24 @@ public class PlayerSelection : MonoBehaviour
             else
             {
                 press = false;
+            }*/
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                // Track world position always while touch exists
+                curScreenPosition = touch.position;
+                curWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(curScreenPosition.x, curScreenPosition.y, Camera.main.nearClipPlane));
+
+                // Set press only when appropriate
+                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                {
+                    press = true;
+                }
+                else
+                {
+                    press = false;
+                }
             }
         }
 
@@ -95,12 +115,12 @@ public class PlayerSelection : MonoBehaviour
     }
     public void Activities() //moras da zamenis ako se objkti overlappuju
     {
-        CheckPressOverTrash();
+        CheckTrashBinSelection();
     }
     Trash selectedTrash = null;
     Bin selectedBin = null;
     bool wasTrashHeldPrevFrame = false;
-    public void CheckPressOverTrash() //moras da zamenis ako se objkti overlappuju
+    public void CheckTrashBinSelection() //moras da zamenis ako se objkti overlappuju
     {
 
         if (press)
@@ -137,7 +157,39 @@ public class PlayerSelection : MonoBehaviour
             }
             else
             {
-                LayerMask layerMask = LayerMask.GetMask(Layer.Trash.ToString());
+                Trash trySelectTrash = null;
+                float minDistance = maxDistanceClickTrash;
+
+                foreach (Trash trash in TrashManager.Instance.trashList)
+                {
+                    float distance = Vector2.Distance(trash.gameObject.transform.position, curWorldPosition);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        trySelectTrash = trash;
+                    }
+                }
+
+                if (trySelectTrash == null)
+                {
+                    if (selectedTrash != null)
+                    {
+                        selectedTrash.DeSelect();
+                        selectedTrash = null;
+                    }
+                }
+                else
+                {
+                    if (selectedTrash == null)
+                    {
+                        selectedTrash = trySelectTrash;
+                        selectedTrash?.Select();//ne vidim razlog za ? ali dobijao sam null bug ovde
+                        wasTrashHeldPrevFrame = true;
+                    }
+                    //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
+                }
+
+                /*LayerMask layerMask = LayerMask.GetMask(Layer.Trash.ToString());
                 RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
 
                 if (hit.collider == null)
@@ -157,8 +209,7 @@ public class PlayerSelection : MonoBehaviour
                         wasTrashHeldPrevFrame = true;
                     }
                     //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
-
-                }
+                }*/
             }
             /*if (pressedPrevFrame == false)
             {
@@ -181,14 +232,14 @@ public class PlayerSelection : MonoBehaviour
         {
             if (!wasTrashHeldPrevFrame)//wasTrashHeldPrevFrame zato sto si imao bug da kad se privuce trash takodje aktivira usisavanje kante... a release i press nisu u istom frame-u nikad
             {
-                Debug.Log(" ppppppp " + pressedPrevFrame);
+                //Debug.Log(" ppppppp " + pressedPrevFrame);
                 LayerMask layerMask0 = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
                 RaycastHit2D hit0 = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask0);
                 //Debug.Log("+++++++++==");
 
                 if (hit0.collider != null)
                 {
-                    Debug.Log(" ddddd " + pressedPrevFrame);
+                    //Debug.Log(" ddddd " + pressedPrevFrame);
                     Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
                     if (bin.trashCount >= bin.maxTrashCount)
                     {

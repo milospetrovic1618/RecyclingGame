@@ -1,0 +1,5 @@
+D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/FramePacing/CMakeFiles/swappywrapper.dir
+D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/FramePacing/CMakeFiles/edit_cache.dir
+D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/FramePacing/CMakeFiles/rebuild_cache.dir

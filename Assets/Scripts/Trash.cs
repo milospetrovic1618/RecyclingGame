@@ -139,6 +139,8 @@ public class Trash : MonoBehaviour
     }
     public void FlyToBin()
     {
+        ToggleRigidBody(false);//zbog buga da kad djubre pada ima rigidbody pa aktivira onu kantu koja vraca nazad
+
         IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform, transform);
         Action myAction = () =>
         {
