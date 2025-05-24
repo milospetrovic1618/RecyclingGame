@@ -12,7 +12,7 @@ public class PlayerSelection : MonoBehaviour
     public Vector2 releasedWorldPosition;
     public Vector2 curWorldPosition;//nisi koristio mozda ce da ti treba
     public Vector2 curScreenPosition;//nisi koristio mozda ce da ti treba
-    public string deviceType = "";
+    public string deviceType = ""; //BOJAN: da li je stvarno bolje string nego DeviceType enum? :)
 
     public float maxDistanceClickTrash = 0.6f;
     void Start()
@@ -47,12 +47,16 @@ public class PlayerSelection : MonoBehaviour
     }
     public bool IsOnUI()
     {
+        //BOJAN: sa obzirom da ces imati 20ak itema na tabli max, ja bih ovo resio stavljanjem BoxCollider2D na svaki item, i na njegovu skriptu OnMouseDown / OnMouseUp, a za bin bih detektovao OnCollisionEnter2D / OnCollisionExit2D
+        //BOJAN: ali nisam siguran sta je optimalnije, znam da samo izbegavam ovaj EventSystem bas jako zbog raznih nekih glitcheva
         if (EventSystem.current.IsPointerOverGameObject())//UI IMA SVOJ EVENT SYSTEM
         { 
             return true; 
         }
         return false;
     }
+    
+    //BOJAN: komentar za ovaj tvoj komentar ispod => mozes da koristis mozda #IF UNITY_STANDALONE || UNITY_EDITOR ili #IF UNITY_ANDROID || UNITY_IOS
     //temp, izbrisi kasnije kada onemogucis da u isto vreme bude u building inputMode , ovo je za onaj donji if skroz, mozes ti posebno svaki inputMode da odradis ali ne bi bilo lose da napravis prioritetet i tako smanjis broj if-ova tako sto koristis if else
     public void Inputs()
     {
@@ -90,6 +94,9 @@ public class PlayerSelection : MonoBehaviour
                 curScreenPosition = touch.position;
                 curWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(curScreenPosition.x, curScreenPosition.y, Camera.main.nearClipPlane));
 
+                //BOJAN: zar nije lepse press = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
+                //BOJAN: jedna linija koda, radi isto sto i ovaj dole kod :)
+                //BOJAN: moglo bi da se optimizuje sa nekim toggle-ovanjem, da ne ispitujes stalno touch phase, jer ovako u 
                 // Set press only when appropriate
                 if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                 {
@@ -117,6 +124,8 @@ public class PlayerSelection : MonoBehaviour
     {
         CheckTrashBinSelection();
     }
+    
+    //BOJAN: promenljive uvek na vrhu skripte :) i ja ovo volim da radim, da ostavim ovako promenljive iznad metode gde se zapravo koriste, pogotovo ako su private, ali 99% programera ce te mrzeti zbog ovoga :P
     Trash selectedTrash = null;
     Bin selectedBin = null;
     bool wasTrashHeldPrevFrame = false;
@@ -132,6 +141,7 @@ public class PlayerSelection : MonoBehaviour
                 selectedTrash.ToggleRigidBody(false);
 
 
+                //BOJAN: ovaj layerMask koristis na vise mesta, mogao bi da ga setujes samo jednom na awake-u u private promenljivu
                 LayerMask layerMask = LayerMask.GetMask(Layer.BinsSelectingColliders.ToString());
                 RaycastHit2D hit = Physics2D.Raycast(curWorldPosition, Vector2.zero, float.MaxValue, layerMask);
                 //Debug.Log("+++++++++==");

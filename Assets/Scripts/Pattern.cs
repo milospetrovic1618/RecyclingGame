@@ -10,6 +10,7 @@ public class Pattern : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
+        //BOJAN: vec imas sracunat width i height ekrana preko BootMain? Koristi BootMain.Instance.viewWidth i viewHeight
         Vector2 viewBottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Camera.main.nearClipPlane));
         Vector2 viewTopRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
         float viewLeftX = viewBottomLeft.x;

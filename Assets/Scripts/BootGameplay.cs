@@ -28,6 +28,8 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
         Instance = this;
         SoundManager.Instance.PlayBGM(SoundManager.Instance.gameplayBackgroundMusic);
 
+        //BOJAN: ovo za SoundToggle on/off na awake bi bolje bilo napraviti izolovanu skriptu komponentu i kaciti gde treba
+        //BOJAN: nego trpati po boot-evima copy/paste koda
         if (SoundManager.Instance.IsSilent())
         {
             SoundToggle.sprite = SoundOffTex;

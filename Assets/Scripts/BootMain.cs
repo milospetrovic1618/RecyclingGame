@@ -57,6 +57,10 @@ public class BootMain : MonoBehaviour
         soundManager.Initialize(menuBackgroundMusic,gameplayBackgroundMusic,buttonClick, enterBin, SoundManagerInstantiated.AddComponent<AudioSource>(), SoundManagerInstantiated.AddComponent<AudioSource>());
         peristantGameObjects.Add(SoundManagerInstantiated);
 
+        //BOJAN: za mobile bi bilo dobro da se racuna Screen.safeArea zbog notch-eva (kad su prednja kamera i dugmici deo ekrana)
+        //BOJAN: za mobile ce uglavnom biti fiksno width i height (mada noviji telefoni mogu i ovo da poremete)
+        //BOJAN: ali za PC/browser ce igraci moci da menjaju (pre svega resize browsera...)
+        //BOJAN: pa ne bi bilo lose u neki Update ubaciti da proverava da li je doslo do promene
         Vector2 viewBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
         Vector2 viewTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
         viewLeftX = viewBottomLeft.x;

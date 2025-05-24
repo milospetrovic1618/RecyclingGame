@@ -119,6 +119,7 @@ public class TrashManager : MonoBehaviour
     }
     public void BeginningSpawn()
     {
+        //BOJAN: ovo je temp mozda? 10 je ovde magican broj, mada je dovoljno jasna skripta da mozda i moze da ostane ovako, ako se broj spawnovanih predmeta na pocetku igre ne menja nikad
         for (int i = 0; i < 10; i++)
         {
             ThrowTrash();
@@ -157,6 +158,8 @@ public class TrashManager : MonoBehaviour
             //AddNewType
         }
         timerAddNewTypes += Time.deltaTime;
+        
+        //BOJAN: je l' se racuna vreme i kad je pauzirana igra?
         totalTime += Time.deltaTime;
         timerForSpawn += Time.deltaTime;
         currentPlayerInterval += Time.deltaTime;
@@ -186,6 +189,7 @@ public class TrashManager : MonoBehaviour
     }
     public void ThrowTrash()
     {
+        //BOJAN: ovaj object pooling mi je malo cudan. generalno bi trebalo na initu da se instanciraju recimo 20 itema, i onda kasnije da ih vrtis, a ne da ih dodajes u toku runtime-a od 0? ili nisam uspeo da procitam kod dobro...
         Trash newTrash = null;
         if (deactivatedTrashObjectPooling.Count == 0)
         {
@@ -234,6 +238,7 @@ public class TrashManager : MonoBehaviour
         {
             return null;
         }
+        //BOJAN: ja bih ovo skratio na return trashList.Contains(trash)?trash:null; -> ali ovo je vise licna preferenca nego neka pametna stvar
         if (trashList.Contains(trash))
         {
             return trash;
@@ -253,6 +258,7 @@ public class TrashManager : MonoBehaviour
         }
     }
 
+    //BOJAN: ovo ne mora da se kompajluje, tako da sakrij ga iza #IF UNITY_EDITOR, a realno ne bi uopste trebalo da stoji u TrashManageru :P
     [ContextMenu("ExportSimulation")]
     void ExportSimulation()
     {
