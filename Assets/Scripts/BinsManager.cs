@@ -64,8 +64,8 @@ public class BinsManager : MonoBehaviour
         nextBinOrder.Clear();
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Paper));
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Glass));
-        nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Plastic));
-        nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Metal));
+        nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.PlasticMetal));
+        nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.ElectronicsBatteries));
         nextBinOrder.Enqueue(GetBinFromRecyclingType(RecyclingType.Organic));
 
         availableBins[0] = GetNextBin();
@@ -89,8 +89,8 @@ public class BinsManager : MonoBehaviour
         {
             case RecyclingType.Paper: return PaperBin;
             case RecyclingType.Glass: return GlassBin;
-            case RecyclingType.Plastic: return PlasticBin;
-            case RecyclingType.Metal: return MetalBin;
+            case RecyclingType.PlasticMetal: return PlasticBin;
+            case RecyclingType.ElectronicsBatteries: return MetalBin;
             case RecyclingType.Organic: return OrganicBin;
             default:return null;
         }

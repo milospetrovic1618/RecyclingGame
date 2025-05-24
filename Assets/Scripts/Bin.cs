@@ -6,14 +6,14 @@ using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public enum RecyclingType
-//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary... i u BinsManager u switch GetBinFromRecyclingType
+//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_fullTrashList dictionary... i u BinsManager u switch GetBinFromRecyclingType
 {
     Paper,
-    Plastic,
-    Metal,
+    PlasticMetal,
+    ElectronicsBatteries,
     Glass,
     Organic,
-    matchNever
+    MatchNever
 }
 
 public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijante jer je fiksan broj... a za trash sam direktno iz runtime-a dodavao komponente jer ih spwanujem i tako mi je prirodnije i lakse(brze odradim tipove u odnosu da pravim varijante), a bins vec postoje
@@ -42,8 +42,8 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
                 TrashManager.Instance.AddNewPlayerInterval();
                 GameplayManager.Instance.CurrentScore++;
                 trashCount++;
-                Destroy(trashItem.gameObject);
-                TrashManager.Instance.trashList.Remove(trashItem);
+
+                TrashManager.Instance.DeactivateTrash(trashItem);
                 if (trashCount == maxTrashCount)
                 {
                     Shake();

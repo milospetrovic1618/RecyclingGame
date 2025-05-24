@@ -22,14 +22,14 @@ public class TrashManager : MonoBehaviour
     private float offset = 0.3f;
 
     public float referenceSpawnInterval;
-    float minInterval = 0.62f;//posto su deca u pitanju trebalo bi da stavimo malo vecu brojku
+    float minInterval = 0.55f;//posto su deca u pitanju trebalo bi da stavimo malo vecu brojku
     float maxInterval = 2.3f;
     public float actualSpawnInterval;
     float maxReferenceIntervalIncrease = 1f;//... - 100% max usporenje u odnosu na brzinu
     float maxReferenceIntervalDecrease = 1f;//... - 100% max ubrzavanje u odnosu na brzinu, 
     //ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
     float decayRate;
-    float targetTimeToReachMin = 60f;//180f;
+    float targetTimeToReachMin = 200f;//180f;
     float howCloseToConsiderReferenceReachedMin = 0.01f;
     public float averagePlayerInterval;//prosecan interval ubacivanja
     int numberForAverage = 5;
@@ -53,6 +53,8 @@ public class TrashManager : MonoBehaviour
    -mozda da se dodaje jos vise bodova sto je brzina spawna bliza maksimalnoj brzini*/
 
 
+    float timerAddNewTypes = 0;
+    float delayAddNewTypes = 30f;
 
 
     public float TimedExponentialDecay()
@@ -129,19 +131,32 @@ public class TrashManager : MonoBehaviour
             referenceSpawnInterval = TimedExponentialDecay();
             SetAveragePlayerInterval();
             //float maxReferenceIntervalDecrease = 0.5f;//50%, moci ce da ubrza speed za 50% maks, ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
-
             float referenceIntervalProgress = Mathf.Clamp01(totalTime / targetTimeToReachMin);//od 0 do 1 koliko je totalTime blizu targetTime
             float remainingProgress = 1 - referenceIntervalProgress; // od 0 do 1 jos koliko je progresa ostalo
             float minClamp = 1f - remainingProgress * maxReferenceIntervalDecrease;
             float maxClamp = 1f + remainingProgress * maxReferenceIntervalIncrease;
             //ovo se mnozi sa maxReferenceIntervalDecrease ili increase i znaci da su efekti usporavanja i ubrzavanja sve manji sto se blizi minIntervalu, usporavanje postaje manje jer treba da bude teze, ubrzavanje 
-
             actualSpawnInterval = referenceSpawnInterval * Mathf.Clamp(averagePlayerInterval / referenceSpawnInterval, minClamp, maxClamp);
 
             timerForSpawn = 0;
-            ThrowTrash();
+            if (trashList.Count > 1)
+            {
+                ThrowTrash();
+            }else
+            {
+                ThrowTrash();
+                ThrowTrash();
+                ThrowTrash();
+            }
             
         }
+        if (timerAddNewTypes > delayAddNewTypes)
+        {
+            timerAddNewTypes = 0;
+            GameplayManager.AddNewTrashType();
+            //AddNewType
+        }
+        timerAddNewTypes += Time.deltaTime;
         totalTime += Time.deltaTime;
         timerForSpawn += Time.deltaTime;
         currentPlayerInterval += Time.deltaTime;
@@ -229,9 +244,11 @@ public class TrashManager : MonoBehaviour
     {
         if (trashList.Contains(trash))//da ga ne sadrzi znacilo bi da je izbrisano
         {
+            trash.ToggleRigidBody(false);
+            trash.DeSelect();
             trashList.Remove(trash);
-            trash.gameObject.SetActive(false);
             deactivatedTrashObjectPooling.Enqueue(trash);
+            trash.gameObject.SetActive(false);
             //Destroy(trash.gameObject);
         }
     }
@@ -255,6 +272,18 @@ public class TrashManager : MonoBehaviour
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
 public class SpawnIntervalSimulator
 {
     float minInterval = 0.62f;

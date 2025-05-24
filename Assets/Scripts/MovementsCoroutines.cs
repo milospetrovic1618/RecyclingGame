@@ -164,6 +164,10 @@ public class MovementsCoroutines : MonoBehaviour
         float t = 0;
         while (t < 1f)
         {
+            if (transformToAnimate == null)
+            {
+                break;
+            }
             elapsedTime += Time.deltaTime;
             t = Mathf.Clamp01(elapsedTime / moveDuration);
             transformToAnimate.position = Vector3.Lerp(startPosition, targetPosition, t);

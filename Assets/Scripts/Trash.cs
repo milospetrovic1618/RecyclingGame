@@ -7,27 +7,32 @@ using System;
 using static UnityEngine.GraphicsBuffer;
 
 public enum TrashType
-//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_trashList dictionary
+//kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_fullTrashList dictionary
 {
-    CrumpledPaper,
     Cardboard,
-    Newspaper,
+    Paper1,
+    Paper2,
+    Paper3,
 
-    Bottle,
-    Cup,
-    Straw,
+    BottlePlastic,
+    PlasticMetal1,
+    PlasticMetal2,
+    PlasticMetal3,
 
-    BottleCap,
-    FoodCan,
-    SodaCan,
+    BatteryAA,
+    PhoneBroken,
+    Electronics1,
+    Electronics2,
 
-    Jar,
-    ClearBottle,
-    GreenBottle,
+    BottleClear,
+    BottleGreen,
+    BottleBrown,
+    Glass1,
 
     AppleCore,
     BananaPeel,
-    StaleBread
+    EggShells,
+    Organic1
 }
 
 
@@ -99,7 +104,7 @@ public class Trash : MonoBehaviour
         RecyclingType randomBin = BinsManager.Instance.availableBins[UnityEngine.Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
 
         // Get the trash list for that RecyclingType
-        List<TrashType> trashList = GameplayManager.bin_trashList[randomBin];
+        List<TrashType> trashList = GameplayManager.bin_availableTrashList[randomBin];
 
         // Get a random TrashType from that list
         TrashType randomTrash = trashList[UnityEngine.Random.Range(0, trashList.Count)];
@@ -108,14 +113,20 @@ public class Trash : MonoBehaviour
     }
     public void Select()
     {
-        outline.enabled = true;
-        transform.localScale = transform.localScale * 1.5f;
+        if (!outline.enabled)
+        {
+            outline.enabled = true;
+            transform.localScale = transform.localScale * 1.5f;
+        }
     }
 
     public void DeSelect()
     {
-        outline.enabled = false;
-        transform.localScale = transform.localScale / 1.5f;
+        if (outline.enabled)
+        {
+            outline.enabled = false;
+            transform.localScale = transform.localScale / 1.5f;
+        }
     }
     public void ToggleRigidBody(bool active)//za rigidbody nema enable disable
     {
@@ -142,10 +153,17 @@ public class Trash : MonoBehaviour
         ToggleRigidBody(false);//zbog buga da kad djubre pada ima rigidbody pa aktivira onu kantu koja vraca nazad
 
         IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform, transform);
+
+        GameplayManager.Instance.CurrentScore++;//mora ovde da ne bi pravilo bug
+        TrashManager.Instance.trashList.Remove(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
+        //napravio si da kad lete prema kanti vec se podrazumeva kao poen i ne racuna za maksTrashCount (izbacio si ga iz liste)
+
         Action myAction = () =>
         {
-            GameplayManager.Instance.CurrentScore++;
-            TrashManager.Instance.DeactivateTrash(this);
+            //GameplayManager.Instance.CurrentScore++;ovo sam izbacio
+            this.gameObject.SetActive(false);
+            ToggleRigidBody(false);
+            TrashManager.Instance.deactivatedTrashObjectPooling.Enqueue(this);
         };
 
         AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, myAction));

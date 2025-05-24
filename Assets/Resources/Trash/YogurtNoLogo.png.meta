@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3c4c8b4d434e1174bae51fefdb46988b
+guid: 99da22c299ef8754580a2880ccf498c1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6539845494953745017
-    second: BananaPeel_0
+      213: 8946537417353866111
+    second: YogurtNoLogo_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 300
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BananaPeel_0
+      name: YogurtNoLogo_0
       rect:
         serializedVersion: 2
-        x: 63
-        y: 87
-        width: 386
-        height: 338
+        x: 146
+        y: 82
+        width: 252
+        height: 295
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 785e7530c2dcd35a0800000000000000
-      internalID: -6539845494953745017
+      spriteID: f7b2e1b516c782c70800000000000000
+      internalID: 8946537417353866111
       vertices: []
       indices: 
       edges: []
@@ -158,8 +158,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      BananaPeel_0: -6539845494953745017
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
