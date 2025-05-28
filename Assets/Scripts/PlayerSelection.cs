@@ -86,7 +86,7 @@ public class PlayerSelection : MonoBehaviour
             {
                 press = false;
             }*/
-            if (Input.touchCount > 0)
+            if (Input.touchCount== 1)
             {
                 Touch touch = Input.GetTouch(0);
 
@@ -98,14 +98,8 @@ public class PlayerSelection : MonoBehaviour
                 //BOJAN: jedna linija koda, radi isto sto i ovaj dole kod :)
                 //BOJAN: moglo bi da se optimizuje sa nekim toggle-ovanjem, da ne ispitujes stalno touch phase, jer ovako u 
                 // Set press only when appropriate
-                if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-                {
-                    press = true;
-                }
-                else
-                {
-                    press = false;
-                }
+
+                press = true;
             }
         }
 

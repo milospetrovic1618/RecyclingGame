@@ -15,11 +15,11 @@ public class TrashManager : MonoBehaviour
     public float minXJankArea;
     public float maxXJankArea;
     public float minYJankArea;
-    
-    public List<Trash> trashList = new List<Trash>();
+    public List<Trash> trashList { get; private set; } = new List<Trash>();
+
     public Queue<Trash> deactivatedTrashObjectPooling = new Queue<Trash>();//posle ces da dodas object pooling... samo gledaj gde si koristio destroy
     public int maxTrash = 20;
-    private float offset = 0.3f;
+    public static  float offset = 0.3f;
 
     public float referenceSpawnInterval;
     float minInterval = 0.55f;//posto su deca u pitanju trebalo bi da stavimo malo vecu brojku
@@ -29,7 +29,7 @@ public class TrashManager : MonoBehaviour
     float maxReferenceIntervalDecrease = 1f;//... - 100% max ubrzavanje u odnosu na brzinu, 
     //ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
     float decayRate;
-    float targetTimeToReachMin = 200f;//180f;
+    float targetTimeToReachMin = 100f;//180f;
     float howCloseToConsiderReferenceReachedMin = 0.01f;
     public float averagePlayerInterval;//prosecan interval ubacivanja
     int numberForAverage = 5;
@@ -54,7 +54,7 @@ public class TrashManager : MonoBehaviour
 
 
     float timerAddNewTypes = 0;
-    float delayAddNewTypes = 30f;
+    float delayAddNewTypes = 20f;
 
 
     public float TimedExponentialDecay()
@@ -79,10 +79,10 @@ public class TrashManager : MonoBehaviour
         JunkArea.transform.localScale *= scaleMultiplier;
 
         bounds = sr.bounds;
-        minXJankArea = bounds.min.x + offset;
-        minYJankArea = bounds.min.y + offset;
-        maxXJankArea = bounds.max.x - offset;
-        maxYJankArea = bounds.max.y - offset;
+        minXJankArea = bounds.min.x + 1.5f * offset; //sve ovde ide * 2 jer zelis unutar fielda da se spawnuju stvari, da ne moze na ivicama
+        minYJankArea = bounds.min.y + 1.5f * offset;
+        maxXJankArea = bounds.max.x - 1.5f * offset;
+        maxYJankArea = bounds.max.y - 1.5f * offset;
 
         BeginningSpawn();
 
@@ -124,6 +124,7 @@ public class TrashManager : MonoBehaviour
         {
             ThrowTrash();
         }
+        UpdateHealthBar();
     }
     void Update()
     {
@@ -201,9 +202,11 @@ public class TrashManager : MonoBehaviour
             newTrash.gameObject.SetActive(true);
         }
 
-        newTrash.gameObject.transform.position = new Vector2(BootMain.Instance.viewRightX + 10f, 0);//da se ne bi videlo u screenu
+        newTrash.gameObject.transform.position = new Vector2(BootMain.Instance.viewRightX + 10f, 0);//da se ne bi videlo na screenu
         newTrash.Throw(GetRandomPositionInJunkArea());
         trashList.Add(newTrash);
+
+        UpdateHealthBar();
 
         if (trashList.Count > maxTrash)//> a ne >= zato sto spavnuje trash van vidokruga i player uopste ne moze da reaguje 
         {
@@ -251,11 +254,32 @@ public class TrashManager : MonoBehaviour
         {
             trash.ToggleRigidBody(false);
             trash.DeSelect();
-            trashList.Remove(trash);
+            RemoveFromList(trash);
+
             deactivatedTrashObjectPooling.Enqueue(trash);
             trash.gameObject.SetActive(false);
             //Destroy(trash.gameObject);
         }
+    }
+
+    public void RemoveFromList(Trash trash)
+    {
+        if (trashList.Contains(trash))
+        {
+            trashList.Remove(trash);
+            UpdateHealthBar();
+        }
+    }
+    private void UpdateHealthBar()
+    {
+        float fill = (float)(maxTrash - trashList.Count) / maxTrash;
+        BootGameplay.Instance.HealthBar.fillAmount = fill;
+        BootGameplay.Instance.HealthBar.color = Color.Lerp(Color.red, Color.cyan, fill);
+    }
+
+    public int TrashCount()
+    {
+        return trashList.Count;
     }
 
     //BOJAN: ovo ne mora da se kompajluje, tako da sakrij ga iza #IF UNITY_EDITOR, a realno ne bi uopste trebalo da stoji u TrashManageru :P

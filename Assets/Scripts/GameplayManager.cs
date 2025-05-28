@@ -25,14 +25,14 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
     public static Dictionary<TrashType, RecyclingType> trash_bin = new Dictionary<TrashType, RecyclingType>()
     {// Paper
     { TrashType.Cardboard, RecyclingType.Paper },
-    { TrashType.Paper1, RecyclingType.Paper },
-    { TrashType.Paper2, RecyclingType.Paper },
+    { TrashType.Paper, RecyclingType.Paper },
+    { TrashType.PaperBag, RecyclingType.Paper },
     { TrashType.Paper3, RecyclingType.Paper },
 
     // Plastic & Metal
     { TrashType.BottlePlastic, RecyclingType.PlasticMetal },
-    { TrashType.PlasticMetal1, RecyclingType.PlasticMetal },
-    { TrashType.PlasticMetal2, RecyclingType.PlasticMetal },
+    { TrashType.YogurtLogo, RecyclingType.PlasticMetal },
+    { TrashType.YogurtNoLogo, RecyclingType.PlasticMetal },
     { TrashType.PlasticMetal3, RecyclingType.PlasticMetal },
 
     // Electronics & Batteries
@@ -58,8 +58,8 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
     {{ RecyclingType.Paper, new List<TrashType>
         {
             TrashType.Cardboard,
-            TrashType.Paper1,
-            TrashType.Paper2,
+            TrashType.Paper,
+            TrashType.PaperBag,
             TrashType.Paper3
         }
     },
@@ -67,8 +67,8 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
     { RecyclingType.PlasticMetal, new List<TrashType>
         {
             TrashType.BottlePlastic,
-            TrashType.PlasticMetal1,
-            TrashType.PlasticMetal2,
+            TrashType.YogurtLogo,
+            TrashType.YogurtNoLogo,
             TrashType.PlasticMetal3
         }
     },
@@ -136,9 +136,9 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
         }
     }
 
-    public Action<int> onScoreChanged;     
-    private int currentScore;
-    public int CurrentScore
+    public Action<float> onScoreChanged;     
+    private float currentScore = 0;
+    private float CurrentScore
     {
         get => currentScore;
         set
@@ -148,13 +148,16 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
             onScoreChanged?.Invoke(currentScore);
         }
     }
-
+    public void ScoreIncrease(RecyclingType recyclingType)
+    {
+        CurrentScore += SaveSystem.Instance.Player.ScoreIncrease(recyclingType);
+    }
 
     private void Awake()
     {
         Instance = this; 
 
-        onScoreChanged = score => BootGameplay.Instance.scoreText.text = score.ToString();
+        onScoreChanged = score => BootGameplay.Instance.scoreText.text = ((int)score).ToString();
 
         AddNewTrashType();
     }

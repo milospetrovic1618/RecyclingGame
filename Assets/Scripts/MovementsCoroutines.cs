@@ -133,6 +133,8 @@ public class MovementsCoroutines : MonoBehaviour
         transformToAnimate.position = endPos;
 
     }
+
+    //ovo treba da se nalazi unutar klase/objekta za koju je korutina vezana... i onda ne mozes da stopiras ovakve korutine jer nemas referencu na yield return StartCoroutine(coroutine); tj na korutinu nakon koje ide callback
     /*public void StartCoroutineWithCallback(IEnumerator coroutine, Action<object[]> callback, params object[] args)
     {
         StartCoroutine(RunCoroutineAndCallback(coroutine, callback, args));
@@ -143,7 +145,9 @@ public class MovementsCoroutines : MonoBehaviour
         yield return StartCoroutine(coroutine);
         callback?.Invoke(args);
     }*/
-    public Coroutine StartCoroutineWithCallback(IEnumerator enumerator, Action callback)
+
+    //ovo treba da se nalazi unutar klase/objekta za koju je korutina vezana... i onda ne mozes da stopiras ovakve korutine jer nemas referencu na yield return StartCoroutine(coroutine);
+    /*public Coroutine StartCoroutineWithCallback(IEnumerator enumerator, Action callback)
     {
         return StartCoroutine(RunCoroutineAndCallback(enumerator, callback));
     }
@@ -152,7 +156,7 @@ public class MovementsCoroutines : MonoBehaviour
     {
         yield return StartCoroutine(coroutine);
         callback?.Invoke();
-    }
+    }*/
     public IEnumerator MoveToPosition(Vector2 targetPosition, Transform transformToAnimate, float moveDuration)
     {
         Vector3 startPosition;
@@ -177,29 +181,47 @@ public class MovementsCoroutines : MonoBehaviour
     }
     public IEnumerator ShakingIndefinitely(Transform transformToAnimate)
     {
-        float magnitude = 0.1f; 
-        float delay = 0.05f;//da se ne shakuje previse brzo
+        float magnitude = 0.1f;
+        float smoothTime = 0.05f;
 
         Vector3 originalPosition = transformToAnimate.localPosition;
-
-        float elapsed = 0f;
+        Vector3 targetPosition = originalPosition;
+        Vector3 currentVelocity = Vector3.zero;
 
         while (true)
         {
-            float offsetX = UnityEngine.Random.Range(-0.5f, 0.5f) * magnitude;
-            float offsetY = UnityEngine.Random.Range(-0.5f, 0.5f) * magnitude;
+            // Pick a new random target offset
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-1f, 1f),
+                UnityEngine.Random.Range(-1f, 1f),
+                0f
+            ) * magnitude;
 
-            transformToAnimate.localPosition = originalPosition + new Vector3(offsetX, offsetY, 0f);
+            targetPosition = originalPosition + randomOffset;
 
-            elapsed += Time.deltaTime;
-            yield return new WaitForSeconds(delay);
+            float t = 0f;
+            float duration = 0.1f; // How long to move to new target
+
+            while (t < duration)
+            {
+                t += Time.deltaTime;
+
+                transformToAnimate.localPosition = Vector3.SmoothDamp(
+                    transformToAnimate.localPosition,
+                    targetPosition,
+                    ref currentVelocity,
+                    smoothTime
+                );
+
+                yield return null; // smooth per frame
+            }
         }
     }
 
-    public IEnumerator CurveMoveFollow(Transform transformToFollow, Transform transformToAnimate)
+    public IEnumerator CurveMoveFollow(Transform transformToFollow, Transform transformToAnimate, Vector2 offset)
     {
         Vector2 startPos = transformToAnimate.position;
-        float duration = 0.7f;
+        float duration = 0.5f;
 
         float curveHeightReference = 4f;
         float curveHeightCameraSizeReference = 10f;
@@ -207,10 +229,11 @@ public class MovementsCoroutines : MonoBehaviour
 
         bool clockwise = UnityEngine.Random.value < 0.5f;
 
+        //ovo je endPosition ((Vector2)transformToFollow.position + offset)
 
-        Vector2 direction = ((Vector2)transformToFollow.position - startPos).normalized;
+        Vector2 direction = (((Vector2)transformToFollow.position + offset) - startPos).normalized;
         Vector2 perpendicular = clockwise ? new Vector2(-direction.y, direction.x) : new Vector2(direction.y, -direction.x); // 90 stepeni rotira
-        Vector2 control = (startPos + (Vector2)transformToFollow.position) / 2 + perpendicular * curveHeight;
+        Vector2 control = (startPos + ((Vector2)transformToFollow.position + offset)) / 2 + perpendicular * curveHeight;
 
         //napravi da se izabere Vector2 perpendicular = new Vector2(-direction.y, direction.x);  ili new Vector2(direction.y, -direction.x)
 
@@ -225,7 +248,7 @@ public class MovementsCoroutines : MonoBehaviour
             // Quadratic Bezier interpolation
             Vector2 position = Mathf.Pow(1 - t, 2) * startPos +
                                2 * (1 - t) * t * control +
-                               Mathf.Pow(t, 2) * (Vector2)transformToFollow.position;
+                               Mathf.Pow(t, 2) * ((Vector2)transformToFollow.position + offset);
 
             //ovu proveru si morao da dodas zbog buga gde se izbrise tah gameobject sa tim transformom
             if (transformToAnimate != null)
@@ -244,7 +267,7 @@ public class MovementsCoroutines : MonoBehaviour
         if (transformToAnimate != null)
         //ovu proveru si morao da dodas zbog buga gde se izbrise tah gameobject sa tim transformom
         {
-            transformToAnimate.position = (Vector2)transformToFollow.position;
+            transformToAnimate.position = ((Vector2)transformToFollow.position + offset);
         }
 
     }

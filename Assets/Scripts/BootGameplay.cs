@@ -8,6 +8,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using TMPro;
+
 public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde pr camera
 {
     public static BootGameplay Instance;
@@ -15,13 +17,14 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
     //junk Area
     //ui
     //gameplay script Holder
-    public Text scoreText;
+    public TextMeshProUGUI scoreText;
     public GameObject PauseUI;
     public GameObject PauseButton;
     public GameObject GameOverUI;
     public UnityEngine.UI.Image SoundToggle;
     public Sprite SoundOnTex;
     public Sprite SoundOffTex;
+    public UnityEngine.UI.Image HealthBar;
 
     public void Awake()
     {

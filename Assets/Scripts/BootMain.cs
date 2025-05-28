@@ -11,7 +11,8 @@ public enum Scenes
 {
     Menu,
     Gameplay,
-    Boot
+    Boot,
+    Test
 }
 //redosled u executionOrder - prvo boot, pa Data, pa ostalo
 //binsManager pre TrashManager  jer se koristi za random

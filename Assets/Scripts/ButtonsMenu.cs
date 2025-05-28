@@ -10,7 +10,7 @@ public class ButtonsMenu : MonoBehaviour
     public void LoadGameplay()
     {
         SoundManager.Instance.PlayButtonClick();
-        BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Test);
     }
 
     public void LoadQuiz()

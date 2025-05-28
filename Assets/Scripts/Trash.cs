@@ -5,18 +5,19 @@ using UnityEngine.UI;
 using OutlineFx;
 using System;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
 
 public enum TrashType
 //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_fullTrashList dictionary
 {
     Cardboard,
-    Paper1,
-    Paper2,
+    Paper,
+    PaperBag,
     Paper3,
 
     BottlePlastic,
-    PlasticMetal1,
-    PlasticMetal2,
+    YogurtLogo,
+    YogurtNoLogo,
     PlasticMetal3,
 
     BatteryAA,
@@ -45,6 +46,7 @@ public class Trash : MonoBehaviour
     public Rigidbody2D rigidbody;
     public OutlineFx.OutlineFx outline;
     public Coroutine movementCoroutine;
+    public Coroutine coroutineWithCallback;
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer(Layer.Trash.ToString());
@@ -52,6 +54,8 @@ public class Trash : MonoBehaviour
         spriteRenderer.sortingLayerName = SortingLayer.Trash.ToString();
         collider = gameObject.AddComponent<PolygonCollider2D>();
         outline = gameObject.AddComponent<OutlineFx.OutlineFx>();
+
+        
         //ToggleRigidBody(true);
         DeSelect();
     }
@@ -133,6 +137,7 @@ public class Trash : MonoBehaviour
         if (active)
         {
             rigidbody = gameObject.AddComponent<Rigidbody2D>(); //ovde dobijas bug kad se izbrisu svi objekti sa ekrana a ti i dalje drzis objekat.. to ces da resis tako sto ces da proveris da li i dalje postoji unutar trash list... sto proveravas ali player selection
+            
         }
         else
         {
@@ -152,10 +157,10 @@ public class Trash : MonoBehaviour
     {
         ToggleRigidBody(false);//zbog buga da kad djubre pada ima rigidbody pa aktivira onu kantu koja vraca nazad
 
-        IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform, transform);
+        IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform.Find("Rotator"), transform, new Vector2(0,BinsManager.Instance.binHeight + 0.5f));//GetBin().transform.Find("Rotator") ovo je velika greska?
 
-        GameplayManager.Instance.CurrentScore++;//mora ovde da ne bi pravilo bug
-        TrashManager.Instance.trashList.Remove(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
+        GameplayManager.Instance.ScoreIncrease(GetRecyclingType());//mora ovde da ne bi pravilo bug
+        TrashManager.Instance.RemoveFromList(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
         //napravio si da kad lete prema kanti vec se podrazumeva kao poen i ne racuna za maksTrashCount (izbacio si ga iz liste)
 
         Action myAction = () =>
@@ -166,7 +171,7 @@ public class Trash : MonoBehaviour
             TrashManager.Instance.deactivatedTrashObjectPooling.Enqueue(this);
         };
 
-        AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, myAction));
+        AssignMovementCoroutine(enumerator, myAction);
         //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
     }
     public void MoveToPosition(Vector2 target, bool toggleRigidBody)
@@ -179,31 +184,50 @@ public class Trash : MonoBehaviour
             ToggleRigidBody(toggleRigidBody);
         };
 
-        IEnumerator enumerator = MovementsCoroutines.Instance.MoveToPosition(target, this.transform, 0.5f);
-        AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, toggleRigidBodyAction));
+        IEnumerator enumerator = MovementsCoroutines.Instance.MoveToPosition(target, this.transform, 0.3f);
+        AssignMovementCoroutine(enumerator, toggleRigidBodyAction);
 
         //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
     }
-    public void AssignMovementCoroutine(Coroutine newCoroutine) //hteo sam da stavim ove korutine direktno na trash ali ovako mi urednije i lakse
+    public Coroutine StartCoroutineWithCallback(IEnumerator enumerator, Action callback)
     {
-        StopCoroutineMovement();//posto kod trash moze samo jedno pomeranje
-        movementCoroutine = newCoroutine;
+        return StartCoroutine(RunCoroutineAndCallback(enumerator, callback)); ;
+    }
+
+    private IEnumerator RunCoroutineAndCallback(IEnumerator coroutine, Action callback)
+    {
+        coroutineWithCallback = StartCoroutine(coroutine); // Save reference to the actual routine
+        yield return coroutineWithCallback;                // Wait for it to finish
+        callback?.Invoke();                         // Then invoke callback
+    }
+    public void AssignMovementCoroutine(IEnumerator enumerator, Action callback = null)
+    {
+        StopCoroutineMovement(); // Stop existing one
+        movementCoroutine = callback == null
+            ? StartCoroutine(enumerator)
+            : StartCoroutine(RunCoroutineAndCallback(enumerator, callback));
     }
 
     public void Throw(Vector2 target)
     {
         IEnumerator enumerator = MovementsCoroutines.Instance.Throw(target, this.transform);
         //Debug.Log("nooooonooooooooolapolizia");
-        AssignMovementCoroutine(StartCoroutine(enumerator));
+        AssignMovementCoroutine(enumerator);
     }
 
     // Stops the movement and destroys the component
     public void StopCoroutineMovement()
     {
-        if (movementCoroutine != null)
+        if (movementCoroutine != null)//ako izbrises ovu proveru desice se zbrka
         {
             StopCoroutine(movementCoroutine);
             movementCoroutine = null;
+        }
+
+        if (coroutineWithCallback != null)
+        {
+            StopCoroutine(coroutineWithCallback);
+            coroutineWithCallback = null;
         }
     }
     //animations

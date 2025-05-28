@@ -26,6 +26,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     [SerializeField]
     public int maxTrashCount = 5;
     public Coroutine movementCoroutine;
+    public Coroutine coroutineWithCallback;
     private void Awake()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -40,7 +41,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
             {
                 SoundManager.Instance.PlaySFX(SoundManager.Instance.enterBin);
                 TrashManager.Instance.AddNewPlayerInterval();
-                GameplayManager.Instance.CurrentScore++;
+                GameplayManager.Instance.ScoreIncrease(binType);
                 trashCount++;
 
                 TrashManager.Instance.DeactivateTrash(trashItem);
@@ -98,14 +99,26 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         };
 
         IEnumerator enumerator = MovementsCoroutines.Instance.MoveToPosition(target, this.transform, moveDuration);
-        AssignMovementCoroutine(MovementsCoroutines.Instance.StartCoroutineWithCallback(enumerator, toggleOpenBinAction));
+        AssignMovementCoroutine(enumerator, toggleOpenBinAction);
 
         //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
+    }
+
+    public Coroutine StartCoroutineWithCallback(IEnumerator enumerator, Action callback)
+    {
+        return StartCoroutine(RunCoroutineAndCallback(enumerator, callback)); ;
+    }
+
+    private IEnumerator RunCoroutineAndCallback(IEnumerator coroutine, Action callback)
+    {
+        coroutineWithCallback = StartCoroutine(coroutine); // Save reference to the actual routine
+        yield return coroutineWithCallback;                // Wait for it to finish
+        callback?.Invoke();                         // Then invoke callback
     }
     public void Shake()
     {
         IEnumerator enumerator = MovementsCoroutines.Instance.ShakingIndefinitely(this.transform);
-        AssignMovementCoroutine(StartCoroutine(enumerator));
+        AssignMovementCoroutine(enumerator);
     }
     public void StopShaking()
     {
@@ -114,20 +127,29 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         //posto naglo prekines shaking coroutinu ali je pozicija moze da bude pomerena jer je shaking
         transform.position = BinsManager.Instance.visibleRowPositions[BinsManager.Instance.GetPositionIndex(this)];
     }
-    public void AssignMovementCoroutine(Coroutine newCoroutine) //hteo sam da stavim ove korutine direktno na trash ali ovako mi urednije i lakse
+
+    public void AssignMovementCoroutine(IEnumerator enumerator, Action callback = null)
     {
-        StopCoroutineMovement();//posto kod trash moze samo jedno pomeranje
-        movementCoroutine = newCoroutine;
+        StopCoroutineMovement(); // Stop existing one
+        movementCoroutine = callback == null
+            ? StartCoroutine(enumerator)
+            : StartCoroutine(RunCoroutineAndCallback(enumerator, callback));
     }
 
 
     // Stops the movement and destroys the component
     public void StopCoroutineMovement()
     {
-        if (movementCoroutine != null)
+        if (movementCoroutine != null)//ako izbrises ovu proveru desice se zbrka
         {
             StopCoroutine(movementCoroutine);
             movementCoroutine = null;
+        }
+
+        if (coroutineWithCallback != null)
+        {
+            StopCoroutine(coroutineWithCallback);
+            coroutineWithCallback = null;
         }
     }
 }

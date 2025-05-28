@@ -11,7 +11,9 @@ public class BinsManager : MonoBehaviour
     public Bin PlasticBin;
     public Bin MetalBin;
     public Bin OrganicBin;
-    public Bin Missed;
+    public Bin MissedBottom;
+    public Bin MissedRight;
+    public Bin MissedLeft;
     public static BinsManager Instance;
     public Bin[] availableBins = new Bin[3];
     public int neededBins = 3;//za tutorijale treba 1 i 2
@@ -54,7 +56,9 @@ public class BinsManager : MonoBehaviour
 
         notAvailableBinsPosition = new Vector2(0, BootMain.Instance.viewBottomY - (binHeight + 0.4f)*2.1f);
 
-        Missed.transform.localScale = new Vector2((3* BootMain.Instance.viewWidth)/binWidth, 1);//3 * da se osigura da je dovoljno dugo
+        MissedBottom.transform.localScale = new Vector2(3* BootMain.Instance.viewWidth, 1);//3 * da se osigura da je dovoljno dugo
+        MissedLeft.transform.localScale = new Vector2(1, 3 * BootMain.Instance.viewHeight);
+        MissedRight.transform.localScale = new Vector2(1, 3 * BootMain.Instance.viewHeight);
 
         SetInitial();
         //Debug.Log(AssignBinHeight(PaperBin) + " +++++++");
@@ -81,7 +85,9 @@ public class BinsManager : MonoBehaviour
             bin.transform.position = notAvailableBinsPosition;
         }
 
-        Missed.transform.position = visibleRowPositions[1];//stavi ga na sredinu
+        MissedBottom.transform.position = visibleRowPositions[1];//stavi ga na sredinu
+        MissedLeft.transform.position = new Vector2(BootMain.Instance.viewLeftX + TrashManager.offset, 0);
+        MissedRight.transform.position = new Vector2(BootMain.Instance.viewRightX - TrashManager.offset, 0);
     }
     public Bin GetBinFromRecyclingType(RecyclingType recyclingType)
     {
