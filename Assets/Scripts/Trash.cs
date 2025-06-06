@@ -159,7 +159,7 @@ public class Trash : MonoBehaviour
 
         IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform.Find("Rotator"), transform, new Vector2(0,BinsManager.Instance.binHeight + 0.5f));//GetBin().transform.Find("Rotator") ovo je velika greska?
 
-        GameplayManager.Instance.ScoreIncrease(GetRecyclingType());//mora ovde da ne bi pravilo bug
+        // zbog prikaza skora iznad kanti ne moze ovako GameplayManager.Instance.ScoreIncrease(GetRecyclingType());//mora ovde da ne bi pravilo bug
         TrashManager.Instance.RemoveFromList(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
         //napravio si da kad lete prema kanti vec se podrazumeva kao poen i ne racuna za maksTrashCount (izbacio si ga iz liste)
 

@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags: []
   layers:
   - Default
@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Pattern
+    uniqueID: 3567381059
+    locked: 0
   - name: JunkArea
     uniqueID: 952887163
     locked: 0
@@ -50,3 +53,8 @@ TagManager:
   - name: Bins
     uniqueID: 1215805407
     locked: 0
+  - name: Score
+    uniqueID: 3929291111
+    locked: 0
+  m_RenderingLayers:
+  - Default

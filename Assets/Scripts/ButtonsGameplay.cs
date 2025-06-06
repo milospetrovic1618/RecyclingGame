@@ -1,10 +1,216 @@
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading;
+using TMPro;
 using UnityEngine;
 
 public class ButtonsGameplay : MonoBehaviour
 {
+    public Dictionary<string, (string[] answers, string correctAnswer, string explanation)> quizData =
+    new Dictionary<string, (string[] answers, string correctAnswer, string explanation)>()
+{
+    {
+        "How long can it take a glass bottle to break down in a landfill?",
+        (
+            new[] { "1 year", "100 years", "Over 1,000 years" },
+            "Over 1,000 years",
+            "Glass takes a really long time to break down — over a thousand years! That’s why recycling it is so important."
+        )
+    },
+    {
+        "What kind of recycling involves food and garden waste?",
+        (
+            new[] { "Sorting", "Composting", "Filtering" },
+            "Composting",
+            "Composting turns leftovers, fruit peels, and garden clippings into nutrient-rich soil."
+        )
+    },
+    {
+        "Which of these items is the best to put in a compost bin?",
+        (
+            new[] { "Banana peel", "Plastic spoon", "Glass jar" },
+            "Banana peel",
+            "Banana peels break down easily and help make healthy compost. The others belong in the trash or recycling."
+        )
+    },
+    {
+        "Which of these is made from trees?",
+        (
+            new[] { "Plastic bottle", "Cardboard box", "Glass cup" },
+            "Cardboard box",
+            "Cardboard is made from paper, which comes from trees. Recycling cardboard helps save forests!"
+        )
+    },
+    {
+        "What symbol shows something is recyclable?",
+        (
+            new[] { "Heart", "Triangle", "Star" },
+            "Triangle",
+            "The triangle with arrows is called the recycling symbol. If you see it, it usually means the item can be recycled."
+        )
+    },
+    {
+        "What does compost turn into?",
+        (
+            new[] { "Dirt", "Water", "Plastic" },
+            "Dirt",
+            "Compost becomes dark, crumbly soil that’s great for plants. It’s like nature’s way of recycling food scraps!"
+        )
+    },
+    {
+        "If you can’t recycle an item, what’s the best thing to do?",
+        (
+            new[] { "Throw it in the trash", "Reuse or repurpose it", "Bury it" },
+            "Reuse or repurpose it",
+            "Instead of throwing things away, reusing or repurposing them gives items a second life and reduces trash."
+        )
+    },
+    {
+        "True or False: Glass can be recycled forever without losing quality.",
+        (
+            new[] { "True", "False" },
+            "True",
+            "Glass doesn’t wear out — it can be melted and reused again and again without changing how strong or clear it is!"
+        )
+    },
+    {
+        "True or False: You can put food-covered containers directly into the recycling bin.",
+        (
+            new[] { "True", "False" },
+            "False",
+            "Food can spoil the recycling process. Containers need to be clean so they don’t contaminate other items."
+        )
+    },
+    {
+        "True or False: You should rinse out containers before putting them in the recycling bin.",
+        (
+            new[] { "True", "False" },
+            "True",
+            "A quick rinse helps keep the recycling clean and makes it easier to turn it into something new."
+        )
+    },
+    {
+        "True or False: You should flatten cardboard boxes before recycling them.",
+        (
+            new[] { "True", "False" },
+            "True",
+            "Flattening boxes saves space in the bin and makes it easier to collect and process the cardboard."
+        )
+    },
+    {
+        "True or False: Composting helps make healthy soil.",
+        (
+            new[] { "True", "False" },
+            "True",
+            "Composting turns food scraps and leaves into rich, healthy soil that helps plants grow!"
+        )
+    }
+};
 
+    public static string[] ShuffleArray(string[] array)
+    {
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            string temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+    public string chosenQuestionKey;
+    public void ContinueTry()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, quizData.Count);
+        chosenQuestionKey = quizData.Keys.ElementAt(randomIndex);
+
+        //
+
+
+        BootGameplay.Instance.PauseUI.SetActive(false);
+        BootGameplay.Instance.GameOverUI.SetActive(false);
+        BootGameplay.Instance.Quiz.SetActive(true);
+        BootGameplay.Instance.Quiz_Question.text = chosenQuestionKey;
+        BootGameplay.Instance.scoreHolder.SetActive(false);
+        if (quizData[chosenQuestionKey].answers.Length == 3)
+        {
+            BootGameplay.Instance.Quiz1.SetActive(true);
+            BootGameplay.Instance.Quiz2.SetActive(false);
+
+
+            
+            //assign shuffledArray, ovo nije potrebno jer moze i direktno random na text na buttonu ali ok je
+            quizData[chosenQuestionKey] = (ShuffleArray(quizData[chosenQuestionKey].answers.ToArray()), quizData[chosenQuestionKey].correctAnswer, quizData[chosenQuestionKey].explanation);
+
+            BootGameplay.Instance.Quiz1_Button1.text = quizData[chosenQuestionKey].answers[0];
+            BootGameplay.Instance.Quiz1_Button2.text = quizData[chosenQuestionKey].answers[1];
+            BootGameplay.Instance.Quiz1_Button3.text = quizData[chosenQuestionKey].answers[2];
+        }
+        else//==2
+        {
+            BootGameplay.Instance.Quiz1.SetActive(false);
+            BootGameplay.Instance.Quiz2.SetActive(true);
+
+            //doesnt shuffle
+            BootGameplay.Instance.Quiz2_Button1.text = quizData[chosenQuestionKey].answers[0];
+            BootGameplay.Instance.Quiz2_Button2.text = quizData[chosenQuestionKey].answers[1];
+        }
+
+        //Destroy(BootGameplay.Instance.ContinueButton.gameObject);
+    }
+    public void QuizAnswer(TextMeshProUGUI TMP)
+    {
+        string answer = TMP.text;
+        bool correct = quizData[chosenQuestionKey].correctAnswer == answer;
+
+        if (correct)
+        {
+            Continue();
+        }
+        else
+        {
+            Home();
+        }
+        Debug.Log(correct);
+    }
+    public void Continue()
+    {
+        Time.timeScale = 1f;
+        BootGameplay.Instance.Quiz.SetActive(false);
+        BootGameplay.Instance.PauseButton.SetActive(true);
+        BootGameplay.Instance.scoreHolder.SetActive(true);
+
+        if (GraduallyReturnSpawnRateCoroutine != null)
+        {
+            StopCoroutine(GraduallyReturnSpawnRateCoroutine);
+        }
+        GraduallyReturnSpawnRateCoroutine = StartCoroutine(GraduallyReturnSpawnRate());
+    }
+    Coroutine GraduallyReturnSpawnRateCoroutine;
+    public IEnumerator GraduallyReturnSpawnRate()//USPORAVA BRZINU SPAWNOVANJA NA POCETKU
+    {
+    
+        float maxTimeToReturnToNormal = 25f;//za ovoliko ide od maks do min intervala, ali ako nije min interval moze i brze
+        float minInterval = TrashManager.Instance.minInterval;
+        float maxInterval = TrashManager.Instance.maxInterval;
+        float refreshInterval = minInterval - 0.05f;//malo manje nego min da se ne bi poklapalo
+        float subtractEveryInterval = (maxInterval - minInterval) / (maxTimeToReturnToNormal / refreshInterval);
+        float curRateBeforeGameOver = maxInterval;// TrashManager.Instance.actualSpawnInterval;
+        Debug.Log($"kkkk  curRateBeforeGameOver {curRateBeforeGameOver} referenceSpawnInterval {TrashManager.Instance.referenceSpawnInterval} actualSpawnInterval {TrashManager.Instance.actualSpawnInterval} subtractEveryInterval {subtractEveryInterval}");
+        while (TrashManager.Instance.referenceSpawnInterval < curRateBeforeGameOver)
+        {
+            Debug.Log($" curRateBeforeGameOver {curRateBeforeGameOver} referenceSpawnInterval {TrashManager.Instance.referenceSpawnInterval} actualSpawnInterval {TrashManager.Instance.actualSpawnInterval} subtractEveryInterval {subtractEveryInterval}");
+            TrashManager.Instance.actualSpawnInterval = curRateBeforeGameOver;
+
+            curRateBeforeGameOver -= subtractEveryInterval;
+            yield return new WaitForSeconds(refreshInterval) ;
+        }
+        //na interval od min,  oduzimaj od max po malo sve dok ne bude manji od curRateBeforeGameOver, tad nemoj da postavljas nego prestani
+        //na interval od min zato sto na toliko najbrze moze da se updatuje interval u trashManageru, pa nema potrebe u svakom frame-u
+    }
     public void TogglePause()
     {
         bool pause = !BootGameplay.Instance.PauseUI.activeSelf;

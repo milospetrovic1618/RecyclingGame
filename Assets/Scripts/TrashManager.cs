@@ -11,6 +11,7 @@ public class TrashManager : MonoBehaviour
 {
     public static TrashManager Instance;
     public GameObject JunkArea;
+    public SpriteRenderer junkAreaRenderer;
     public float maxYJankArea;
     public float minXJankArea;
     public float maxXJankArea;
@@ -22,14 +23,14 @@ public class TrashManager : MonoBehaviour
     public static  float offset = 0.3f;
 
     public float referenceSpawnInterval;
-    float minInterval = 0.55f;//posto su deca u pitanju trebalo bi da stavimo malo vecu brojku
-    float maxInterval = 2.3f;
+    public float minInterval = 0.50f;//posto su deca u pitanju trebalo bi da stavimo malo vecu brojku
+    public float maxInterval = 2.3f;
     public float actualSpawnInterval;
     float maxReferenceIntervalIncrease = 1f;//... - 100% max usporenje u odnosu na brzinu
     float maxReferenceIntervalDecrease = 1f;//... - 100% max ubrzavanje u odnosu na brzinu, 
     //ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
     float decayRate;
-    float targetTimeToReachMin = 100f;//180f;
+    float targetTimeToReachMin = 120f;//180f;
     float howCloseToConsiderReferenceReachedMin = 0.01f;
     public float averagePlayerInterval;//prosecan interval ubacivanja
     int numberForAverage = 5;
@@ -124,7 +125,7 @@ public class TrashManager : MonoBehaviour
         {
             ThrowTrash();
         }
-        UpdateHealthBar();
+        UpdateHealth();
     }
     void Update()
     {
@@ -206,7 +207,7 @@ public class TrashManager : MonoBehaviour
         newTrash.Throw(GetRandomPositionInJunkArea());
         trashList.Add(newTrash);
 
-        UpdateHealthBar();
+        UpdateHealth();
 
         if (trashList.Count > maxTrash)//> a ne >= zato sto spavnuje trash van vidokruga i player uopste ne moze da reaguje 
         {
@@ -267,16 +268,50 @@ public class TrashManager : MonoBehaviour
         if (trashList.Contains(trash))
         {
             trashList.Remove(trash);
-            UpdateHealthBar();
+            UpdateHealth();
         }
     }
-    private void UpdateHealthBar()
+    private void UpdateHealth()
     {
-        float fill = (float)(maxTrash - trashList.Count) / maxTrash;
+        /* bilo nekad float fill = (float)(maxTrash - trashList.Count) / maxTrash;
         BootGameplay.Instance.HealthBar.fillAmount = fill;
-        BootGameplay.Instance.HealthBar.color = Color.Lerp(Color.red, Color.cyan, fill);
-    }
+        BootGameplay.Instance.HealthBar.color = Color.Lerp(Color.red, Color.cyan, fill);*/
 
+        Color target = Color.white;
+        int health = maxTrash - trashList.Count;
+        if (health <= maxTrash/3f)//vece od dve trecine
+        {
+            //Debug.Log("tripitropi " + trashList.Count); 
+            float t = health/(maxTrash / 3f);
+            Color pink = new Color(1f, 0.5f, 0.5f, 1f);
+            target = Color.Lerp(pink,Color.white, t);
+        }
+        if (target != junkAreaRenderer.color)
+        {
+            if (changingColorJunkArea != null)
+            {
+                StopCoroutine(changingColorJunkArea);
+            }
+            changingColorJunkArea = StartCoroutine(GraduallyChangeColor(actualSpawnInterval, target));
+        }
+        //Debug.Log("uslo je " + color.ToString());
+    }
+    private Coroutine changingColorJunkArea;
+    private IEnumerator GraduallyChangeColor(float time, Color target)
+    {
+        Color startColor = junkAreaRenderer.color;
+        float elapsed = 0f;
+
+        while (elapsed < time)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / time;
+            junkAreaRenderer.color = Color.Lerp(startColor, target, t);
+            yield return null;
+        }
+
+        junkAreaRenderer.color = target; // ensure exact end color
+    }
     public int TrashCount()
     {
         return trashList.Count;

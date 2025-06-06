@@ -6,6 +6,7 @@ using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Mathematics;
+using TMPro;
 
 public enum Scenes
 {
@@ -29,9 +30,9 @@ public class BootMain : MonoBehaviour
 
     public SoundManager soundManager;
     public GameObject CameraInstantiated;
-    public Camera cam;
     public GameObject EventSystemInstantiated;
     public GameObject SoundManagerInstantiated;
+    public Camera cam;
 
     public float viewWidth;
     public float viewHeight;
@@ -39,6 +40,8 @@ public class BootMain : MonoBehaviour
     public float viewLeftX;
     public float viewBottomY;
     public float viewTopY;
+
+    public TMP_FontAsset LuckiestGuy;
     public void Awake()
     {
         Instance = this;
@@ -48,10 +51,8 @@ public class BootMain : MonoBehaviour
         CameraInstantiated = Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity);
         CameraInstantiated.tag = "MainCamera";
         cam = CameraInstantiated.GetComponent<Camera>();//mora camera instatiated da bi dobilo tacan width
-        peristantGameObjects.Add(CameraInstantiated);
 
         EventSystemInstantiated = Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
-        peristantGameObjects.Add(EventSystemInstantiated);
 
         SoundManagerInstantiated = new GameObject();
         soundManager = SoundManagerInstantiated.gameObject.AddComponent<SoundManager>();
@@ -69,7 +70,7 @@ public class BootMain : MonoBehaviour
         viewBottomY = viewBottomLeft.y;
         viewTopY = viewTopRight.y;
         viewWidth = viewRightX - viewLeftX;
-        viewHeight = viewBottomY - viewTopY;
+        viewHeight = viewTopY - viewBottomY;
 
         SetPersistant(peristantGameObjects);
 

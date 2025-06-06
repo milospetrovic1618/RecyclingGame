@@ -17,22 +17,58 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
     //junk Area
     //ui
     //gameplay script Holder
+    public GameObject CameraPrefab;
+    public GameObject EventSystemPrefab;
+
+    public GameObject scoreHolder;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scoreOutlineText;
     public GameObject PauseUI;
     public GameObject PauseButton;
     public GameObject GameOverUI;
+    public UnityEngine.UI.Button ContinueButton;
+    public GameObject Quiz;
+    public TextMeshProUGUI Quiz_Question;
+    public GameObject Quiz1;
+    public TextMeshProUGUI Quiz1_Button1;
+    public TextMeshProUGUI Quiz1_Button2;
+    public TextMeshProUGUI Quiz1_Button3;
+    public GameObject Quiz2;
+    public TextMeshProUGUI Quiz2_Button1;
+    public TextMeshProUGUI Quiz2_Button2;
     public UnityEngine.UI.Image SoundToggle;
     public Sprite SoundOnTex;
     public Sprite SoundOffTex;
-    public UnityEngine.UI.Image HealthBar;
+    public GameObject CameraInstantiated;
+    public GameObject EventSystemInstantiated;
 
     public void Awake()
     {
         Instance = this;
-        SoundManager.Instance.PlayBGM(SoundManager.Instance.gameplayBackgroundMusic);
+        SoundManager.Instance?.PlayBGM(SoundManager.Instance.gameplayBackgroundMusic);
+
+        CameraInstantiated = Instantiate(CameraPrefab, new Vector3(0, 0, -1), Quaternion.identity);
+        CameraInstantiated.tag = "MainCamera";
+
+        EventSystemInstantiated = Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
 
         //BOJAN: ovo za SoundToggle on/off na awake bi bolje bilo napraviti izolovanu skriptu komponentu i kaciti gde treba
         //BOJAN: nego trpati po boot-evima copy/paste koda
+        
+
+        Material scoreOutlineTextMat = new Material(scoreOutlineText.font.material);
+        scoreOutlineText.fontMaterial = scoreOutlineTextMat;
+
+        //  outline  
+        scoreOutlineText.outlineWidth = 0.9f;
+        scoreOutlineText.outlineColor = scoreOutlineText.color;
+        /*
+        scoreOutlineText.EnableKeyword("UNDERLAY_ON");
+        scoreOutlineText.SetColor("_UnderlayColor", Color.black);
+        scoreOutlineText.SetFloat("_UnderlaySoftness", 0.5f);
+        scoreOutlineText.SetFloat("_UnderlayOffsetX", 0f);
+        scoreOutlineText.SetFloat("_UnderlayOffsetY", 0f);*/
+
         if (SoundManager.Instance.IsSilent())
         {
             SoundToggle.sprite = SoundOffTex;

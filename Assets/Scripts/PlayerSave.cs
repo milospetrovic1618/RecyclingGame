@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerSave : GenericSave
@@ -7,75 +8,85 @@ public class PlayerSave : GenericSave
     //base fields
     [JsonProperty]
     private float totalScore;
+    [JsonProperty]
+    private float highScore;
 
     //base fields
     [JsonProperty]
-    private int totalCount;
+    private long totalCount;
     [JsonProperty]
-    private int paperCount;
+    private long paperCount;
     [JsonProperty]
-    private int glassCount;
+    private long glassCount;
     [JsonProperty]
-    private int plasticMetalCount;
+    private long plasticMetalCount;
     [JsonProperty]
-    private int organicCount;
+    private long organicCount;
     [JsonProperty]
-    private int electronicsBatteriesCount;
+    private long electronicsBatteriesCount;
 
 
     //multiplier
     [JsonProperty]
     private float totalMultiplier = 1;
     [JsonProperty]
-    private int paperMultiplier = 1;
+    private long paperMultiplier = 1;
     [JsonProperty]
-    private int glassMultiplier = 1;
+    private long glassMultiplier = 1;
     [JsonProperty]
-    private int plasticMetalMultiplier = 1;
+    private long plasticMetalMultiplier = 1;
     [JsonProperty]
-    private int organicMultiplier = 1;
+    private long organicMultiplier = 1;
     [JsonProperty]
-    private int electronicsBatteriesMultiplier = 1;
+    private long electronicsBatteriesMultiplier = 1;
 
 
 
-    public float ScoreIncrease(RecyclingType recyclingType)
+    public float ScoreIncrease(RecyclingType recyclingType, int count)//int caount dodat zbog moci, inace bi bilo ++ tj +=1
     {
-        TotalCount++;
+        TotalCount+= count;
 
-        float multiplier = totalMultiplier;
+        float multipliedScore = totalMultiplier * count;
         switch (recyclingType)
         {
             case RecyclingType.Paper:
-                PaperCount++;
-                multiplier *= paperMultiplier;
+                PaperCount+= count;
+                multipliedScore *= paperMultiplier;
                 break;
             case RecyclingType.PlasticMetal:
-                PlasticMetalCount++;
-                multiplier *= plasticMetalMultiplier;
+                PlasticMetalCount += count;
+                multipliedScore *= plasticMetalMultiplier;
                 break;
             case RecyclingType.Glass:
-                GlassCount++;
-                multiplier *= glassMultiplier;
+                GlassCount += count;
+                multipliedScore *= glassMultiplier;
                 break;
             case RecyclingType.Organic:
-                OrganicCount++;
-                multiplier *= organicMultiplier;
+                OrganicCount += count;
+                multipliedScore *= organicMultiplier;
                 break;
             case RecyclingType.ElectronicsBatteries:
-                ElectronicsBatteriesCount++;
-                multiplier *= electronicsBatteriesMultiplier;
+                ElectronicsBatteriesCount += count;
+                multipliedScore *= electronicsBatteriesMultiplier;
                 break;
         }
 
-        totalScore += multiplier;
+
+
+        totalScore += multipliedScore;
+
+        GameObject addScore = new GameObject();
+        ScoreShow scoreComponent = addScore.AddComponent<ScoreShow>();
+        scoreComponent.Initialize(multipliedScore, recyclingType, count > 1);
+
+
 
         SaveSystem.Instance.Flag(this);
-        return multiplier;
+        return multipliedScore;
     }
     //base
     [JsonIgnore]
-    public int TotalCount
+    public long TotalCount
     {
         get => totalCount;
         set
@@ -96,7 +107,19 @@ public class PlayerSave : GenericSave
 
 
     [JsonIgnore]
-    public int PaperCount
+    public float HighScore
+    {
+        get => highScore;
+        set
+        {
+            highScore = value;
+
+            SaveSystem.Instance.Flag(this);
+        }
+    }
+
+    [JsonIgnore]
+    public long PaperCount
     {
         get => paperCount;
         set
@@ -115,7 +138,7 @@ public class PlayerSave : GenericSave
         }
     }
     [JsonIgnore]
-    public int GlassCount
+    public long GlassCount
     {
         get => glassCount;
         set
@@ -134,7 +157,7 @@ public class PlayerSave : GenericSave
         }
     }
     [JsonIgnore]
-    public int PlasticMetalCount
+    public long PlasticMetalCount
     {
         get => plasticMetalCount;
         set
@@ -153,7 +176,7 @@ public class PlayerSave : GenericSave
         }
     }
     [JsonIgnore]
-    public int OrganicCount
+    public long OrganicCount
     {
         get => organicCount;
         set
@@ -172,7 +195,7 @@ public class PlayerSave : GenericSave
         }
     }
     [JsonIgnore]
-    public int ElectronicsBatteriesCount
+    public long ElectronicsBatteriesCount
     {
         get => electronicsBatteriesCount;
         set
@@ -272,7 +295,7 @@ public class PlayerSave : GenericSave
         else
             return 2f;
     }
-    public int GetBinMultiplier(int count)
+    public int GetBinMultiplier(long count)
     {
         if (count < binMultiplierTresholds[0])
             return 1;
@@ -287,10 +310,15 @@ public class PlayerSave : GenericSave
         else
             return 6;
     }
-    public int GetTotalScore()
+    public long GetTotalScore()
     {
-        return (int)totalScore;
+        return (long)totalScore;
     }
+    public long GetHighScore()
+    {
+        return (long)highScore;
+    }
+
 
 
 }

@@ -171,15 +171,16 @@ MonoBehaviour:
   enterBin: {fileID: 8300000, guid: d41e40f5e8a178844ad917d33bea1748, type: 3}
   soundManager: {fileID: 0}
   CameraInstantiated: {fileID: 0}
-  cam: {fileID: 0}
   EventSystemInstantiated: {fileID: 0}
   SoundManagerInstantiated: {fileID: 0}
+  cam: {fileID: 0}
   viewWidth: 0
   viewHeight: 0
   viewRightX: 0
   viewLeftX: 0
   viewBottomY: 0
   viewTopY: 0
+  LuckiestGuy: {fileID: 11400000, guid: e07f6c911fa4d2948bf10090cdd0c0d4, type: 2}
 --- !u!114 &2078042782
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,9 @@ using UnityEngine.UI;
 public enum SortingLayer
 {
     JunkArea,
-    Trash
+    Trash,
+    Bins,
+    Score
 }
 public enum Layer
 {
@@ -146,18 +148,27 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
             if (currentScore == value) return;
             currentScore = value;
             onScoreChanged?.Invoke(currentScore);
+            if (currentScore>SaveSystem.Instance.Player.HighScore)
+            {
+                SaveSystem.Instance.Player.HighScore = currentScore;
+            }
         }
     }
     public void ScoreIncrease(RecyclingType recyclingType)
     {
-        CurrentScore += SaveSystem.Instance.Player.ScoreIncrease(recyclingType);
+        CurrentScore += SaveSystem.Instance.Player.ScoreIncrease(recyclingType,1);
+    }
+
+    public void ScoreIncrease(RecyclingType recyclingType, int count)
+    {
+        CurrentScore += SaveSystem.Instance.Player.ScoreIncrease(recyclingType, count);
     }
 
     private void Awake()
     {
         Instance = this; 
 
-        onScoreChanged = score => BootGameplay.Instance.scoreText.text = ((int)score).ToString();
+        onScoreChanged = score => BootGameplay.Instance.scoreOutlineText.text = BootGameplay.Instance.scoreText.text = ((int)score).ToString();
 
         AddNewTrashType();
     }

@@ -18,7 +18,7 @@ public class BinsManager : MonoBehaviour
     public Bin[] availableBins = new Bin[3];
     public int neededBins = 3;//za tutorijale treba 1 i 2
 
-    private float availableBinPositionFromBottom = 0.4f;
+    //private float availableBinPositionFromBottom = 0.4f;
     public Queue<Bin> nextBinOrder = new Queue<Bin>();
 
     public Vector2[] visibleRowPositions = new Vector2[3];
@@ -166,10 +166,13 @@ public class BinsManager : MonoBehaviour
                 toRemove.Add(trash);
             }
         }
+        int count = 0;
         foreach (Trash trash in toRemove)
         {
+            count++;
             trash.FlyToBin();
         }
+        if (count != 0) GameplayManager.Instance.ScoreIncrease(bin.binType, count);
 
         //ugasi shaking
     }
