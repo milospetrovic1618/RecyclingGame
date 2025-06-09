@@ -6,6 +6,11 @@ using UnityEngine.EventSystems;
 
 public class PlayerSelection : MonoBehaviour
 {
+    public static PlayerSelection Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
     public bool press = false;//sama rec kaze
     public bool pressedPrevFrame = false;//pressedPrevFrame je press u proslom frejmu... cini mi se da mu je jedina uloga prepoznavanje releasa
     public bool release;
@@ -245,7 +250,7 @@ public class PlayerSelection : MonoBehaviour
                 {
                     //Debug.Log(" ddddd " + pressedPrevFrame);
                     Bin bin = hit0.collider.transform.parent.GetComponent<Bin>();
-                    if (bin.trashCount >= bin.maxTrashCount)
+                    if (bin.trashCount >= Bin.maxTrashCount)
                     {
                         BinsManager.Instance.ReplaceBin(bin);
                     }

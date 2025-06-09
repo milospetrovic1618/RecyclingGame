@@ -1,0 +1,279 @@
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
+using System;
+using System.Runtime.CompilerServices;
+using System.Collections;
+using UnityEditor;
+using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
+
+[Serializable]
+public class AchievementUI
+{
+    public UnityEngine.UI.Image background;
+    public TextMeshProUGUI titleOutline;
+    public TextMeshProUGUI progressTextOutline;
+    public TextMeshProUGUI title;
+    public TextMeshProUGUI progressText;
+    public UnityEngine.UI.Image fillBackground;
+    public UnityEngine.UI.Image fill;
+    public Color[] rankColor = new Color[]
+{
+    new Color(0.263f, 0.290f, 0.329f),
+    new Color(0.604f, 0.443f, 0.180f),
+    new Color(0.384f, 0.553f, 0.769f), 
+    new Color(0.807f, 0.549f, 0.129f), 
+    new Color(0.667f, 0.608f, 0.753f), 
+    new Color(0.231f, 0.573f, 0.294f), 
+};
+
+    public AchievementUI (GameObject AchievementPrefabInitialized, AchievementData achievementData)
+    {
+        AchievementPrefabInitialized.name = achievementData.name;
+        background = AchievementPrefabInitialized.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
+        titleOutline = AchievementPrefabInitialized.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        progressTextOutline = AchievementPrefabInitialized.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        title = AchievementPrefabInitialized.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+        progressText = AchievementPrefabInitialized.transform.GetChild(4).GetComponent<TextMeshProUGUI>();
+        fillBackground = AchievementPrefabInitialized.transform.GetChild(5).GetComponent<UnityEngine.UI.Image>();
+        fill = AchievementPrefabInitialized.transform.GetChild(6).GetComponent<UnityEngine.UI.Image>();
+        
+        background.sprite = Resources.Load<Sprite>($"Achievements/{achievementData.rank}");
+        titleOutline.text = achievementData.title;
+        progressTextOutline.text = achievementData.progressText;
+        title.text = achievementData.title;
+        progressText.text = achievementData.progressText;
+        if (achievementData.noFill)
+        {
+            Achievements.DestroyGameObject(fillBackground.gameObject);
+            Achievements.DestroyGameObject(fill.gameObject);
+        }
+        else
+        {
+            fill.fillAmount = achievementData.fill;
+            fill.color = rankColor[achievementData.rank-1];
+        }
+
+        //OUTLINE
+        foreach(TextMeshProUGUI backText in new List<TextMeshProUGUI> { titleOutline, progressTextOutline })
+        {
+
+            Material backTextMat = new Material(backText.font.material);
+            backText.fontMaterial = backTextMat;
+            backText.outlineWidth = 1f;
+            backText.outlineColor = rankColor[achievementData.rank - 1]; ;
+        }
+
+    }
+}
+public class AchievementData
+{
+    public string name;
+    public string title;
+    public string progressText = "";
+    public int rank;
+    public float fill;//-1 -> destroyFill and and fill background
+    public bool noFill;
+    /*
+    public UnityEngine.UI.Image background;
+    public TextMeshProUGUI title;
+    public TextMeshProUGUI progressText;
+    public UnityEngine.UI.Image fillBackground;
+    public UnityEngine.UI.Image fill;*/
+    public AchievementData(string name, string title)
+    {
+        this.name = name;
+        this.title = title;
+        switch (name)
+        {
+            case "TotalCount":
+                rank = SaveSystem.Instance.Player.GetRankTotalCount();
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.totalMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    long TotalCount = SaveSystem.Instance.Player.TotalCount;
+                    progressText = TotalCount+ "/" +PlayerSave.totalMultiplierTresholds[rank-1];
+                    fill = (float)TotalCount / (float)PlayerSave.totalMultiplierTresholds[rank - 1];
+                }
+                break;
+            case "PlasticMetalCount":
+                long PlasticMetalCount = SaveSystem.Instance.Player.PlasticMetalCount;
+                rank = SaveSystem.Instance.Player.GetRankBin(PlasticMetalCount);
+
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.binMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    progressText = PlasticMetalCount + "/" + PlayerSave.binMultiplierTresholds[rank - 1];
+                    fill = (float)PlasticMetalCount / (float)PlayerSave.binMultiplierTresholds[rank - 1];
+                }
+                break;
+            case "PaperCount":
+                long PaperCount = SaveSystem.Instance.Player.PaperCount;
+                rank = SaveSystem.Instance.Player.GetRankBin(PaperCount);
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.binMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    progressText = PaperCount + "/" + PlayerSave.binMultiplierTresholds[rank - 1];
+                    fill = (float)PaperCount / (float)PlayerSave.binMultiplierTresholds[rank - 1];
+                }
+                break;
+            case "GlassCount":
+                long GlassCount = SaveSystem.Instance.Player.GlassCount;
+                rank = SaveSystem.Instance.Player.GetRankBin(GlassCount);
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.binMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    progressText = GlassCount + "/" + PlayerSave.binMultiplierTresholds[rank - 1];
+                    fill = (float)GlassCount / (float)PlayerSave.binMultiplierTresholds[rank - 1];
+                }
+                break;
+            case "ElectronicsBatteriesCount":
+                long ElectronicsBatteriesCount = SaveSystem.Instance.Player.ElectronicsBatteriesCount;
+                rank = SaveSystem.Instance.Player.GetRankBin(ElectronicsBatteriesCount);
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.binMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    progressText = ElectronicsBatteriesCount + "/" + PlayerSave.binMultiplierTresholds[rank - 1];
+                    fill = (float)ElectronicsBatteriesCount / (float)PlayerSave.binMultiplierTresholds[rank - 1];
+                }
+                break;
+
+            case "OrganicCount":
+                long OrganicCount = SaveSystem.Instance.Player.OrganicCount;
+                rank = SaveSystem.Instance.Player.GetRankBin(OrganicCount);
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.binMultiplierTresholds[4] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    progressText = OrganicCount + "/" + PlayerSave.binMultiplierTresholds[rank - 1];
+                    fill = (float)OrganicCount / (float)PlayerSave.binMultiplierTresholds[rank - 1];
+                }
+                break;
+            case "CountChangeBins":
+                rank = SaveSystem.Instance.Player.GetRankCountChangeBins();
+                //Debug.Log(rank-4);
+                long ChangeBins = SaveSystem.Instance.Player.CountChangeBins;
+
+                if (rank == 6)
+                {
+                    progressText = PlayerSave.changeBinsRankTresholds[2] + "+";
+                    noFill = true;
+                }
+                else
+                {
+                    long changeBinsCount = SaveSystem.Instance.Player.CountChangeBins;
+                    int index = Mathf.Clamp(rank - 3,0, PlayerSave.changeBinsRankTresholds.Length-1);
+                    progressText = changeBinsCount + "/" + PlayerSave.changeBinsRankTresholds[index];
+                    fill = (float)changeBinsCount / (float)PlayerSave.changeBinsRankTresholds[index];
+                }
+                break;
+            case "Trivia":
+                rank = SaveSystem.Instance.Player.GetRankTrivia();
+
+                int maxTrivia = Quiz.quizData.Count;
+                if (rank == 6)
+                {
+                    progressText = maxTrivia.ToString();
+                    noFill = true;
+                }
+                else
+                {
+                    int triviaCount = SaveSystem.Instance.Player.GetTriviaCount();
+                    progressText = triviaCount + "/" + maxTrivia;
+                    fill = (float)triviaCount / (float)maxTrivia;
+                }
+                break;
+            case "CatchTrashMidAir":
+                rank = SaveSystem.Instance.Player.GetRankCatchMidAir();
+                noFill = true;
+                progressText = "";
+                break;
+        }
+
+        /*ui.background.sprite = Resources.Load<Sprite>($"Achievements/{rank}");*/
+        if (rank == 6)
+        {
+            noFill = true;
+        }
+    }
+}
+public class Achievements : MonoBehaviour
+{
+    public GameObject AchievementPrefab;
+    public GameObject Content;
+    public Scrollbar scrollVerical;
+    public static void DestroyGameObject(GameObject go)
+    {
+        Destroy(go);
+    }
+    public void ReturnHome()
+    {
+        SoundManager.Instance.PlayButtonClick();
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
+    }
+    void Start()
+    {
+        List<AchievementData> achievementDataList = new List<AchievementData>
+        {
+            new AchievementData("TotalCount", "RECYCLED TRASH"),
+            new AchievementData("PlasticMetalCount", "PLASTIC AND METAL WASTE"),
+            new AchievementData("PaperCount", "PAPER WASTE"),
+            new AchievementData("GlassCount", "GLASS WASTE"),
+            new AchievementData("ElectronicsBatteriesCount", "ELECTRONICS WASTE"),
+            new AchievementData("OrganicCount", "ORGANIC WASTE"),
+            new AchievementData("CountChangeBins", "Change bins!"),
+            new AchievementData("Trivia", "Trivia!"),
+            new AchievementData("CatchTrashMidAir", "Catch Trash Mid Air!")
+        };
+
+        achievementDataList.Sort((a, b) => a.rank.CompareTo(b.rank));//prvo idu najnizi rankovi
+        achievementDataList.Sort((a, b) => b.fill.CompareTo(a.fill));//prvo idu najveci fillovi
+
+        foreach (AchievementData achievementData in achievementDataList)
+        {
+            GameObject AchievementPrefabInitialized = Instantiate(AchievementPrefab);
+            AchievementUI achievementUI = new AchievementUI(AchievementPrefabInitialized, achievementData);
+
+            AchievementPrefabInitialized.transform.SetParent(Content.transform);
+        }
+        scrollVerical.value = 0.735f;
+    }
+    public void Update()
+    {
+        if (scrollVerical.value > 0.735f)
+        {
+            scrollVerical.value = 0.735f;
+        }
+    }
+}

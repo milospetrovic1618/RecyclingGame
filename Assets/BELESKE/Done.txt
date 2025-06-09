@@ -1,10 +1,48 @@
+﻿
+DIZAJN UI
+https://www.figma.com/design/Ut7sbEY4taE8ZiLXT8FxPf/UI-UX-Recycle-it?t=ffXUysrZVzp1MWvl-1
 
-+  odradi kad se promasi kanta  
-imaj detector kad se ne ubaci ni u jednu kantu tj ispadne skroz da ga vrati u trashArea
+TEKSTURE
+https://drive.google.com/drive/folders/1Dkhf_wqwXt36pxXPytawU4CCUsvIhrez
 
-+ kako ce da radi animation
-imas coroutins
-na svakom objeltu imaces public courutinu koja ce da se zove movement
-imaces stopMovement i imaces AssignNewMovement gde ce stari da se brise
-imaces i akcije koje ce da se assignuju na kraju
-vidi da li u c# mozes da stavis  da funkcija nema ili ima argument
+APK
+https://drive.google.com/drive/u/0/folders/1i704AMdv7t1VzFNwabga0BmMQUgayaar
+
+Flow
+https://www.figma.com/board/gYR0Q63aHg5HZiemJHX0uS/Recycle-game-flow?node-id=0-1&p=f&t=zJn6ULVsIk0Hs1Lb-0
+
+■ bug u tuto kad ocistis sve ali kroz moc... imas probelm sto 
+■ primeni da je zatamnjena pozadina ali braonaksta
+
+■ 
+zameni ui i astale dizajn stvari: dugmici u gamplay, score u meniju
+
+■ bug kad se pusti i baci fly
+■ buggovi nekad:
+spawnuje ga iznad table
+spawnuje i toggle body mu je aktiviran stalno... vrv missed
+
+■ Imamo total score bez poente, ne prikazuje se nigde, multiplieri se gledaju u odnosu na totalCount, pa mozda da bude achievement bez nagrade
+fali dizajn za tutorijal
+
+=============
+
+i kako ovo mozes da primenis na cubeland
+
+da bi doveo ljude u tim isto treba da sredis animacije, da imas jednu singleton za movement courutine
+treba da korisis lossyPosition
+da li lossy position utice na childrens, ako utice to je super tj ako pomera i children... znam da na parent ne utice
+
+ta singleton da se zove EntitiesMovementCoroutines
+i ovde ce da se nalaze osnovne animacije, pr 
+
+ovo ti resava i da se manje memorije zauzima
+
+a na svakom entitiju bih imao jos jednu skriptu koja bi odredjivala koji ce child da se pomera za koji tip animacije, logika za attacking i movingToNextCell
+
+
+■ izbrisi ove beleske i dodatne assete
+■■■  bug, zasto kad pomeris prst od kante i dalje je selektovana
+
+■■■  primeni komentare barem neke od bojana, da ne bi bilo da ih ne primenis barem one neophodne... ispostuj
+

@@ -20,11 +20,12 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
 {
     public RecyclingType binType;
     public SpriteRenderer spriteRenderer;
+    public SpriteRenderer openLidRenderer;
     public PolygonCollider2D collider;
     public OutlineFx.OutlineFx outline;
     public int trashCount = 0;
     [SerializeField]
-    public int maxTrashCount = 5;
+    public static int maxTrashCount = 5;
     public Coroutine movementCoroutine;
     public Coroutine coroutineWithCallback;
     private void Awake()
@@ -117,11 +118,15 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     }
     public void Shake()
     {
+        spriteRenderer.sprite = Resources.Load<Sprite>("BinsClosed/" + binType.ToString());
+        openLidRenderer.color = new Color(1,1,1,0);
         IEnumerator enumerator = MovementsCoroutines.Instance.ShakingIndefinitely(this.transform);
         AssignMovementCoroutine(enumerator);
     }
     public void StopShaking()
     {
+        spriteRenderer.sprite = Resources.Load<Sprite>("Bins/" + binType.ToString());
+        openLidRenderer.color = new Color(1, 1, 1, 1);
         StopCoroutineMovement(); 
 
         //posto naglo prekines shaking coroutinu ali je pozicija moze da bude pomerena jer je shaking

@@ -33,27 +33,27 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
 
     // Plastic & Metal
     { TrashType.BottlePlastic, RecyclingType.PlasticMetal },
-    { TrashType.YogurtLogo, RecyclingType.PlasticMetal },
-    { TrashType.YogurtNoLogo, RecyclingType.PlasticMetal },
-    { TrashType.PlasticMetal3, RecyclingType.PlasticMetal },
+    { TrashType.Yogurt, RecyclingType.PlasticMetal },
+    { TrashType.FoodCan, RecyclingType.PlasticMetal },
+    { TrashType.SodaCan, RecyclingType.PlasticMetal },
 
     // Electronics & Batteries
     { TrashType.BatteryAA, RecyclingType.ElectronicsBatteries },
     { TrashType.PhoneBroken, RecyclingType.ElectronicsBatteries },
-    { TrashType.Electronics1, RecyclingType.ElectronicsBatteries },
-    { TrashType.Electronics2, RecyclingType.ElectronicsBatteries },
+    { TrashType.Charger, RecyclingType.ElectronicsBatteries },
+    { TrashType.Earphones, RecyclingType.ElectronicsBatteries },
 
     // Glass
     { TrashType.BottleClear, RecyclingType.Glass },
     { TrashType.BottleGreen, RecyclingType.Glass },
     { TrashType.BottleBrown, RecyclingType.Glass },
-    { TrashType.Glass1, RecyclingType.Glass },
+    { TrashType.Jar, RecyclingType.Glass },
 
     // Organic
     { TrashType.AppleCore, RecyclingType.Organic },
     { TrashType.BananaPeel, RecyclingType.Organic },
     { TrashType.EggShells, RecyclingType.Organic },
-    { TrashType.Organic1, RecyclingType.Organic }
+    { TrashType.TeaBag, RecyclingType.Organic }
     }; 
 
     private static Dictionary<RecyclingType, List<TrashType>> bin_fullTrashList = new Dictionary<RecyclingType, List<TrashType>>()
@@ -69,9 +69,9 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
     { RecyclingType.PlasticMetal, new List<TrashType>
         {
             TrashType.BottlePlastic,
-            TrashType.YogurtLogo,
-            TrashType.YogurtNoLogo,
-            TrashType.PlasticMetal3
+            TrashType.Yogurt,
+            TrashType.FoodCan,
+            TrashType.SodaCan
         }
     },
 
@@ -79,8 +79,8 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
         {
             TrashType.BatteryAA,
             TrashType.PhoneBroken,
-            TrashType.Electronics1,
-            TrashType.Electronics2
+            TrashType.Charger,
+            TrashType.Earphones
         }
     },
 
@@ -89,7 +89,7 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
             TrashType.BottleClear,
             TrashType.BottleGreen,
             TrashType.BottleBrown,
-            TrashType.Glass1
+            TrashType.Jar
         }
     },
 
@@ -98,7 +98,7 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
             TrashType.AppleCore,
             TrashType.BananaPeel,
             TrashType.EggShells,
-            TrashType.Organic1
+            TrashType.TeaBag
         }
     },
 

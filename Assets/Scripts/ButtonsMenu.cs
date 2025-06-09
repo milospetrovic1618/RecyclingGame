@@ -13,6 +13,12 @@ public class ButtonsMenu : MonoBehaviour
         BootMain.Instance.LoadSceneFromBoot(Scenes.Test);
     }
 
+    public void LoadAchievements()
+    {
+        SoundManager.Instance.PlayButtonClick();
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Achievements);
+    }
+
     public void LoadQuiz()
     {
         SoundManager.Instance.PlayButtonClick();
@@ -28,7 +34,8 @@ public class ButtonsMenu : MonoBehaviour
     public void SoundToggle()
     {
         SoundManager.Instance.PlayButtonClick();
-        if (SoundManager.Instance.ToggleSound())
+        SoundManager.Instance.ToggleMusic();
+        if (!SoundManager.Instance.IsMusicSilent())
         {
             BootMenu.Instance.SoundToggle.sprite = BootMenu.Instance.SoundOnTex;
         }

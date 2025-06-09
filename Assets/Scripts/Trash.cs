@@ -10,30 +10,33 @@ using UnityEngine.UIElements;
 public enum TrashType
 //kada dodajes novi trash ili recycle type u enum , treba se se doda i u gameplayData u trash_bin i bin_fullTrashList dictionary
 {
+
+    None,
+
     Cardboard,
     Paper,
     PaperBag,
     Paper3,
 
     BottlePlastic,
-    YogurtLogo,
-    YogurtNoLogo,
-    PlasticMetal3,
+    Yogurt,
+    FoodCan,
+    SodaCan,
 
     BatteryAA,
     PhoneBroken,
-    Electronics1,
-    Electronics2,
+    Charger,
+    Earphones,
 
     BottleClear,
     BottleGreen,
     BottleBrown,
-    Glass1,
+    Jar,
 
     AppleCore,
     BananaPeel,
     EggShells,
-    Organic1
+    TeaBag
 }
 
 
@@ -47,6 +50,7 @@ public class Trash : MonoBehaviour
     public OutlineFx.OutlineFx outline;
     public Coroutine movementCoroutine;
     public Coroutine coroutineWithCallback;
+    public string coroutineName;
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer(Layer.Trash.ToString());
@@ -59,21 +63,35 @@ public class Trash : MonoBehaviour
         //ToggleRigidBody(true);
         DeSelect();
     }
-    void OnEnable()//zbog object poolinga
+    /*void On Enable()//zbog object poolinga
     {
-        Set(GetRandomTrashType());
-    }
+        Set(GetRandomAvailableTrashType());
+    }*/
     public void Set(TrashType trashType)
     {
+        //spriteRenderer.sortingOrder = TrashManager.Instance.trashList.Count;//always on top
+        //transform.SetAsLastSibling();//always on top
         if (this.trashType != trashType)
         {
+
             this.trashType = trashType;
-            spriteRenderer.sprite = Resources.Load<Sprite>("Trash/" + trashType.ToString());
-            if (spriteRenderer.sprite == null)
+            Sprite sprite = Resources.Load<Sprite>("Trash/" + trashType.ToString());
+            spriteRenderer.sprite = sprite;
+
+            if (sprite == null)
             {
-                Debug.Log(trashType);
+                Debug.LogError(trashType);
+            }
+            if (spriteRenderer == null)
+            {
+                Debug.LogError("spriteRenderer null");
             }
 
+
+            if (spriteRenderer.sprite == null || Resources.Load<Sprite>("Trash/" + trashType.ToString()) == null)
+            {
+                Debug.LogError(trashType);
+            }
             /*PolygonCollider2D[] colliders = collider.GetComponents<PolygonCollider2D>();
             foreach (PolygonCollider2D collider in colliders)
             {
@@ -96,24 +114,9 @@ public class Trash : MonoBehaviour
     {
         return GameplayManager.trash_bin[trashType];
     }
-
-    public TrashType GetRandomTrashType()
+    public bool IsInsideJunkArea()
     {
-        /*List<TrashType> keys = new List<TrashType>(GameplayManager.trash_bin.Keys);
-
-        int randomIndex = UnityEngine.Random.Range(0, keys.Count);
-
-        //Debug.Log(keys[randomIndex].ToString());
-        return keys[randomIndex];*/
-        RecyclingType randomBin = BinsManager.Instance.availableBins[UnityEngine.Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
-
-        // Get the trash list for that RecyclingType
-        List<TrashType> trashList = GameplayManager.bin_availableTrashList[randomBin];
-
-        // Get a random TrashType from that list
-        TrashType randomTrash = trashList[UnityEngine.Random.Range(0, trashList.Count)];
-
-        return randomTrash;
+        return TrashManager.Instance.junkAreaRenderer.bounds.Contains(transform.position);
     }
     public void Select()
     {
@@ -121,6 +124,15 @@ public class Trash : MonoBehaviour
         {
             outline.enabled = true;
             transform.localScale = transform.localScale * 1.5f;
+
+            if (coroutineName == "Throw")
+            {
+                StopCoroutine(movementCoroutine);//zaustavi throw ako se uhvati
+                if (!TrashManager.Instance.initialSpawn)
+                {
+                    SaveSystem.Instance.Player.CatchTrashMidAir = true;
+                }
+            }
         }
     }
 
@@ -160,8 +172,7 @@ public class Trash : MonoBehaviour
         IEnumerator enumerator = MovementsCoroutines.Instance.CurveMoveFollow(GetBin().transform.Find("Rotator"), transform, new Vector2(0,BinsManager.Instance.binHeight + 0.5f));//GetBin().transform.Find("Rotator") ovo je velika greska?
 
         // zbog prikaza skora iznad kanti ne moze ovako GameplayManager.Instance.ScoreIncrease(GetRecyclingType());//mora ovde da ne bi pravilo bug
-        TrashManager.Instance.RemoveFromList(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
-        //napravio si da kad lete prema kanti vec se podrazumeva kao poen i ne racuna za maksTrashCount (izbacio si ga iz liste)
+        
 
         Action myAction = () =>
         {
@@ -173,6 +184,8 @@ public class Trash : MonoBehaviour
 
         AssignMovementCoroutine(enumerator, myAction);
         //izbrisi iz curveMove da se rade stvari kao sto suu increase score nego da se to radi na kraju rutine
+        TrashManager.Instance.RemoveFromList(this);//MORA DA SE IZBACI PRE DA NE PRAVI BUG
+        //napravio si da kad lete prema kanti vec se podrazumeva kao poen i ne racuna za maksTrashCount (izbacio si ga iz liste)
     }
     public void MoveToPosition(Vector2 target, bool toggleRigidBody)
     {
@@ -203,6 +216,9 @@ public class Trash : MonoBehaviour
     public void AssignMovementCoroutine(IEnumerator enumerator, Action callback = null)
     {
         StopCoroutineMovement(); // Stop existing one
+        string rawName = enumerator.GetType().Name;
+        coroutineName = rawName.Substring(rawName.IndexOf('<') + 1, rawName.IndexOf('>') - rawName.IndexOf('<') - 1); ; //r
+        //Debug.Log(coroutineName);
         movementCoroutine = callback == null
             ? StartCoroutine(enumerator)
             : StartCoroutine(RunCoroutineAndCallback(enumerator, callback));
@@ -218,6 +234,7 @@ public class Trash : MonoBehaviour
     // Stops the movement and destroys the component
     public void StopCoroutineMovement()
     {
+        coroutineName = "";
         if (movementCoroutine != null)//ako izbrises ovu proveru desice se zbrka
         {
             StopCoroutine(movementCoroutine);

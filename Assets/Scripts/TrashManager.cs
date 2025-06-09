@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ public class TrashManager : MonoBehaviour
     public float maxXJankArea;
     public float minYJankArea;
     public List<Trash> trashList { get; private set; } = new List<Trash>();
+    public bool initialSpawn = false;
 
     public Queue<Trash> deactivatedTrashObjectPooling = new Queue<Trash>();//posle ces da dodas object pooling... samo gledaj gde si koristio destroy
     public int maxTrash = 20;
@@ -62,13 +64,11 @@ public class TrashManager : MonoBehaviour
     {
         return minInterval + (maxInterval - minInterval) * Mathf.Exp(-decayRate * totalTime);
     }
-
     void Start()
     {
         Instance = this;
         offset = 0.3f;
-        SpriteRenderer sr = JunkArea.GetComponent<SpriteRenderer>();
-        Bounds bounds = sr.bounds;
+        Bounds bounds = junkAreaRenderer.bounds;
         float junkAreaWidth = bounds.max.x - bounds.min.x;
         float screenWidth = BootMain.Instance.viewWidth;
 
@@ -79,7 +79,7 @@ public class TrashManager : MonoBehaviour
         float scaleMultiplier = targetWidth / currentWidth;
         JunkArea.transform.localScale *= scaleMultiplier;
 
-        bounds = sr.bounds;
+        bounds = junkAreaRenderer.bounds;
         minXJankArea = bounds.min.x + 1.5f * offset; //sve ovde ide * 2 jer zelis unutar fielda da se spawnuju stvari, da ne moze na ivicama
         minYJankArea = bounds.min.y + 1.5f * offset;
         maxXJankArea = bounds.max.x - 1.5f * offset;
@@ -121,50 +121,65 @@ public class TrashManager : MonoBehaviour
     public void BeginningSpawn()
     {
         //BOJAN: ovo je temp mozda? 10 je ovde magican broj, mada je dovoljno jasna skripta da mozda i moze da ostane ovako, ako se broj spawnovanih predmeta na pocetku igre ne menja nikad
-        for (int i = 0; i < 10; i++)
+        if (SaveSystem.Instance.Player.TutorialFinished)
         {
-            ThrowTrash();
+            for (int i = 0; i < 10; i++)
+            {
+                initialSpawn = true;
+                ThrowRandomAvailableTrash();
+            }
+        }
+        else
+        {
+            SpawnAllTrashOfType(RecyclingType.Paper);
+            SpawnAllTrashOfType(RecyclingType.PlasticMetal);
+            SpawnAllTrashOfType(RecyclingType.Glass);
+            SpawnAllTrashOfType(RecyclingType.Glass);
         }
         UpdateHealth();
     }
     void Update()
     {
-        if (timerForSpawn > actualSpawnInterval)
+        if (SaveSystem.Instance.Player.TutorialFinished)
         {
-            referenceSpawnInterval = TimedExponentialDecay();
-            SetAveragePlayerInterval();
-            //float maxReferenceIntervalDecrease = 0.5f;//50%, moci ce da ubrza speed za 50% maks, ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
-            float referenceIntervalProgress = Mathf.Clamp01(totalTime / targetTimeToReachMin);//od 0 do 1 koliko je totalTime blizu targetTime
-            float remainingProgress = 1 - referenceIntervalProgress; // od 0 do 1 jos koliko je progresa ostalo
-            float minClamp = 1f - remainingProgress * maxReferenceIntervalDecrease;
-            float maxClamp = 1f + remainingProgress * maxReferenceIntervalIncrease;
-            //ovo se mnozi sa maxReferenceIntervalDecrease ili increase i znaci da su efekti usporavanja i ubrzavanja sve manji sto se blizi minIntervalu, usporavanje postaje manje jer treba da bude teze, ubrzavanje 
-            actualSpawnInterval = referenceSpawnInterval * Mathf.Clamp(averagePlayerInterval / referenceSpawnInterval, minClamp, maxClamp);
+            if (timerForSpawn > actualSpawnInterval)
+            {
+                initialSpawn = false;
+                referenceSpawnInterval = TimedExponentialDecay();
+                SetAveragePlayerInterval();
+                //float maxReferenceIntervalDecrease = 0.5f;//50%, moci ce da ubrza speed za 50% maks, ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
+                float referenceIntervalProgress = Mathf.Clamp01(totalTime / targetTimeToReachMin);//od 0 do 1 koliko je totalTime blizu targetTime
+                float remainingProgress = 1 - referenceIntervalProgress; // od 0 do 1 jos koliko je progresa ostalo
+                float minClamp = 1f - remainingProgress * maxReferenceIntervalDecrease;
+                float maxClamp = 1f + remainingProgress * maxReferenceIntervalIncrease;
+                //ovo se mnozi sa maxReferenceIntervalDecrease ili increase i znaci da su efekti usporavanja i ubrzavanja sve manji sto se blizi minIntervalu, usporavanje postaje manje jer treba da bude teze, ubrzavanje 
+                actualSpawnInterval = referenceSpawnInterval * Mathf.Clamp(averagePlayerInterval / referenceSpawnInterval, minClamp, maxClamp);
 
-            timerForSpawn = 0;
-            if (trashList.Count > 1)
-            {
-                ThrowTrash();
-            }else
-            {
-                ThrowTrash();
-                ThrowTrash();
-                ThrowTrash();
+                timerForSpawn = 0;
+                if (trashList.Count > 1)
+                {
+                    ThrowRandomAvailableTrash();
+                } else
+                {
+                    ThrowRandomAvailableTrash();
+                    ThrowRandomAvailableTrash();
+                    ThrowRandomAvailableTrash();
+                }
+
             }
-            
+            if (timerAddNewTypes > delayAddNewTypes)
+            {
+                timerAddNewTypes = 0;
+                GameplayManager.AddNewTrashType();
+                //AddNewType
+            }
+            timerAddNewTypes += Time.deltaTime;
+
+            //BOJAN: je l' se racuna vreme i kad je pauzirana igra?
+            totalTime += Time.deltaTime;
+            timerForSpawn += Time.deltaTime;
+            currentPlayerInterval += Time.deltaTime;
         }
-        if (timerAddNewTypes > delayAddNewTypes)
-        {
-            timerAddNewTypes = 0;
-            GameplayManager.AddNewTrashType();
-            //AddNewType
-        }
-        timerAddNewTypes += Time.deltaTime;
-        
-        //BOJAN: je l' se racuna vreme i kad je pauzirana igra?
-        totalTime += Time.deltaTime;
-        timerForSpawn += Time.deltaTime;
-        currentPlayerInterval += Time.deltaTime;
     }
     public void GameOver()
     {
@@ -189,10 +204,59 @@ public class TrashManager : MonoBehaviour
 
         }*/
     }
-    public void ThrowTrash()
+    public void ThrowRandomAvailableTrash()
     {
-        //BOJAN: ovaj object pooling mi je malo cudan. generalno bi trebalo na initu da se instanciraju recimo 20 itema, i onda kasnije da ih vrtis, a ne da ih dodajes u toku runtime-a od 0? ili nisam uspeo da procitam kod dobro...
+        //BOJAN: ovaj object pooling mi je malo cudan. generalno bi trebalo na initu da se instanciraju recimo 20 itema, i onda kasnije da ih vrtis, a ne da ih dodajes u toku runtime-a od 0? ili nisam uspeo da procitam kod dobro... MILOS: ma polako dodajem kad treba, i bunim queue za object pooling
+        Trash trash = GetNewTrash();
+        TrashType randomTrashType = GetRandomAvailableTrashType();
+
+        Debug.Log(randomTrashType);
+        trash.Set(randomTrashType);
+        ThrowTrash(trash);
+    }
+
+    public TrashType GetRandomAvailableTrashType()
+    {
+        /*List<TrashType> keys = new List<TrashType>(GameplayManager.trash_bin.Keys);
+
+        int randomIndex = UnityEngine.Random.Range(0, keys.Count);
+
+        //Debug.Log(keys[randomIndex].ToString());
+        return keys[randomIndex];*/
+        RecyclingType randomBin = BinsManager.Instance.availableBins[UnityEngine.Random.Range(0, BinsManager.Instance.availableBins.Length)].binType;
+
+        // Get the trash list for that RecyclingType
+        List<TrashType> trashList = GameplayManager.bin_availableTrashList[randomBin];
+
+        // Get a random TrashType from that list
+        TrashType randomTrash = trashList[UnityEngine.Random.Range(0, trashList.Count)];
+
+        return randomTrash;
+    }
+    public void ThrowTrash(Trash trash)
+    {
+        trash.Throw(GetRandomPositionInJunkArea());
+        AddTrashList(trash);
+
+        UpdateHealth();
+
+        if (trashList.Count > maxTrash) // Not >= because it's offscreen first
+        {
+            GameOver();
+        }
+    }
+    public void AddTrashList(Trash trash)
+    {
+        trashList.Add(trash);
+        for(int i = 0; i < trashList.Count; i++)//first always on top
+        {
+            trashList[i].spriteRenderer.sortingOrder = i;
+        }
+    }
+    public Trash GetNewTrash()
+    {
         Trash newTrash = null;
+
         if (deactivatedTrashObjectPooling.Count == 0)
         {
             newTrash = SpawnNewTrash();
@@ -203,17 +267,23 @@ public class TrashManager : MonoBehaviour
             newTrash.gameObject.SetActive(true);
         }
 
-        newTrash.gameObject.transform.position = new Vector2(BootMain.Instance.viewRightX + 10f, 0);//da se ne bi videlo na screenu
-        newTrash.Throw(GetRandomPositionInJunkArea());
-        trashList.Add(newTrash);
-
-        UpdateHealth();
-
-        if (trashList.Count > maxTrash)//> a ne >= zato sto spavnuje trash van vidokruga i player uopste ne moze da reaguje 
+        newTrash.gameObject.transform.position = new Vector2(BootMain.Instance.viewRightX + 10f, 0); // Off-screen spawn
+        return newTrash;
+    }
+    public void SpawnAllTrashOfType(RecyclingType recyclingType)//za tutorijal
+    {
+        foreach (TrashType trashType in GameplayManager.trash_bin.Keys)
         {
-            GameOver();
+            if (recyclingType == GameplayManager.trash_bin[trashType])
+            {
+                Trash trash = GetNewTrash();
+                Debug.Log(trashType);
+                trash.Set(trashType);
+                ThrowTrash(trash);
+            }
         }
     }
+    //public void
     public Vector2 GetRandomPositionInJunkArea()
     {
         float randomX = UnityEngine.Random.Range(minXJankArea, maxXJankArea);
@@ -251,6 +321,7 @@ public class TrashManager : MonoBehaviour
     }
     public void DeactivateTrash(Trash trash)
     {
+        trash.transform.position = new Vector2(0,BootMain.Instance.viewTopY + 10f);
         if (trashList.Contains(trash))//da ga ne sadrzi znacilo bi da je izbrisano
         {
             trash.ToggleRigidBody(false);
@@ -293,6 +364,39 @@ public class TrashManager : MonoBehaviour
                 StopCoroutine(changingColorJunkArea);
             }
             changingColorJunkArea = StartCoroutine(GraduallyChangeColor(actualSpawnInterval, target));
+        }
+
+        if (!SaveSystem.Instance.Player.TutorialFinished)
+        {
+            if (trashList.Count == 0)
+            {
+                if (BinsManager.Instance.ReplaceCountForTutorial >  2)//da se prodju sve kante
+                {
+                    List<Trash> trashToFly = new List<Trash>(trashList);
+                    foreach (Trash trash in trashToFly)
+                    {
+                        trash.FlyToBin();
+                    }
+                    StartCoroutine(TutorialTap.Instance.TutorialFinished());
+                }
+                else if (BinsManager.Instance.ReplaceCountForTutorial == 2)//zbog bug u tutorial kad ocistis sve ali kroz moc... imas probelm zato sto  
+                {
+                    bool allFlying = true;
+                    foreach (Trash trash in trashList)
+                    {
+                        if (trash.coroutineName != "CurveMoveFollow")
+                        {
+                            allFlying = false;
+                            break;
+                        }
+                    }
+                    if (allFlying)
+                    {
+                        Debug.Log("radiiiiiii");
+                        StartCoroutine(TutorialTap.Instance.TutorialFinished());
+                    }
+                }
+            }
         }
         //Debug.Log("uslo je " + color.ToString());
     }

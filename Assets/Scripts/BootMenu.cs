@@ -39,7 +39,7 @@ public class BootMenu : MonoBehaviour
         totalScoreOutlineText.outlineWidth = 1f;
         totalScoreOutlineText.outlineColor = totalScoreOutlineText.color;
 
-        if (SoundManager.Instance.IsSilent())
+        if (SoundManager.Instance.IsMusicSilent())
         {
             SoundToggle.sprite = SoundOffTex;
         }

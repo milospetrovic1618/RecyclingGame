@@ -15,18 +15,24 @@ public class SoundManager : MonoBehaviour
     public AudioClip buttonClick;
     public AudioClip enterBin;
 
-    private bool isSilent = false; // Replaces isMuted
+    private bool isMusicSilent = false;
+    private bool isSFXSilent = false;
 
     private void Awake()
     {
         Instance = this;
     }
-    public bool IsSilent()
-    {
-        return isSilent;
-    }
 
-    public void Initialize(AudioClip menuBackgroundMusic, AudioClip gameplayBackgroundMusic, AudioClip buttonClick, AudioClip enterBin, AudioSource musicSource, AudioSource sfxSource)
+    public bool IsMusicSilent() => isMusicSilent;
+    public bool IsSFXSilent() => isSFXSilent;
+
+    public void Initialize(
+        AudioClip menuBackgroundMusic,
+        AudioClip gameplayBackgroundMusic,
+        AudioClip buttonClick,
+        AudioClip enterBin,
+        AudioSource musicSource,
+        AudioSource sfxSource)
     {
         this.menuBackgroundMusic = menuBackgroundMusic;
         this.gameplayBackgroundMusic = gameplayBackgroundMusic;
@@ -45,7 +51,7 @@ public class SoundManager : MonoBehaviour
             musicSource.loop = true;
             musicSource.Play();
         }
-        ApplyVolume(); // Apply current volume state
+        ApplyMusicVolume();
     }
 
     public void StopBGM()
@@ -55,7 +61,10 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip)
     {
-        sfxSource.PlayOneShot(clip);
+        if (!isSFXSilent)
+        {
+            sfxSource.PlayOneShot(clip);
+        }
     }
 
     public void PlayButtonClick()
@@ -63,22 +72,37 @@ public class SoundManager : MonoBehaviour
         PlaySFX(buttonClick);
     }
 
-    public bool ToggleSound()
+    public void ToggleMusic()
     {
-        SetSoundActive(isSilent);
-        return !isSilent;//is Silent se menja u grodnjoj funkciji
+        isMusicSilent = !isMusicSilent;
+        ApplyMusicVolume();
     }
 
-    public void SetSoundActive(bool active)
+    public void ToggleSFX()
     {
-        isSilent = !active;
-        ApplyVolume();
+        isSFXSilent = !isSFXSilent;
+        ApplySFXVolume();
     }
 
-
-    private void ApplyVolume()
+    public void SetMusicActive(bool active)
     {
-        musicSource.volume = isSilent ? 0f : 1f;
-        sfxSource.volume = isSilent ? 0f : 1f;
+        isMusicSilent = !active;
+        ApplyMusicVolume();
+    }
+
+    public void SetSFXActive(bool active)
+    {
+        isSFXSilent = !active;
+        ApplySFXVolume();
+    }
+
+    private void ApplyMusicVolume()
+    {
+        musicSource.volume = isMusicSilent ? 0f : 1f;
+    }
+
+    private void ApplySFXVolume()
+    {
+        sfxSource.volume = isSFXSilent ? 0f : 1f;
     }
 }

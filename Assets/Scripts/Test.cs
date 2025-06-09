@@ -11,6 +11,7 @@ public class Test : MonoBehaviour
     public TMP_InputField PlasticMetalCountField;
     public TMP_InputField GlassCountField;
     public TMP_InputField PaperCountField;
+    public TMP_InputField ChangeBinsCountField;
 
     private void Start()
     {
@@ -22,6 +23,7 @@ public class Test : MonoBehaviour
         PlasticMetalCountField.text = SaveSystem.Instance.Player.PlasticMetalCount.ToString();
         GlassCountField.text = SaveSystem.Instance.Player.GlassCount.ToString();
         PaperCountField.text = SaveSystem.Instance.Player.PaperCount.ToString();
+        ChangeBinsCountField.text = SaveSystem.Instance.Player.CountChangeBins.ToString();
     }
 
     public void SaveAndPlay()
@@ -32,6 +34,14 @@ public class Test : MonoBehaviour
         SaveSystem.Instance.Player.OrganicCount = int.Parse(OrganicCountField.text);
         SaveSystem.Instance.Player.ElectronicsBatteriesCount = int.Parse(ElectronicCountField.text);
         SaveSystem.Instance.Player.TotalCount = int.Parse(TotalCountField.text);
+        SaveSystem.Instance.Player.CountChangeBins = int.Parse(ChangeBinsCountField.text);
+
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
+    }
+    public void ClearPlayerData()
+    {
+        SaveSystem.Instance.ClearPrefs();
+        SaveSystem.Instance.InitializePublic();
 
         BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
     }

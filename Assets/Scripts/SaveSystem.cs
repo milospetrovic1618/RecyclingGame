@@ -27,6 +27,19 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
         Player = (PlayerSave)Load(new PlayerSave());
         Saves.Add(Player.Name, Player);
     }
+    public void InitializePublic()//ovo imam zbog testa
+    {
+        JSet = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        };
+
+        Saves = new Dictionary<string, GenericSave>();
+        ChangedSaves = new List<string>();
+
+        Player = (PlayerSave)Load(new PlayerSave());
+        Saves.Add(Player.Name, Player);
+    }
 
     public GenericSave Load(GenericSave save)
     {

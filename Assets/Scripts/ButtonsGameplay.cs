@@ -6,10 +6,9 @@ using System.Net.Http.Headers;
 using System.Threading;
 using TMPro;
 using UnityEngine;
-
-public class ButtonsGameplay : MonoBehaviour
+public static class Quiz
 {
-    public Dictionary<string, (string[] answers, string correctAnswer, string explanation)> quizData =
+    public static Dictionary<string, (string[] answers, string correctAnswer, string explanation)> quizData =
     new Dictionary<string, (string[] answers, string correctAnswer, string explanation)>()
 {
     {
@@ -109,6 +108,10 @@ public class ButtonsGameplay : MonoBehaviour
         )
     }
 };
+}
+public class ButtonsGameplay : MonoBehaviour
+{
+    
 
     public static string[] ShuffleArray(string[] array)
     {
@@ -124,8 +127,8 @@ public class ButtonsGameplay : MonoBehaviour
     public string chosenQuestionKey;
     public void ContinueTry()
     {
-        int randomIndex = UnityEngine.Random.Range(0, quizData.Count);
-        chosenQuestionKey = quizData.Keys.ElementAt(randomIndex);
+        int randomIndex = UnityEngine.Random.Range(0, Quiz.quizData.Count);
+        chosenQuestionKey = Quiz.quizData.Keys.ElementAt(randomIndex);
 
         //
 
@@ -135,7 +138,7 @@ public class ButtonsGameplay : MonoBehaviour
         BootGameplay.Instance.Quiz.SetActive(true);
         BootGameplay.Instance.Quiz_Question.text = chosenQuestionKey;
         BootGameplay.Instance.scoreHolder.SetActive(false);
-        if (quizData[chosenQuestionKey].answers.Length == 3)
+        if (Quiz.quizData[chosenQuestionKey].answers.Length == 3)
         {
             BootGameplay.Instance.Quiz1.SetActive(true);
             BootGameplay.Instance.Quiz2.SetActive(false);
@@ -143,11 +146,11 @@ public class ButtonsGameplay : MonoBehaviour
 
             
             //assign shuffledArray, ovo nije potrebno jer moze i direktno random na text na buttonu ali ok je
-            quizData[chosenQuestionKey] = (ShuffleArray(quizData[chosenQuestionKey].answers.ToArray()), quizData[chosenQuestionKey].correctAnswer, quizData[chosenQuestionKey].explanation);
+            Quiz.quizData[chosenQuestionKey] = (ShuffleArray(Quiz.quizData[chosenQuestionKey].answers.ToArray()), Quiz.quizData[chosenQuestionKey].correctAnswer, Quiz.quizData[chosenQuestionKey].explanation);
 
-            BootGameplay.Instance.Quiz1_Button1.text = quizData[chosenQuestionKey].answers[0];
-            BootGameplay.Instance.Quiz1_Button2.text = quizData[chosenQuestionKey].answers[1];
-            BootGameplay.Instance.Quiz1_Button3.text = quizData[chosenQuestionKey].answers[2];
+            BootGameplay.Instance.Quiz1_Button1.text = Quiz.quizData[chosenQuestionKey].answers[0];
+            BootGameplay.Instance.Quiz1_Button2.text = Quiz.quizData[chosenQuestionKey].answers[1];
+            BootGameplay.Instance.Quiz1_Button3.text = Quiz.quizData[chosenQuestionKey].answers[2];
         }
         else//==2
         {
@@ -155,8 +158,8 @@ public class ButtonsGameplay : MonoBehaviour
             BootGameplay.Instance.Quiz2.SetActive(true);
 
             //doesnt shuffle
-            BootGameplay.Instance.Quiz2_Button1.text = quizData[chosenQuestionKey].answers[0];
-            BootGameplay.Instance.Quiz2_Button2.text = quizData[chosenQuestionKey].answers[1];
+            BootGameplay.Instance.Quiz2_Button1.text =  Quiz.quizData[chosenQuestionKey].answers[0];
+            BootGameplay.Instance.Quiz2_Button2.text = Quiz.quizData[chosenQuestionKey].answers[1];
         }
 
         //Destroy(BootGameplay.Instance.ContinueButton.gameObject);
@@ -164,10 +167,11 @@ public class ButtonsGameplay : MonoBehaviour
     public void QuizAnswer(TextMeshProUGUI TMP)
     {
         string answer = TMP.text;
-        bool correct = quizData[chosenQuestionKey].correctAnswer == answer;
+        bool correct = Quiz.quizData[chosenQuestionKey].correctAnswer == answer;
 
         if (correct)
         {
+            SaveSystem.Instance.Player.AddHashMapTrivia(chosenQuestionKey);
             Continue();
         }
         else
@@ -214,6 +218,14 @@ public class ButtonsGameplay : MonoBehaviour
     public void TogglePause()
     {
         bool pause = !BootGameplay.Instance.PauseUI.activeSelf;
+        if (!SaveSystem.Instance.Player.TutorialFinished)
+        {
+            TutorialTap.Instance?.gameObject?.SetActive(!pause);
+            if (!pause)
+            {
+                TutorialTap.Instance?.Disable();
+            }
+        }
         BootGameplay.Instance.PauseUI.SetActive(pause);
         Time.timeScale = pause ? 0f : 1f;
     }
@@ -223,8 +235,9 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void SoundToggle()
     {
-        SoundManager.Instance.PlayButtonClick(); 
-        if (SoundManager.Instance.ToggleSound())
+        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.ToggleMusic();
+        if (!SoundManager.Instance.IsMusicSilent())
         {
             BootGameplay.Instance.SoundToggle.sprite = BootGameplay.Instance.SoundOnTex;
         }

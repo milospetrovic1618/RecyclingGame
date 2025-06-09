@@ -69,13 +69,21 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
         scoreOutlineText.SetFloat("_UnderlayOffsetX", 0f);
         scoreOutlineText.SetFloat("_UnderlayOffsetY", 0f);*/
 
-        if (SoundManager.Instance.IsSilent())
+        if (SoundManager.Instance.IsMusicSilent())
         {
             SoundToggle.sprite = SoundOffTex;
         }
         else
         {
             SoundToggle.sprite = SoundOnTex;
+        }
+
+        if (!SaveSystem.Instance.Player.TutorialFinished)
+        {
+            GameObject tutorial = Instantiate(Resources.Load<GameObject>("Tutorial"));
+
+            // Set as first in hierarchy (if under a Canvas or specific parent)
+            tutorial.transform.SetAsFirstSibling();
         }
     }
 

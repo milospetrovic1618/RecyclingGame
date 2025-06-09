@@ -18,6 +18,8 @@ public class BinsManager : MonoBehaviour
     public Bin[] availableBins = new Bin[3];
     public int neededBins = 3;//za tutorijale treba 1 i 2
 
+    public int ReplaceCountForTutorial = 0;
+
     //private float availableBinPositionFromBottom = 0.4f;
     public Queue<Bin> nextBinOrder = new Queue<Bin>();
 
@@ -174,6 +176,28 @@ public class BinsManager : MonoBehaviour
         }
         if (count != 0) GameplayManager.Instance.ScoreIncrease(bin.binType, count);
 
+        SaveSystem.Instance.Player.CountChangeBins++;
+
+        if (!SaveSystem.Instance.Player.TutorialFinished)
+        {
+            ReplaceCountForTutorial++;
+            
+            if (ReplaceCountForTutorial > 2)
+            {
+
+            } else if (ReplaceCountForTutorial == 2)
+            {
+                TrashManager.Instance.SpawnAllTrashOfType(nextBin.binType);
+                TrashManager.Instance.SpawnAllTrashOfType(nextBin.binType);
+            }
+            else 
+            {
+                TrashManager.Instance.SpawnAllTrashOfType(nextBin.binType);
+                TrashManager.Instance.SpawnAllTrashOfType(availableBins[UnityEngine.Random.Range(0, availableBins.Length)].binType);
+            }
+        }
+
         //ugasi shaking
     }
+
 }

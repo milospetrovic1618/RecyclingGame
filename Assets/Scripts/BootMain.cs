@@ -13,7 +13,9 @@ public enum Scenes
     Menu,
     Gameplay,
     Boot,
-    Test
+    Test,
+    Achievements,
+    Options,
 }
 //redosled u executionOrder - prvo boot, pa Data, pa ostalo
 //binsManager pre TrashManager  jer se koristi za random
@@ -33,6 +35,9 @@ public class BootMain : MonoBehaviour
     public GameObject EventSystemInstantiated;
     public GameObject SoundManagerInstantiated;
     public Camera cam;
+
+    private int lastScreenWidth;
+    private int lastScreenHeight;
 
     public float viewWidth;
     public float viewHeight;
@@ -59,18 +64,7 @@ public class BootMain : MonoBehaviour
         soundManager.Initialize(menuBackgroundMusic,gameplayBackgroundMusic,buttonClick, enterBin, SoundManagerInstantiated.AddComponent<AudioSource>(), SoundManagerInstantiated.AddComponent<AudioSource>());
         peristantGameObjects.Add(SoundManagerInstantiated);
 
-        //BOJAN: za mobile bi bilo dobro da se racuna Screen.safeArea zbog notch-eva (kad su prednja kamera i dugmici deo ekrana)
-        //BOJAN: za mobile ce uglavnom biti fiksno width i height (mada noviji telefoni mogu i ovo da poremete)
-        //BOJAN: ali za PC/browser ce igraci moci da menjaju (pre svega resize browsera...)
-        //BOJAN: pa ne bi bilo lose u neki Update ubaciti da proverava da li je doslo do promene
-        Vector2 viewBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-        Vector2 viewTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
-        viewLeftX = viewBottomLeft.x;
-        viewRightX = viewTopRight.x;
-        viewBottomY = viewBottomLeft.y;
-        viewTopY = viewTopRight.y;
-        viewWidth = viewRightX - viewLeftX;
-        viewHeight = viewTopY - viewBottomY;
+        SetBounds();
 
         SetPersistant(peristantGameObjects);
 
@@ -85,10 +79,47 @@ public class BootMain : MonoBehaviour
         }
         DontDestroyOnLoad(this);
     }
+    public void SetBounds()
+    {
+        lastScreenWidth = Screen.width;
+        lastScreenHeight = Screen.height;
+
+        Rect safeArea = Screen.safeArea;
+        Vector2 bottomLeftNormalized = new Vector2(
+            safeArea.xMin / Screen.width,
+            safeArea.yMin / Screen.height
+        );
+        Vector2 topRightNormalized = new Vector2(
+            safeArea.xMax / Screen.width,
+            safeArea.yMax / Screen.height
+        );
+
+        Vector2 viewBottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(bottomLeftNormalized.x, bottomLeftNormalized.y, Camera.main.nearClipPlane));
+        Vector2 viewTopRight = Camera.main.ViewportToWorldPoint(new Vector3(topRightNormalized.x, topRightNormalized.y, Camera.main.nearClipPlane));
+
+        viewLeftX = viewBottomLeft.x;
+        viewRightX = viewTopRight.x;
+        viewBottomY = viewBottomLeft.y;
+        viewTopY = viewTopRight.y;
+        viewWidth = viewRightX - viewLeftX;
+        viewHeight = viewTopY - viewBottomY;
+    }
 
     public void LoadSceneFromBoot(Scenes scene)
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(scene.ToString());
+    }
+
+    void Update()
+    {
+        //BOJAN: za mobile bi bilo dobro da se racuna Screen.safeArea zbog notch-eva (kad su prednja kamera i dugmici deo ekrana)
+        //BOJAN: za mobile ce uglavnom biti fiksno width i height (mada noviji telefoni mogu i ovo da poremete)
+        //BOJAN: ali za PC/browser ce igraci moci da menjaju (pre svega resize browsera...)
+        //BOJAN: pa ne bi bilo lose u neki Update ubaciti da proverava da li je doslo do promene
+        if (Screen.width != lastScreenWidth || Screen.height != lastScreenHeight)
+        {
+            SetBounds();
+        }
     }
 }

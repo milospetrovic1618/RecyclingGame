@@ -4,14 +4,17 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using TMPro;
 using static Unity.Burst.Intrinsics.X86.Avx;
+using System.Xml;
 
 public class ScoreShow : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    TextMeshPro backText;
+    //TextMeshPro backText;
     TextMeshPro frontText;
     public void Initialize(float value, RecyclingType recyclingType, bool power)
     {
+        gameObject.name = "score";
+
         int fontSize = 5;
         if (power)
         {
@@ -19,41 +22,11 @@ public class ScoreShow : MonoBehaviour
         }
         string text = "+" + ((int)value).ToString();
 
-        //  backText for outline
-        GameObject backTextObj = new GameObject("BackText");
-        backTextObj.transform.SetParent(transform);
-        backTextObj.transform.localPosition = Vector3.zero;
 
-        backText = backTextObj.AddComponent<TextMeshPro>();
-        backText.font = BootMain.Instance.LuckiestGuy; 
-        backText.text = text;
-        backText.fontSize = fontSize;
-        backText.color = Color.black;
-        backText.alignment = TextAlignmentOptions.Center;
-        backText.textWrappingMode = TextWrappingModes.NoWrap;
-        backText.fontStyle = FontStyles.Bold;
-
-        //new material
-        Material backMat = new Material(backText.font.material);
-        backText.fontMaterial = backMat;
-
-        //  outline  
-        backText.outlineWidth = 0.7f;
-        backMat.EnableKeyword("UNDERLAY_ON");
-        backMat.SetColor("_UnderlayColor", Color.black);
-        backMat.SetFloat("_UnderlaySoftness", 0.5f);
-        backMat.SetFloat("_UnderlayOffsetX", 0f);
-        backMat.SetFloat("_UnderlayOffsetY", 0f);
-
-        // Refresh  
-        backText.SetAllDirty();
-
-        MeshRenderer backRenderer = backText.GetComponent<MeshRenderer>();
-        backRenderer.sortingLayerName = SortingLayer.Score.ToString();
-        backRenderer.sortingOrder = 0;
-
-
-        frontText = gameObject.AddComponent<TextMeshPro>();
+        GameObject frontTextObj = new GameObject("FrontText");
+        frontTextObj.transform.SetParent(transform);
+        frontTextObj.transform.localPosition = Vector3.zero;
+        frontText = frontTextObj.AddComponent<TextMeshPro>();
         frontText.font = BootMain.Instance.LuckiestGuy; // assign font FIRST
         frontText.text = text;
         frontText.fontSize = fontSize;
@@ -65,11 +38,49 @@ public class ScoreShow : MonoBehaviour
         Material frontMat = new Material(frontText.font.material);
         frontText.fontMaterial = frontMat;
 
+        //OUTLINE
+        frontText.fontMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, 0.6f);
+        frontText.outlineWidth = 1;
+
         frontText.SetAllDirty();
 
         MeshRenderer frontRenderer = frontText.GetComponent<MeshRenderer>();
         frontRenderer.sortingLayerName = SortingLayer.Score.ToString();
         frontRenderer.sortingOrder = 1;
+
+
+        //  backText for outline
+        /*GameObject backTextObj = new GameObject("BackText");
+        backTextObj.transform.SetParent(transform);
+        backTextObj.transform.localPosition = Vector3.zero;
+
+        backText = backTextObj.AddComponent<TextMeshPro>();
+        backText.font = BootMain.Instance.LuckiestGuy; 
+        backText.text = text;
+        backText.fontSize = fontSize;
+        Color backTextColor = new Color(0.15f, 0.15f, 0.15f, 1f);
+        backText.color = backTextColor;
+        backText.alignment = TextAlignmentOptions.Center;
+        backText.textWrappingMode = TextWrappingModes.NoWrap;
+        backText.fontStyle = FontStyles.Bold;
+
+        //new material
+        Material backMat = new Material(backText.font.material);
+        backText.fontMaterial = backMat;
+
+        //  outline  
+        backText.outlineWidth = 1f;
+        backMat.EnableKeyword("UNDERLAY_ON");
+        backMat.SetColor("_UnderlayColor", Color.white);
+
+        // Refresh  
+        backText.SetAllDirty();
+
+        MeshRenderer backRenderer = backText.GetComponent<MeshRenderer>();
+        backRenderer.sortingLayerName = SortingLayer.Score.ToString();
+        backRenderer.sortingOrder = 0;*/
+
+
 
 
         Vector2 scorePosition = BinsManager.Instance.GetBinFromRecyclingType(recyclingType).transform.position;
@@ -106,7 +117,7 @@ public class ScoreShow : MonoBehaviour
             Color c = frontText.color;
             c.a = alpha;
             frontText.color = c;
-            backText.color = c;
+            //backText.color = c;
 
             yield return null; 
         }

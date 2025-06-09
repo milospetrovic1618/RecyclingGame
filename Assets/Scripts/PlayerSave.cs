@@ -1,15 +1,29 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerSave : GenericSave
 {
+
+    [JsonProperty]
+    private bool tutorialFinished;
+
     //base fields
     [JsonProperty]
     private float totalScore;
     [JsonProperty]
     private float highScore;
+
+    [JsonProperty]
+    private bool catchTrashMidAir;
+    [JsonProperty]
+    //public HashSet<string> triviaHashset = new HashSet<string>();//da li je odgovorio na sva pitanja
+    private HashSet<string> triviaHashset= new HashSet<string>();//da li je odgovorio na sva pitanja
+    [JsonProperty]
+    private long countChangeBins;
 
     //base fields
     [JsonProperty]
@@ -39,8 +53,6 @@ public class PlayerSave : GenericSave
     private long organicMultiplier = 1;
     [JsonProperty]
     private long electronicsBatteriesMultiplier = 1;
-
-
 
     public float ScoreIncrease(RecyclingType recyclingType, int count)//int caount dodat zbog moci, inace bi bilo ++ tj +=1
     {
@@ -104,7 +116,7 @@ public class PlayerSave : GenericSave
             SaveSystem.Instance.Flag(this);
         }
     }
-
+    
 
     [JsonIgnore]
     public float HighScore
@@ -214,6 +226,61 @@ public class PlayerSave : GenericSave
         }
     }
 
+
+    [JsonIgnore]
+    public long CountChangeBins
+    {
+        get => countChangeBins;
+        set
+        {
+            countChangeBins = value;
+
+            SaveSystem.Instance.Flag(this);
+        }
+    }
+
+    [JsonIgnore]
+    public bool CatchTrashMidAir
+    {
+        get => catchTrashMidAir;
+        set
+        {
+            if (!catchTrashMidAir && tutorialFinished)
+            {
+                catchTrashMidAir = value;
+                SaveSystem.Instance.Flag(this);
+            }
+
+        }
+    }
+    [JsonIgnore]
+    public bool TutorialFinished
+    {
+        get => tutorialFinished;
+        set
+        {
+            tutorialFinished = value;
+            if (tutorialFinished)
+            {
+                BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);//refreshuje scenu bez pomagaca i tutorijal spawna
+            }
+            SaveSystem.Instance.Flag(this);
+        }
+    }
+
+    public void AddHashMapTrivia(string question)//added when answered correctly
+    {
+        if (!triviaHashset.Contains(question))
+        {
+            triviaHashset.Add(question);
+            SaveSystem.Instance.Flag(this);
+        }
+    }
+    public int GetTriviaCount()//added when answered correctly
+    {
+        return triviaHashset.Count;
+    }
+
     //multipliers
     /*[JsonIgnore]
     public float TotalScoreMultiplier
@@ -280,6 +347,8 @@ public class PlayerSave : GenericSave
     public static int[] totalMultiplierTresholds = {500,750,1000,1500,3000 };
     [JsonIgnore]
     public static int[] binMultiplierTresholds = { 100, 200, 400, 800, 1600 };
+    [JsonIgnore]
+    public static int[] changeBinsRankTresholds = { 50,100,200};
     public float GetTotalMultiplier()
     {
         if (totalCount < totalMultiplierTresholds[0])
@@ -295,7 +364,7 @@ public class PlayerSave : GenericSave
         else
             return 2f;
     }
-    public int GetBinMultiplier(long count)
+    public int GetBinMultiplier(long count)//== rank
     {
         if (count < binMultiplierTresholds[0])
             return 1;
@@ -309,6 +378,56 @@ public class PlayerSave : GenericSave
             return 5;
         else
             return 6;
+    }
+    public int GetRankBin(long count)
+    {
+        return GetBinMultiplier(count);
+    }
+    public int GetRankCountChangeBins()
+    {
+        if (countChangeBins < changeBinsRankTresholds[0])
+            return 1;
+        else if (countChangeBins < changeBinsRankTresholds[1])
+            return 4;
+        else if (countChangeBins < changeBinsRankTresholds[2])
+            return 5;
+        else
+            return 6;
+    }
+    public int GetRankTotalCount()
+    {
+        switch (GetTotalMultiplier())
+        {
+            case 1:
+                return 1;
+            case 1.2f:
+                return 2;
+            case 1.4f:
+                return 3;
+            case 1.6f:
+                return 4;
+            case 1.8f:
+                return 5;
+            case 2:
+                return 6;
+        }
+        return -1;
+    }
+    public int GetRankTrivia()
+    {
+        if (GetTriviaCount() == Quiz.quizData.Count)
+        {
+            return 6;
+        }
+        return 1;
+    }
+    public int GetRankCatchMidAir()
+    {
+        if (catchTrashMidAir)
+        {
+            return 6;
+        }
+        return 1;
     }
     public long GetTotalScore()
     {
