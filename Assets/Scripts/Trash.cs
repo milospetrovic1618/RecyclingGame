@@ -49,7 +49,7 @@ public class Trash : MonoBehaviour
     public Rigidbody2D rigidbody;
     public OutlineFx.OutlineFx outline;
     public Coroutine movementCoroutine;
-    public Coroutine coroutineWithCallback;
+    public Coroutine coroutineWithCallback; //vrv bi ti radilo i da imas StopAllCoroutines
     public string coroutineName;
     private void Awake()
     {
@@ -71,6 +71,7 @@ public class Trash : MonoBehaviour
     {
         //spriteRenderer.sortingOrder = TrashManager.Instance.trashList.Count;//always on top
         //transform.SetAsLastSibling();//always on top
+        ToggleRigidBody(false);
         if (this.trashType != trashType)
         {
 

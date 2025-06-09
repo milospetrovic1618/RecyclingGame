@@ -17,7 +17,7 @@ https://www.figma.com/board/gYR0Q63aHg5HZiemJHX0uS/Recycle-game-flow?node-id=0-1
 ■ 
 zameni ui i astale dizajn stvari: dugmici u gamplay, score u meniju
 
-■ bug kad se pusti i baci fly
+■ bug kad se pusti i baci fly.... bug je kad se mnogo brzo klikce na item... tako da sad cu samo u setu da stvim rigid body false
 ■ buggovi nekad:
 spawnuje ga iznad table
 spawnuje i toggle body mu je aktiviran stalno... vrv missed
