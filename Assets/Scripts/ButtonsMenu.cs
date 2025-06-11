@@ -19,29 +19,10 @@ public class ButtonsMenu : MonoBehaviour
         BootMain.Instance.LoadSceneFromBoot(Scenes.Achievements);
     }
 
-    public void LoadQuiz()
+    public void Options()
     {
         SoundManager.Instance.PlayButtonClick();
-    }
-    public void ShowBedges()
-    {
-        SoundManager.Instance.PlayButtonClick();
-    }
-    public void ShowItems()
-    {
-        SoundManager.Instance.PlayButtonClick();
-    }
-    public void SoundToggle()
-    {
-        SoundManager.Instance.PlayButtonClick();
-        SoundManager.Instance.ToggleMusic();
-        if (!SoundManager.Instance.IsMusicSilent())
-        {
-            BootMenu.Instance.SoundToggle.sprite = BootMenu.Instance.SoundOnTex;
-        }
-        else
-        {
-            BootMenu.Instance.SoundToggle.sprite = BootMenu.Instance.SoundOffTex;
-        }
+        BootMain.Instance.LoadOptions();
+
     }
 }

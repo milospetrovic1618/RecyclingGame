@@ -19,9 +19,6 @@ public class BootMenu : MonoBehaviour
     public TextMeshProUGUI totalScoreText;
     public TextMeshProUGUI totalScoreOutlineText;
 
-    public UnityEngine.UI.Image SoundToggle;
-    public Sprite SoundOnTex;
-    public Sprite SoundOffTex;
     public GameObject CameraInstantiated;
     public GameObject EventSystemInstantiated;
     public void Awake()
@@ -38,15 +35,6 @@ public class BootMenu : MonoBehaviour
         totalScoreOutlineText.fontMaterial = totalScoreOutlineMat;
         totalScoreOutlineText.outlineWidth = 1f;
         totalScoreOutlineText.outlineColor = totalScoreOutlineText.color;
-
-        if (SoundManager.Instance.IsMusicSilent())
-        {
-            SoundToggle.sprite = SoundOffTex;
-        }
-        else
-        {
-            SoundToggle.sprite = SoundOnTex;
-        }
     }
     private void Start()
     {

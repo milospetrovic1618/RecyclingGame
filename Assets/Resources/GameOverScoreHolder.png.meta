@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 22ded1d72b5872e4ba880e96a1376990
+guid: 4057e903a3e752f46acf186979a288cb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4031564604880626460
-    second: Group 13_0
+      213: 7151506082282653026
+    second: GameOverScoreHolder_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 110
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Group 13_0
+      name: GameOverScoreHolder_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 8
-        width: 196
-        height: 215
+        x: 1
+        y: 7
+        width: 737
+        height: 364
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c13a2f2e5aef2f730800000000000000
-      internalID: 4031564604880626460
+      spriteID: 265c08b34e04f3360800000000000000
+      internalID: 7151506082282653026
       vertices: []
       indices: 
       edges: []
@@ -159,7 +159,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Group 13_0: 4031564604880626460
+      GameOverScoreHolder_0: 7151506082282653026
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

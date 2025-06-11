@@ -25,6 +25,14 @@ public class PlayerSave : GenericSave
     [JsonProperty]
     private long countChangeBins;
 
+    [JsonProperty]
+    public int lastRankCatchTrashMidAir = 1;
+    [JsonProperty]
+    public int lastRankTriviaHashset = 1;
+    [JsonProperty]
+    public int lastRankCountChangeBins = 1;
+    //za ove ostale uporedjujes multipliere, i ako su razliciti onda izbacis najnoviji rank
+
     //base fields
     [JsonProperty]
     private long totalCount;
@@ -42,17 +50,17 @@ public class PlayerSave : GenericSave
 
     //multiplier
     [JsonProperty]
-    private float totalMultiplier = 1;
+    public float totalMultiplier = 1;
     [JsonProperty]
-    private long paperMultiplier = 1;
+    public long paperMultiplier = 1;
     [JsonProperty]
-    private long glassMultiplier = 1;
+    public long glassMultiplier = 1;
     [JsonProperty]
-    private long plasticMetalMultiplier = 1;
+    public long plasticMetalMultiplier = 1;
     [JsonProperty]
-    private long organicMultiplier = 1;
+    public long organicMultiplier = 1;
     [JsonProperty]
-    private long electronicsBatteriesMultiplier = 1;
+    public long electronicsBatteriesMultiplier = 1;
 
     public float ScoreIncrease(RecyclingType recyclingType, int count)//int caount dodat zbog moci, inace bi bilo ++ tj +=1
     {
@@ -105,13 +113,13 @@ public class PlayerSave : GenericSave
         {
             totalCount = value;
 
-            float newTotalScoreMultiplier = GetTotalMultiplier();
+            /*float newTotalScoreMultiplier = GetTotalMultiplier();
             if (newTotalScoreMultiplier != totalMultiplier)
             {
                 //rank
 
                 totalMultiplier = newTotalScoreMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }
@@ -138,13 +146,13 @@ public class PlayerSave : GenericSave
         {
             paperCount = value;
 
-            int newMultiplier = GetBinMultiplier(value);
+            /*int newMultiplier = GetBinMultiplier(value);
             if (newMultiplier != paperMultiplier)
             {
                 //rank
 
                 paperMultiplier = newMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }
@@ -157,13 +165,13 @@ public class PlayerSave : GenericSave
         {
             glassCount = value;
 
-            int newMultiplier = GetBinMultiplier(value);
+            /*int newMultiplier = GetBinMultiplier(value);
             if (newMultiplier != glassMultiplier)
             {
                 //rank
 
                 glassMultiplier = newMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }
@@ -176,13 +184,13 @@ public class PlayerSave : GenericSave
         {
             plasticMetalCount = value;
 
-            int newMultiplier = GetBinMultiplier(value);
+            /*int newMultiplier = GetBinMultiplier(value);
             if (newMultiplier != plasticMetalMultiplier)
             {
                 //rank
 
                 plasticMetalMultiplier = newMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }
@@ -195,13 +203,13 @@ public class PlayerSave : GenericSave
         {
             organicCount = value;
 
-            int newMultiplier = GetBinMultiplier(value);
+            /*int newMultiplier = GetBinMultiplier(value);
             if (newMultiplier != organicMultiplier)
             {
                 //rank
 
                 organicMultiplier = newMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }
@@ -214,13 +222,13 @@ public class PlayerSave : GenericSave
         {
             electronicsBatteriesCount = value;
 
-            int newMultiplier = GetBinMultiplier(value);
+            /*int newMultiplier = GetBinMultiplier(value);
             if (newMultiplier != electronicsBatteriesMultiplier)
             {
                 //rank
 
                 electronicsBatteriesMultiplier = newMultiplier;
-            }
+            }*/
 
             SaveSystem.Instance.Flag(this);
         }

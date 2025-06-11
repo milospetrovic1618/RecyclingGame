@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using TMPro;
+using Image = UnityEngine.UI.Image;
 
 public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde pr camera
 {
@@ -20,6 +21,8 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
     public GameObject CameraPrefab;
     public GameObject EventSystemPrefab;
 
+    public TextMeshProUGUI scoreTextGameOver;//u gameover stavis ovu poziciju za score, dupliras i tjt, a obican sakrijes
+
     public GameObject scoreHolder;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI scoreOutlineText;
@@ -27,20 +30,28 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
     public GameObject PauseButton;
     public GameObject GameOverUI;
     public UnityEngine.UI.Button ContinueButton;
+    public UnityEngine.UI.Image ContinueButtonImage;
     public GameObject Quiz;
     public TextMeshProUGUI Quiz_Question;
     public GameObject Quiz1;
     public TextMeshProUGUI Quiz1_Button1;
+    public Image Quiz1_Image1;
     public TextMeshProUGUI Quiz1_Button2;
+    public Image Quiz1_Image2;
     public TextMeshProUGUI Quiz1_Button3;
+    public Image Quiz1_Image3;
     public GameObject Quiz2;
     public TextMeshProUGUI Quiz2_Button1;
+    public Image Quiz2_Image1;
     public TextMeshProUGUI Quiz2_Button2;
+    public Image Quiz2_Image2;
     public UnityEngine.UI.Image SoundToggle;
     public Sprite SoundOnTex;
     public Sprite SoundOffTex;
     public GameObject CameraInstantiated;
     public GameObject EventSystemInstantiated;
+
+    public GameObject canvas;
 
     public void Awake()
     {
@@ -68,16 +79,7 @@ public class BootGameplay : MonoBehaviour//ima podatke koji su instancirni ovde 
         scoreOutlineText.SetFloat("_UnderlaySoftness", 0.5f);
         scoreOutlineText.SetFloat("_UnderlayOffsetX", 0f);
         scoreOutlineText.SetFloat("_UnderlayOffsetY", 0f);*/
-
-        if (SoundManager.Instance.IsMusicSilent())
-        {
-            SoundToggle.sprite = SoundOffTex;
-        }
-        else
-        {
-            SoundToggle.sprite = SoundOnTex;
-        }
-
+        
         if (!SaveSystem.Instance.Player.TutorialFinished)
         {
             GameObject tutorial = Instantiate(Resources.Load<GameObject>("Tutorial"));

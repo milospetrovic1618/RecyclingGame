@@ -47,13 +47,15 @@ public class AchievementUI
         progressText.text = achievementData.progressText;
         if (achievementData.noFill)
         {
-            Achievements.DestroyGameObject(fillBackground.gameObject);
-            Achievements.DestroyGameObject(fill.gameObject);
+            fillBackground.color = new Color(0,0,0,0);
+            fill.color = new Color(0, 0, 0, 0);
         }
         else
         {
+            fillBackground.color = rankColor[achievementData.rank-1];
+
+            fill.color = Color.white;
             fill.fillAmount = achievementData.fill;
-            fill.color = rankColor[achievementData.rank-1];
         }
 
         //OUTLINE
@@ -82,13 +84,13 @@ public class AchievementData
     public TextMeshProUGUI progressText;
     public UnityEngine.UI.Image fillBackground;
     public UnityEngine.UI.Image fill;*/
-    public AchievementData(string name, string title)
+    public AchievementData(string name)
     {
         this.name = name;
-        this.title = title;
         switch (name)
         {
             case "TotalCount":
+                title = "RECYCLED TRASH";
                 rank = SaveSystem.Instance.Player.GetRankTotalCount();
 
                 if (rank == 6)
@@ -104,6 +106,7 @@ public class AchievementData
                 }
                 break;
             case "PlasticMetalCount":
+                title = "PLASTIC AND METAL WASTE";
                 long PlasticMetalCount = SaveSystem.Instance.Player.PlasticMetalCount;
                 rank = SaveSystem.Instance.Player.GetRankBin(PlasticMetalCount);
 
@@ -120,6 +123,7 @@ public class AchievementData
                 }
                 break;
             case "PaperCount":
+                title = "PAPER WASTE";
                 long PaperCount = SaveSystem.Instance.Player.PaperCount;
                 rank = SaveSystem.Instance.Player.GetRankBin(PaperCount);
 
@@ -135,6 +139,7 @@ public class AchievementData
                 }
                 break;
             case "GlassCount":
+                title = "GLASS WASTE";
                 long GlassCount = SaveSystem.Instance.Player.GlassCount;
                 rank = SaveSystem.Instance.Player.GetRankBin(GlassCount);
 
@@ -150,6 +155,7 @@ public class AchievementData
                 }
                 break;
             case "ElectronicsBatteriesCount":
+                title = "ELECTRONICS WASTE";
                 long ElectronicsBatteriesCount = SaveSystem.Instance.Player.ElectronicsBatteriesCount;
                 rank = SaveSystem.Instance.Player.GetRankBin(ElectronicsBatteriesCount);
 
@@ -166,6 +172,7 @@ public class AchievementData
                 break;
 
             case "OrganicCount":
+                title = "ORGANIC WASTE";
                 long OrganicCount = SaveSystem.Instance.Player.OrganicCount;
                 rank = SaveSystem.Instance.Player.GetRankBin(OrganicCount);
 
@@ -181,6 +188,7 @@ public class AchievementData
                 }
                 break;
             case "CountChangeBins":
+                title = "Change bins!";
                 rank = SaveSystem.Instance.Player.GetRankCountChangeBins();
                 //Debug.Log(rank-4);
                 long ChangeBins = SaveSystem.Instance.Player.CountChangeBins;
@@ -199,6 +207,7 @@ public class AchievementData
                 }
                 break;
             case "Trivia":
+                title = "Trivia!";
                 rank = SaveSystem.Instance.Player.GetRankTrivia();
 
                 int maxTrivia = Quiz.quizData.Count;
@@ -215,6 +224,7 @@ public class AchievementData
                 }
                 break;
             case "CatchTrashMidAir":
+                title = "Catch Trash Mid Air!";
                 rank = SaveSystem.Instance.Player.GetRankCatchMidAir();
                 noFill = true;
                 progressText = "";
@@ -246,7 +256,7 @@ public class Achievements : MonoBehaviour
     {
         List<AchievementData> achievementDataList = new List<AchievementData>
         {
-            new AchievementData("TotalCount", "RECYCLED TRASH"),
+            /*new AchievementData("TotalCount", "RECYCLED TRASH"),
             new AchievementData("PlasticMetalCount", "PLASTIC AND METAL WASTE"),
             new AchievementData("PaperCount", "PAPER WASTE"),
             new AchievementData("GlassCount", "GLASS WASTE"),
@@ -254,7 +264,16 @@ public class Achievements : MonoBehaviour
             new AchievementData("OrganicCount", "ORGANIC WASTE"),
             new AchievementData("CountChangeBins", "Change bins!"),
             new AchievementData("Trivia", "Trivia!"),
-            new AchievementData("CatchTrashMidAir", "Catch Trash Mid Air!")
+            new AchievementData("CatchTrashMidAir", "Catch Trash Mid Air!")*/
+            new AchievementData("TotalCount"),
+            new AchievementData("PlasticMetalCount"),
+            new AchievementData("PaperCount"),
+            new AchievementData("GlassCount"),
+            new AchievementData("ElectronicsBatteriesCount"),
+            new AchievementData("OrganicCount"),
+            new AchievementData("CountChangeBins"),
+            new AchievementData("Trivia"),
+            new AchievementData("CatchTrashMidAir")
         };
 
         achievementDataList.Sort((a, b) => a.rank.CompareTo(b.rank));//prvo idu najnizi rankovi

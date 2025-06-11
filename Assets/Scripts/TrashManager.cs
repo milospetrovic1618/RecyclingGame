@@ -138,47 +138,54 @@ public class TrashManager : MonoBehaviour
         }
         UpdateHealth();
     }
+    public bool blockSpawn = false;
     void Update()
     {
         if (SaveSystem.Instance.Player.TutorialFinished)
         {
-            if (timerForSpawn > actualSpawnInterval)
+            if (!blockSpawn)
             {
-                initialSpawn = false;
-                referenceSpawnInterval = TimedExponentialDecay();
-                SetAveragePlayerInterval();
-                //float maxReferenceIntervalDecrease = 0.5f;//50%, moci ce da ubrza speed za 50% maks, ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
-                float referenceIntervalProgress = Mathf.Clamp01(totalTime / targetTimeToReachMin);//od 0 do 1 koliko je totalTime blizu targetTime
-                float remainingProgress = 1 - referenceIntervalProgress; // od 0 do 1 jos koliko je progresa ostalo
-                float minClamp = 1f - remainingProgress * maxReferenceIntervalDecrease;
-                float maxClamp = 1f + remainingProgress * maxReferenceIntervalIncrease;
-                //ovo se mnozi sa maxReferenceIntervalDecrease ili increase i znaci da su efekti usporavanja i ubrzavanja sve manji sto se blizi minIntervalu, usporavanje postaje manje jer treba da bude teze, ubrzavanje 
-                actualSpawnInterval = referenceSpawnInterval * Mathf.Clamp(averagePlayerInterval / referenceSpawnInterval, minClamp, maxClamp);
+                BootGameplay.Instance.scoreHolder.SetActive(!BootGameplay.Instance.GameOverUI.activeSelf);//zasto ovo? zato sto ga stavljas na false  u nekom trenutku vidi u find
+                //Debug.Log("kkkkkkkkkk kkk kk");
+                if (timerForSpawn > actualSpawnInterval)
+                {
+                    initialSpawn = false;
+                    referenceSpawnInterval = TimedExponentialDecay();
+                    SetAveragePlayerInterval();
+                    //float maxReferenceIntervalDecrease = 0.5f;//50%, moci ce da ubrza speed za 50% maks, ali to ce zavisiti od toga koliko je referenceInterval blizu Min interval, sto je blize to je manje povecanje
+                    float referenceIntervalProgress = Mathf.Clamp01(totalTime / targetTimeToReachMin);//od 0 do 1 koliko je totalTime blizu targetTime
+                    float remainingProgress = 1 - referenceIntervalProgress; // od 0 do 1 jos koliko je progresa ostalo
+                    float minClamp = 1f - remainingProgress * maxReferenceIntervalDecrease;
+                    float maxClamp = 1f + remainingProgress * maxReferenceIntervalIncrease;
+                    //ovo se mnozi sa maxReferenceIntervalDecrease ili increase i znaci da su efekti usporavanja i ubrzavanja sve manji sto se blizi minIntervalu, usporavanje postaje manje jer treba da bude teze, ubrzavanje 
+                    actualSpawnInterval = referenceSpawnInterval * Mathf.Clamp(averagePlayerInterval / referenceSpawnInterval, minClamp, maxClamp);
 
-                timerForSpawn = 0;
-                if (trashList.Count > 1)
-                {
-                    ThrowRandomAvailableTrash();
-                } else
-                {
-                    ThrowRandomAvailableTrash();
-                    ThrowRandomAvailableTrash();
-                    ThrowRandomAvailableTrash();
+                    timerForSpawn = 0;
+                    if (trashList.Count > 1)
+                    {
+                        ThrowRandomAvailableTrash();
+                    }
+                    else
+                    {
+                        ThrowRandomAvailableTrash();
+                        ThrowRandomAvailableTrash();
+                        ThrowRandomAvailableTrash();
+                    }
+
                 }
+                if (timerAddNewTypes > delayAddNewTypes)
+                {
+                    timerAddNewTypes = 0;
+                    GameplayManager.AddNewTrashType();
+                    //AddNewType
+                }
+                timerAddNewTypes += Time.deltaTime;
 
+                //BOJAN: je l' se racuna vreme i kad je pauzirana igra?
+                totalTime += Time.deltaTime;
+                timerForSpawn += Time.deltaTime;
+                currentPlayerInterval += Time.deltaTime;
             }
-            if (timerAddNewTypes > delayAddNewTypes)
-            {
-                timerAddNewTypes = 0;
-                GameplayManager.AddNewTrashType();
-                //AddNewType
-            }
-            timerAddNewTypes += Time.deltaTime;
-
-            //BOJAN: je l' se racuna vreme i kad je pauzirana igra?
-            totalTime += Time.deltaTime;
-            timerForSpawn += Time.deltaTime;
-            currentPlayerInterval += Time.deltaTime;
         }
     }
     public void GameOver()
@@ -190,19 +197,25 @@ public class TrashManager : MonoBehaviour
         }
         //restartuj spawnrate
 
-        GameOverUIScreenActivate(true);
+        GameOverUI();
     }
-    public void GameOverUIScreenActivate(bool active)
+    /*public void GameOverUIScreenActivate(bool active)
     {
         Time.timeScale = active ? 0f : 1f;
         BootGameplay.Instance.GameOverUI.SetActive(active);
         BootGameplay.Instance.PauseButton.SetActive(!active);
 
-        /*if (!active)
-        {
-            BeginningSpawn();
+    }*/
+    public void GameOverUI()
+    {
+        //scoreHolder
 
-        }*/
+        Time.timeScale = 0f;
+        BootGameplay.Instance.GameOverUI.SetActive(true);
+        BootGameplay.Instance.PauseButton.SetActive(false);
+        BootGameplay.Instance.Quiz.SetActive(false);
+        BootGameplay.Instance.scoreTextGameOver.text = BootGameplay.Instance.scoreText.text;
+        BootGameplay.Instance.scoreHolder.SetActive(false);
     }
     public void ThrowRandomAvailableTrash()
     {

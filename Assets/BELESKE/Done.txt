@@ -11,11 +11,11 @@ https://drive.google.com/drive/u/0/folders/1i704AMdv7t1VzFNwabga0BmMQUgayaar
 Flow
 https://www.figma.com/board/gYR0Q63aHg5HZiemJHX0uS/Recycle-game-flow?node-id=0-1&p=f&t=zJn6ULVsIk0Hs1Lb-0
 
-■ bug u tuto kad ocistis sve ali kroz moc... imas probelm sto 
-■ primeni da je zatamnjena pozadina ali braonaksta
+■ mozda mozes prvo daloadujes additive, i mozda je provera da li je scena ucitana suvisna jer additive podrazumeva da je a scena ucitana
+■ options
+■multiplieri, neka bude da se ucitava i kad se udje u igricuda izbaci, imaces prefab canvas 
 
-■ 
-zameni ui i astale dizajn stvari: dugmici u gamplay, score u meniju
+■  zameni ui i astale dizajn stvari: dugmici u gamplay, score u meniju
 
 ■ bug kad se pusti i baci fly.... bug je kad se mnogo brzo klikce na item... tako da sad cu samo u setu da stvim rigid body false
 ■ buggovi nekad:
@@ -41,7 +41,8 @@ ovo ti resava i da se manje memorije zauzima
 a na svakom entitiju bih imao jos jednu skriptu koja bi odredjivala koji ce child da se pomera za koji tip animacije, logika za attacking i movingToNextCell
 
 
-■ izbrisi ove beleske i dodatne assete
+■■■ izbrisi ove beleske i dodatne assete
+■■■ izbrisi screeenshotove i modele mada ne mora
 ■■■  bug, zasto kad pomeris prst od kante i dalje je selektovana
 
 ■■■  primeni komentare barem neke od bojana, da ne bi bilo da ih ne primenis barem one neophodne... ispostuj

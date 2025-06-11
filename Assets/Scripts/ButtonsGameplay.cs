@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +128,7 @@ public class ButtonsGameplay : MonoBehaviour
     public string chosenQuestionKey;
     public void ContinueTry()
     {
+        SoundManager.Instance.PlayButtonClick();
         int randomIndex = UnityEngine.Random.Range(0, Quiz.quizData.Count);
         chosenQuestionKey = Quiz.quizData.Keys.ElementAt(randomIndex);
 
@@ -166,22 +168,73 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void QuizAnswer(TextMeshProUGUI TMP)
     {
+        SoundManager.Instance.PlayButtonClick();
         string answer = TMP.text;
         bool correct = Quiz.quizData[chosenQuestionKey].correctAnswer == answer;
 
+        GameObject addQuizIndicator = new GameObject();
+        QuizIndicator quizIndicator = addQuizIndicator.AddComponent<QuizIndicator>();
+        Time.timeScale = 1f;//zbog animacije correct incorect quizIndicator
+        TrashManager.Instance.blockSpawn = true;//zbog animacije correct incorect quizIndicator
         if (correct)
         {
             SaveSystem.Instance.Player.AddHashMapTrivia(chosenQuestionKey);
-            Continue();
+
+            quizIndicator.Initialize(true, TMP.rectTransform.position);
+
+            StartCoroutine(WaitAndDo(1,() => { Continue(); TrashManager.Instance.blockSpawn = false; }));
+            //1 sec wait
+            //Continue();
         }
         else
         {
-            Home();
+            quizIndicator.Initialize(false, TMP.rectTransform.position);
+            StartCoroutine(WaitAndDo(1, () => { GameOver(); TrashManager.Instance.blockSpawn = false; }));
+            
         }
+
+        if (Quiz.quizData[chosenQuestionKey].answers.Length == 3)
+        {
+            if (BootGameplay.Instance.Quiz1_Button1.text != TMP.text) BootGameplay.Instance.Quiz1_Image1.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+            if (BootGameplay.Instance.Quiz1_Button2.text != TMP.text) BootGameplay.Instance.Quiz1_Image2.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+            if (BootGameplay.Instance.Quiz1_Button3.text != TMP.text) BootGameplay.Instance.Quiz1_Image3.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+
+            if (!correct)
+            {
+                if (BootGameplay.Instance.Quiz1_Button1.text == TMP.text) BootGameplay.Instance.Quiz1_Image1.sprite = Resources.Load<Sprite>("ButtonRedBackground");
+                if (BootGameplay.Instance.Quiz1_Button2.text == TMP.text) BootGameplay.Instance.Quiz1_Image2.sprite = Resources.Load<Sprite>("ButtonRedBackground");
+                if (BootGameplay.Instance.Quiz1_Button3.text == TMP.text) BootGameplay.Instance.Quiz1_Image3.sprite = Resources.Load<Sprite>("ButtonRedBackground");
+            }
+        }
+        else//==2
+        {
+            if (BootGameplay.Instance.Quiz2_Button1.text != TMP.text) BootGameplay.Instance.Quiz2_Image1.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+            if (BootGameplay.Instance.Quiz2_Button2.text != TMP.text) BootGameplay.Instance.Quiz2_Image2.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+
+            if (!correct)
+            {
+                if (BootGameplay.Instance.Quiz2_Button1.text == TMP.text) BootGameplay.Instance.Quiz1_Image1.sprite = Resources.Load<Sprite>("ButtonRedBackground");
+                if (BootGameplay.Instance.Quiz2_Button2.text == TMP.text) BootGameplay.Instance.Quiz1_Image2.sprite = Resources.Load<Sprite>("ButtonGreenBackground");
+            }
+
+        }
+        Destroy(BootGameplay.Instance.ContinueButton); 
+        BootGameplay.Instance.ContinueButtonImage.sprite = Resources.Load<Sprite>("ButtonGrayBackground");
+
         Debug.Log(correct);
+    }
+    public void GameOver()
+    {
+        TrashManager.Instance.GameOverUI();
+    }
+    private IEnumerator WaitAndDo(float duration, Action callback)
+    {
+        yield return new WaitForSeconds(duration);
+        callback.Invoke();
     }
     public void Continue()
     {
+        SoundManager.Instance.PlayButtonClick();
         Time.timeScale = 1f;
         BootGameplay.Instance.Quiz.SetActive(false);
         BootGameplay.Instance.PauseButton.SetActive(true);
@@ -217,6 +270,7 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void TogglePause()
     {
+        SoundManager.Instance.PlayButtonClick();
         bool pause = !BootGameplay.Instance.PauseUI.activeSelf;
         if (!SaveSystem.Instance.Player.TutorialFinished)
         {
@@ -231,24 +285,19 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void Home()
     {
-        BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
-    }
-    public void SoundToggle()
-    {
         SoundManager.Instance.PlayButtonClick();
-        SoundManager.Instance.ToggleMusic();
-        if (!SoundManager.Instance.IsMusicSilent())
-        {
-            BootGameplay.Instance.SoundToggle.sprite = BootGameplay.Instance.SoundOnTex;
-        }
-        else
-        {
-            BootGameplay.Instance.SoundToggle.sprite = BootGameplay.Instance.SoundOffTex;
-        }
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
     }
     public void Retry()
     {
+        SoundManager.Instance.PlayButtonClick();
         BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);//ovo je najbolje resenje jer treba i za svaku kantu da vracam da nema moc itd... n eisplati mi se druga opcija bez pokretanja scene
         //TrashManager.Instance.GameOverUIScreenActivate(false);
+    }
+    public void Options()
+    {
+        SoundManager.Instance.PlayButtonClick();
+        BootMain.Instance.LoadOptions();
+
     }
 }

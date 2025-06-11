@@ -40,8 +40,7 @@ public class Test : MonoBehaviour
     }
     public void ClearPlayerData()
     {
-        SaveSystem.Instance.ClearPrefs();
-        SaveSystem.Instance.InitializePublic();
+        SaveSystem.Instance.Rebut();
 
         BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
     }

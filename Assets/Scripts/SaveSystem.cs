@@ -40,7 +40,6 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
         Player = (PlayerSave)Load(new PlayerSave());
         Saves.Add(Player.Name, Player);
     }
-
     public GenericSave Load(GenericSave save)
     {
         if (PlayerPrefs.HasKey(save.Name))
@@ -121,6 +120,12 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
     public void ClearPrefs()
     {
         PlayerPrefs.DeleteAll();
+    }
+    [ContextMenu("Rebut")]
+    public void Rebut()
+    {
+        ClearPrefs();
+        InitializePublic();
     }
 }
 

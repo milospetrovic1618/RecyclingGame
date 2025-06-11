@@ -80,7 +80,7 @@ public class PlayerSelection : MonoBehaviour
         else if ( deviceType == "Mobile")
         {
             /*if (Input.touchCount == 1 &&
-            (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(0).phase == TouchPhase.Stationary))
+            (Input.GetTouch(0).Phase == TouchPhase.Moved || Input.GetTouch(0).Phase == TouchPhase.Stationary))
             {
                 press = true;
 
@@ -99,9 +99,9 @@ public class PlayerSelection : MonoBehaviour
                 curScreenPosition = touch.position;
                 curWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(curScreenPosition.x, curScreenPosition.y, Camera.main.nearClipPlane));
 
-                //BOJAN: zar nije lepse press = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary;
+                //BOJAN: zar nije lepse press = touch.Phase == TouchPhase.Moved || touch.Phase == TouchPhase.Stationary;
                 //BOJAN: jedna linija koda, radi isto sto i ovaj dole kod :)
-                //BOJAN: moglo bi da se optimizuje sa nekim toggle-ovanjem, da ne ispitujes stalno touch phase, jer ovako u 
+                //BOJAN: moglo bi da se optimizuje sa nekim toggle-ovanjem, da ne ispitujes stalno touch Phase, jer ovako u 
                 // Set press only when appropriate
 
                 press = true;
