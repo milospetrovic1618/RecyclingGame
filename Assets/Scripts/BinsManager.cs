@@ -12,6 +12,7 @@ public class BinsManager : MonoBehaviour
     public Bin MetalBin;
     public Bin OrganicBin;
     public Bin MissedBottom;
+    public Bin MissedTop;
     public Bin MissedRight;
     public Bin MissedLeft;
     public static BinsManager Instance;
@@ -59,6 +60,7 @@ public class BinsManager : MonoBehaviour
         notAvailableBinsPosition = new Vector2(0, BootMain.Instance.viewBottomY - (binHeight + 0.4f)*2.1f);
 
         MissedBottom.transform.localScale = new Vector2(3* BootMain.Instance.viewWidth, 1);//3 * da se osigura da je dovoljno dugo
+        MissedTop.transform.localScale = new Vector2(3 * BootMain.Instance.viewWidth, 1);
         MissedLeft.transform.localScale = new Vector2(1, 3 * BootMain.Instance.viewHeight);
         MissedRight.transform.localScale = new Vector2(1, 3 * BootMain.Instance.viewHeight);
 
@@ -87,7 +89,9 @@ public class BinsManager : MonoBehaviour
             bin.transform.position = notAvailableBinsPosition;
         }
 
-        MissedBottom.transform.position = visibleRowPositions[1];//stavi ga na sredinu
+        //MissedBottom.transform.position = visibleRowPositions[1];//stavi ga na sredinu
+        MissedBottom.transform.position = new Vector2(0, BootMain.Instance.viewBottomY);
+        MissedTop.transform.position = new Vector2(0,TrashManager.Instance.junkAreaRenderer.bounds.max.y);
         MissedLeft.transform.position = new Vector2(BootMain.Instance.viewLeftX + TrashManager.offset, 0);
         MissedRight.transform.position = new Vector2(BootMain.Instance.viewRightX - TrashManager.offset, 0);
     }

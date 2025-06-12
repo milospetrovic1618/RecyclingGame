@@ -70,7 +70,24 @@ public class BootMain : MonoBehaviour
 
         SetPersistant(peristantGameObjects);
 
-        LoadSceneFromBoot(Scenes.Menu);
+    }
+    private void Start()
+    {
+        //wait for savesystem to initialize
+        /*if (SaveSystem.Instance.Player == null)
+        {
+            StartCoroutine(NextFrameLoadScene(Scenes.Menu));
+        }
+        else
+        {
+            LoadSceneFromBoot(Scenes.Menu);
+        }*/
+    }
+    private IEnumerator NextFrameLoadScene(Scenes scene)
+    {
+        yield return null;
+
+        LoadSceneFromBoot(scene); 
     }
     public void SetPersistant(List<GameObject> list)//reference ne cine da objekti opstanu, ali ako su child opstace i izmedju scena ako je parent DontDestroyOnLoad
     {
@@ -123,6 +140,8 @@ public class BootMain : MonoBehaviour
     {
         Time.timeScale = 1f;
         StartCoroutine(UnlockSceneLogic(scene));//zato sto savesystem nema inicijalizovanog playera jos uvek
+
+
 
         SceneManager.LoadScene(scene.ToString());
 

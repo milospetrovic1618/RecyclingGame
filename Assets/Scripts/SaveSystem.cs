@@ -16,6 +16,7 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
 
     protected override void OnInitialize()
     {
+        Debug.Log("Android debug OnInitialize");
         JSet = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All
@@ -26,8 +27,10 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
         
         Player = (PlayerSave)Load(new PlayerSave());
         Saves.Add(Player.Name, Player);
+
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
     }
-    public void InitializePublic()//ovo imam zbog testa
+    public void ReInitialize()//ovo imam zbog testa
     {
         JSet = new JsonSerializerSettings
         {
@@ -125,7 +128,7 @@ public class SaveSystem : PersistentSingleton<SaveSystem>
     public void Rebut()
     {
         ClearPrefs();
-        InitializePublic();
+        ReInitialize();
     }
 }
 

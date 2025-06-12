@@ -64,7 +64,7 @@ public class TrashManager : MonoBehaviour
     {
         return minInterval + (maxInterval - minInterval) * Mathf.Exp(-decayRate * totalTime);
     }
-    void Start()
+    private void Awake()
     {
         Instance = this;
         offset = 0.3f;
@@ -84,6 +84,9 @@ public class TrashManager : MonoBehaviour
         minYJankArea = bounds.min.y + 1.5f * offset;
         maxXJankArea = bounds.max.x - 1.5f * offset;
         maxYJankArea = bounds.max.y - 1.5f * offset;
+    }
+    void Start()
+    {
 
         BeginningSpawn();
 
@@ -261,7 +264,11 @@ public class TrashManager : MonoBehaviour
     public void AddTrashList(Trash trash)
     {
         trashList.Add(trash);
-        for(int i = 0; i < trashList.Count; i++)//first always on top
+        UpdateSortingOrder();
+    }
+    public void UpdateSortingOrder()
+    {
+        for (int i = 0; i < trashList.Count; i++)//first always on top
         {
             trashList[i].spriteRenderer.sortingOrder = i;
         }

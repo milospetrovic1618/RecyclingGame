@@ -7,7 +7,35 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerSave : GenericSave
 {
+    [JsonConstructor]
+    public PlayerSave()
+    {
+        TutorialFinished = false;
+        totalScore = 0;
+        HighScore = 0;
+        CatchTrashMidAir = false;
 
+        triviaStringRepresentingHashset = "";
+        CountChangeBins = 0;
+
+        lastRankCatchTrashMidAir = 1;
+        lastRankTriviaHashset = 1;
+        lastRankCountChangeBins = 1;
+
+        TotalCount = 0;
+        PaperCount = 0;
+        GlassCount = 0;
+        PlasticMetalCount = 0;
+        OrganicCount = 0;
+        ElectronicsBatteriesCount = 0;
+
+        totalMultiplier = 1;
+        paperMultiplier = 1;
+        glassMultiplier = 1;
+        plasticMetalMultiplier = 1;
+        organicMultiplier = 1;
+        electronicsBatteriesMultiplier = 1;
+    }
     [JsonProperty]
     private bool tutorialFinished;
 
@@ -20,8 +48,9 @@ public class PlayerSave : GenericSave
     [JsonProperty]
     private bool catchTrashMidAir;
     [JsonProperty]
-    //public HashSet<string> triviaHashset = new HashSet<string>();//da li je odgovorio na sva pitanja
-    private HashSet<string> triviaHashset= new HashSet<string>();//da li je odgovorio na sva pitanja
+    private string triviaStringRepresentingHashset; // store all questions separated by pipe
+    /*//public HashSet<string> triviaStringRepresentingHashset = new HashSet<string>();//da li je odgovorio na sva pitanja
+    private HashSet<string> triviaStringRepresentingHashset;//da li je odgovorio na sva pitanja*/
     [JsonProperty]
     private long countChangeBins;
 
@@ -276,19 +305,45 @@ public class PlayerSave : GenericSave
         }
     }
 
-    public void AddHashMapTrivia(string question)//added when answered correctly
+    /*public void AddHashMapTrivia(string question)//added when answered correctly
     {
-        if (!triviaHashset.Contains(question))
+        if (!triviaStringRepresentingHashset.Contains(question))
         {
-            triviaHashset.Add(question);
+            triviaStringRepresentingHashset.Add(question);
             SaveSystem.Instance.Flag(this);
         }
     }
     public int GetTriviaCount()//added when answered correctly
     {
-        return triviaHashset.Count;
+        return triviaStringRepresentingHashset.Count;
+    }*/
+
+    public void AddHashMapTrivia(string question)
+    {
+        // Split the string into an array
+        var questions = string.IsNullOrEmpty(triviaStringRepresentingHashset)
+                        ? new string[0]
+                        : triviaStringRepresentingHashset.Split('|');
+
+        // Use a HashSet temporarily to check if question exists
+        var questionSet = new HashSet<string>(questions);
+
+        if (!questionSet.Contains(question))
+        {
+            questionSet.Add(question);
+            // Rebuild the triviaStringRepresentingHashset string with the added question
+            triviaStringRepresentingHashset = string.Join("|", questionSet);
+            SaveSystem.Instance.Flag(this);
+        }
     }
 
+    public int GetTriviaCount()
+    {
+        if (string.IsNullOrEmpty(triviaStringRepresentingHashset))
+            return 0;
+
+        return triviaStringRepresentingHashset.Split('|').Length;
+    }
     //multipliers
     /*[JsonIgnore]
     public float TotalScoreMultiplier

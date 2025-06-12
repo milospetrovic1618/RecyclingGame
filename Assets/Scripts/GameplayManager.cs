@@ -10,6 +10,7 @@ public enum SortingLayer
 {
     JunkArea,
     Trash,
+    SelectedTrash,
     Bins,
     Score
 }

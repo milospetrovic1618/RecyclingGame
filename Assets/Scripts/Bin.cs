@@ -23,16 +23,23 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     public SpriteRenderer openLidRenderer;
     public PolygonCollider2D collider;
     public OutlineFx.OutlineFx outline;
+    public OutlineFx.OutlineFx outlineLid;
     public int trashCount = 0;
     [SerializeField]
     public static int maxTrashCount = 5;
     public Coroutine movementCoroutine;
     public Coroutine coroutineWithCallback;
-    private void Awake()
+    public bool closed;
+    private void Start()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         collider = gameObject.GetComponent<PolygonCollider2D>();
-        outline = gameObject.GetComponent<OutlineFx.OutlineFx>();
+        outline = gameObject.GetComponent<OutlineFx.OutlineFx>(); 
+        
+        if (openLidRenderer != null && openLidRenderer.transform != null)//missed
+        {
+            outlineLid = openLidRenderer.transform.GetComponent<OutlineFx.OutlineFx>();
+        }
     }
     public void PutInBin(Trash trashItem)
     {
@@ -67,12 +74,17 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     }
     public void Select()
     {
+        if (!closed)
+        {
+            outlineLid.enabled = true;
+        }
         outline.enabled = true;
         transform.localScale = transform.localScale * 1.15f;
     }
 
     public void DeSelect()
     {
+        outlineLid.enabled = false;
         outline.enabled = false;
         transform.localScale = transform.localScale / 1.15f;
     }
@@ -118,6 +130,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     }
     public void Shake()
     {
+        closed = true;
         spriteRenderer.sprite = Resources.Load<Sprite>("BinsClosed/" + binType.ToString());
         openLidRenderer.color = new Color(1,1,1,0);
         IEnumerator enumerator = MovementsCoroutines.Instance.ShakingIndefinitely(this.transform);
@@ -125,6 +138,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
     }
     public void StopShaking()
     {
+        closed = false;
         spriteRenderer.sprite = Resources.Load<Sprite>("Bins/" + binType.ToString());
         openLidRenderer.color = new Color(1, 1, 1, 1);
         StopCoroutineMovement(); 

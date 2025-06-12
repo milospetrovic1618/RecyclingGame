@@ -71,6 +71,7 @@ public class Trash : MonoBehaviour
     {
         //spriteRenderer.sortingOrder = TrashManager.Instance.trashList.Count;//always on top
         //transform.SetAsLastSibling();//always on top
+        DeSelect();
         ToggleRigidBody(false);
         if (this.trashType != trashType)
         {
@@ -121,8 +122,16 @@ public class Trash : MonoBehaviour
     }
     public void Select()
     {
+        
         if (!outline.enabled)
         {
+
+            spriteRenderer.sortingLayerName = SortingLayer.SelectedTrash.ToString();
+            TrashManager.Instance.trashList.Remove(this);
+            TrashManager.Instance.trashList.Add(this);//postavis ga na poslednje mesto
+            TrashManager.Instance.UpdateSortingOrder();//bude na vrhu
+                                                       //treba iznad if jer je moguce da naleti jos neko novo smece... ali ipak si resio ovo na drugaciji nacin, stavis na na drugi layer
+
             outline.enabled = true;
             transform.localScale = transform.localScale * 1.5f;
 
@@ -141,6 +150,7 @@ public class Trash : MonoBehaviour
     {
         if (outline.enabled)
         {
+            spriteRenderer.sortingLayerName = SortingLayer.Trash.ToString();
             outline.enabled = false;
             transform.localScale = transform.localScale / 1.5f;
         }
@@ -149,6 +159,7 @@ public class Trash : MonoBehaviour
     {
         if (active)
         {
+            if (gameObject.GetComponent<Rigidbody2D>() == null)
             rigidbody = gameObject.AddComponent<Rigidbody2D>(); //ovde dobijas bug kad se izbrisu svi objekti sa ekrana a ti i dalje drzis objekat.. to ces da resis tako sto ces da proveris da li i dalje postoji unutar trash list... sto proveravas ali player selection
             
         }

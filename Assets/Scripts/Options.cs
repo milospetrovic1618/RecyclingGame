@@ -18,7 +18,7 @@ public class Options : MonoBehaviour
         if (SoundManager.Instance.IsMusicSilent())
         {
             musicButtonBackground.sprite = Resources.Load<Sprite>("ButtonRedBackground");
-            musicText.text = "MUSIC OF";
+            musicText.text = "MUSIC OFF";
         }
         else
         {

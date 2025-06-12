@@ -33,25 +33,35 @@ public class BootMenu : MonoBehaviour
 
         Material totalScoreOutlineMat = new Material(totalScoreOutlineText.font.material);
         totalScoreOutlineText.fontMaterial = totalScoreOutlineMat;
-        totalScoreOutlineText.outlineWidth = 1f;
-        totalScoreOutlineText.outlineColor = totalScoreOutlineText.color;
+        /*totalScoreOutlineText.outlineWidth = 1f;
+        totalScoreOutlineText.outlineColor = totalScoreOutlineText.color;*/
     }
     private void Start()
     {
         //kad se inicijalizuje SaveSystem i player
+        //za android gresku
+        if (SaveSystem.Instance == null)
+        {
+            Debug.LogError("SaveSystem.Instance");
+        }
+        if (SaveSystem.Instance.Player == null)
+        {
+            Debug.LogError("SaveSystem.Instance.Player is null");
+        }
+
         string scoreStr = SaveSystem.Instance.Player.GetHighScore().ToString();
         int len = scoreStr.Length;
         float fontSize;
 
         if (len < 5)
         {
-            fontSize = 200f;
+            fontSize = 150f;
         }
         else
         {
             // Lerp from 190 (length 5) to 100 (length 11)
             float t = Mathf.InverseLerp(5f, 11f, len);
-            fontSize = Mathf.Lerp(190f, 80f, t);
+            fontSize = Mathf.Lerp(140f, 60f, t);
         }
 
         // Apply font size

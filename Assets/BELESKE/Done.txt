@@ -11,6 +11,18 @@ https://drive.google.com/drive/u/0/folders/1i704AMdv7t1VzFNwabga0BmMQUgayaar
 Flow
 https://www.figma.com/board/gYR0Q63aHg5HZiemJHX0uS/Recycle-game-flow?node-id=0-1&p=f&t=zJn6ULVsIk0Hs1Lb-0
 
++zamenio hashset u stirng, i sklonio assign
++ucitavam menu tek kad se inicijalizu savesystem
++ stavio sam kontruktor
+
+■resi da nema scoreShow u quiz
+■ mozda da resis velicinu za achivement tako sto ce da bude expant, ali onda treba da bude 
++ sort
+
+
+- popup achievements
+- resen bug (valjda)
+- indiktori za quiz (correct /incorrect)
 ■ mozda mozes prvo daloadujes additive, i mozda je provera da li je scena ucitana suvisna jer additive podrazumeva da je a scena ucitana
 ■ options
 ■multiplieri, neka bude da se ucitava i kad se udje u igricuda izbaci, imaces prefab canvas 
@@ -24,6 +36,15 @@ spawnuje i toggle body mu je aktiviran stalno... vrv missed
 
 ■ Imamo total score bez poente, ne prikazuje se nigde, multiplieri se gledaju u odnosu na totalCount, pa mozda da bude achievement bez nagrade
 fali dizajn za tutorijal
+
+
+
+
+■■■ izbrisi ove beleske i dodatne assete
+■■■ izbrisi screeenshotove i modele mada ne mora
+■■■  bug, zasto kad pomeris prst od kante i dalje je selektovana
+
+■■■  primeni komentare barem neke od bojana, da ne bi bilo da ih ne primenis barem one neophodne... ispostuj
 
 =============
 
@@ -40,10 +61,4 @@ ovo ti resava i da se manje memorije zauzima
 
 a na svakom entitiju bih imao jos jednu skriptu koja bi odredjivala koji ce child da se pomera za koji tip animacije, logika za attacking i movingToNextCell
 
-
-■■■ izbrisi ove beleske i dodatne assete
-■■■ izbrisi screeenshotove i modele mada ne mora
-■■■  bug, zasto kad pomeris prst od kante i dalje je selektovana
-
-■■■  primeni komentare barem neke od bojana, da ne bi bilo da ih ne primenis barem one neophodne... ispostuj
-
+kartice u shopu, posto ces da ih instanciras treba da imas da se expanduju u jhorizontal group, isto bi trebao i horizontal hroup da se expadnuje i da bude child sivog dela koji se isto expanduje

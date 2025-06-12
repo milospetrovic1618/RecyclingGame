@@ -50,6 +50,9 @@ TagManager:
   - name: Trash
     uniqueID: 2665853013
     locked: 0
+  - name: SelectedTrash
+    uniqueID: 794327823
+    locked: 0
   - name: Bins
     uniqueID: 1215805407
     locked: 0

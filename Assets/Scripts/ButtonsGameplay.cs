@@ -128,6 +128,8 @@ public class ButtonsGameplay : MonoBehaviour
     public string chosenQuestionKey;
     public void ContinueTry()
     {
+        Time.timeScale = 0f;
+
         SoundManager.Instance.PlayButtonClick();
         int randomIndex = UnityEngine.Random.Range(0, Quiz.quizData.Count);
         chosenQuestionKey = Quiz.quizData.Keys.ElementAt(randomIndex);

@@ -162,7 +162,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1215805407
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 5872153957055394651, guid: 4c97e8cae0193d04fbdfbc8cd1f2a89b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -192,6 +192,7 @@ MonoBehaviour:
   openLidRenderer: {fileID: 4617299975053708447}
   collider: {fileID: 0}
   outline: {fileID: 0}
+  outlineLid: {fileID: 0}
   trashCount: 0
 --- !u!114 &6969764676600396975
 MonoBehaviour:
@@ -581,6 +582,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1459079722479837872}
   - component: {fileID: 4617299975053708447}
+  - component: {fileID: 7061154625997405612}
   m_Layer: 8
   m_Name: Lid
   m_TagString: Untagged
@@ -658,3 +660,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7061154625997405612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7732456437099790672}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4218d78ef2d54d0898b7514e121a781f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _color: {r: 1, g: 1, b: 1, a: 1}

@@ -12,6 +12,7 @@ public class Test : MonoBehaviour
     public TMP_InputField GlassCountField;
     public TMP_InputField PaperCountField;
     public TMP_InputField ChangeBinsCountField;
+    public TMP_InputField tutorialFinished;
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class Test : MonoBehaviour
         GlassCountField.text = SaveSystem.Instance.Player.GlassCount.ToString();
         PaperCountField.text = SaveSystem.Instance.Player.PaperCount.ToString();
         ChangeBinsCountField.text = SaveSystem.Instance.Player.CountChangeBins.ToString();
+        tutorialFinished.text = (BoolToInt(!SaveSystem.Instance.Player.TutorialFinished)).ToString();
     }
 
     public void SaveAndPlay()
@@ -35,8 +37,17 @@ public class Test : MonoBehaviour
         SaveSystem.Instance.Player.ElectronicsBatteriesCount = int.Parse(ElectronicCountField.text);
         SaveSystem.Instance.Player.TotalCount = int.Parse(TotalCountField.text);
         SaveSystem.Instance.Player.CountChangeBins = int.Parse(ChangeBinsCountField.text);
+        SaveSystem.Instance.Player.TutorialFinished = !IntToBool(int.Parse(tutorialFinished.text));
 
         BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
+    }
+    public bool IntToBool(int value)
+    {
+        return value == 1;
+    }
+    public int BoolToInt(bool value)
+    {
+        return value ? 1 : 0;
     }
     public void ClearPlayerData()
     {
