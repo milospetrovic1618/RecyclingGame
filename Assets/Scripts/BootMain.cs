@@ -27,15 +27,15 @@ public class BootMain : MonoBehaviour
 
     public GameObject CameraPrefab;
     public GameObject EventSystemPrefab;
-    public AudioClip menuBackgroundMusic;
+    /*public AudioClip menuBackgroundMusic;
     public AudioClip gameplayBackgroundMusic;
     public AudioClip buttonClick;
     public AudioClip enterBin;
 
-    public SoundManager soundManager;
+    public SoundManager soundManager;*/
     public GameObject CameraInstantiated;
     public GameObject EventSystemInstantiated;
-    public GameObject SoundManagerInstantiated;
+    //public GameObject SoundManagerInstantiated;
     public Camera cam;
 
     private int lastScreenWidth;
@@ -61,10 +61,10 @@ public class BootMain : MonoBehaviour
 
         EventSystemInstantiated = Instantiate(EventSystemPrefab, Vector3.zero, quaternion.identity);
 
-        SoundManagerInstantiated = new GameObject();
+        /*SoundManagerInstantiated = new GameObject();
         soundManager = SoundManagerInstantiated.gameObject.AddComponent<SoundManager>();
         soundManager.Initialize(menuBackgroundMusic,gameplayBackgroundMusic,buttonClick, enterBin, SoundManagerInstantiated.AddComponent<AudioSource>(), SoundManagerInstantiated.AddComponent<AudioSource>());
-        peristantGameObjects.Add(SoundManagerInstantiated);
+        peristantGameObjects.Add(SoundManagerInstantiated);*/
 
         SetBounds();
 

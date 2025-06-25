@@ -32,7 +32,7 @@ public class Options : MonoBehaviour
         if (SoundManager.Instance.IsSFXSilent())
         {
             sfxButtonBackground.sprite = Resources.Load<Sprite>("ButtonRedBackground");
-            sfxText.text = "SFX OF";
+            sfxText.text = "SFX OFF";
         }
         else
         {
@@ -42,23 +42,28 @@ public class Options : MonoBehaviour
     }
     public void CloseScene()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
+        BootMain.Instance.UnloadOptions();
+    }
+    public void CloseSceneNoSound()
+    {
         BootMain.Instance.UnloadOptions();
     }
     public void MusicToggle()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         SoundManager.Instance.ToggleMusic();
         UpdateMusicButton();
     }
     public void SFXToggle()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         SoundManager.Instance.ToggleSFX();
         UpdateSFXButton();
     }
     public void AboutUs()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button(); 
+        Application.OpenURL("https://razigra.org/");
     }
 }

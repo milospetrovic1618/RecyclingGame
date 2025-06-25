@@ -129,10 +129,10 @@ TextureImporter:
       name: BananaPeel_0
       rect:
         serializedVersion: 2
-        x: 63
-        y: 87
-        width: 386
-        height: 338
+        x: 0
+        y: 0
+        width: 502
+        height: 440
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

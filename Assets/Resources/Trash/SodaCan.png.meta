@@ -3,8 +3,8 @@ guid: 7174015673e43564086d9977bd00d27a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2001721646326348563
-    second: SocaCan_0
+      213: 2362618192862393911
+    second: SodaCan_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SocaCan_0
+      name: SodaCan_0
       rect:
         serializedVersion: 2
-        x: 173
-        y: 102
-        width: 161
-        height: 318
+        x: 0
+        y: 0
+        width: 236
+        height: 470
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 31bfd745b3b87cb10800000000000000
-      internalID: 2001721646326348563
+      spriteID: 736307d8ab4b9c020800000000000000
+      internalID: 2362618192862393911
       vertices: []
       indices: 
       edges: []
@@ -159,7 +159,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SocaCan_0: 2001721646326348563
+      SodaCan_0: 2362618192862393911
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

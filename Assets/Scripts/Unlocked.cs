@@ -25,6 +25,7 @@ public class Unlocked : MonoBehaviour
                     NextUnlock();
                     break;
                 case 1:
+                    SoundManager.Instance.PlaySFX(SoundManager.Instance.pointSound);
                     animation = StartCoroutine(AnimateCover());
                     break;
                 case 2:
@@ -104,7 +105,7 @@ public class Unlocked : MonoBehaviour
     public void Click()
     {
         Debug.Log("Clicked");
-        SoundManager.Instance.PlayButtonClick();
+        //SoundManager.Instance.Button();
         Phase++;
     }
     void Start()

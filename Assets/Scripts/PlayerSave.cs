@@ -100,22 +100,27 @@ public class PlayerSave : GenericSave
         {
             case RecyclingType.Paper:
                 PaperCount+= count;
+                SoundManager.Instance.Paper();
                 multipliedScore *= paperMultiplier;
                 break;
             case RecyclingType.PlasticMetal:
                 PlasticMetalCount += count;
+                SoundManager.Instance.Plastic();
                 multipliedScore *= plasticMetalMultiplier;
                 break;
             case RecyclingType.Glass:
+                SoundManager.Instance.Glass();
                 GlassCount += count;
                 multipliedScore *= glassMultiplier;
                 break;
             case RecyclingType.Organic:
+                SoundManager.Instance.Organic();
                 OrganicCount += count;
                 multipliedScore *= organicMultiplier;
                 break;
             case RecyclingType.ElectronicsBatteries:
                 ElectronicsBatteriesCount += count;
+                SoundManager.Instance.Electronic();
                 multipliedScore *= electronicsBatteriesMultiplier;
                 break;
         }

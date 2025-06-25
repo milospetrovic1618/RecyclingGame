@@ -3,11 +3,8 @@ guid: c59d47b27d3b8754d96be10bf8351811
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7215973121069544549
-    second: Food Can_0
-  - first:
-      213: -4235526325940285761
-    second: Food Can_1
+      213: -5275274190489405920
+    second: FoodCan_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -54,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 300
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -129,35 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Food Can_0
+      name: FoodCan_0
       rect:
         serializedVersion: 2
-        x: 141
-        y: 1
-        width: 230
-        height: 511
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b9b02e1ada6bbdb90800000000000000
-      internalID: -7215973121069544549
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Food Can_1
-      rect:
-        serializedVersion: 2
-        x: 258
+        x: 0
         y: 0
-        width: 31
-        height: 6
+        width: 228
+        height: 512
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fbe83815f336835c0800000000000000
-      internalID: -4235526325940285761
+      spriteID: 026b717c2167ac6b0800000000000000
+      internalID: -5275274190489405920
       vertices: []
       indices: 
       edges: []
@@ -184,8 +159,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Food Can_0: -7215973121069544549
-      Food Can_1: -4235526325940285761
+      FoodCan_0: -5275274190489405920
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

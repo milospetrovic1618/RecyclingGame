@@ -135,6 +135,7 @@ public class PlayerSelection : MonoBehaviour
         {
             if (TrashManager.Instance.ReturnNullIfDestroyed(selectedTrash) != null) //ovo je isto kao selectedTrash != null
             {
+                //Debug.Log(1);
                 selectedTrash.transform.position = curWorldPosition;
                 //Debug.Log((selectedTrash.rigidbody == null).ToString());
                 selectedTrash.ToggleRigidBody(false);
@@ -155,13 +156,24 @@ public class PlayerSelection : MonoBehaviour
                 }
                 else
                 {
-                    if (selectedBin == null)
+                    /*if (selectedBin == null)
                     {
                         selectedBin = hit.collider.transform.parent.GetComponent<Bin>();//ovde je parent jer je na child-u collider za selecting (BinsSelectingColliders)
                         selectedBin.Select();
                     }
                     //selectedTrash.rigidbody.bodyType = RigidbodyType2D.Static;
-
+                    */
+                    Bin curSelectedBin = hit.collider.transform.parent.GetComponent<Bin>();
+                    if (selectedBin != curSelectedBin)
+                    {
+                        if (selectedBin != null)
+                        {
+                            selectedBin.DeSelect();
+                            selectedBin = null;
+                        }
+                        selectedBin = curSelectedBin;//ovde je parent jer je na child-u collider za selecting (BinsSelectingColliders)
+                        selectedBin.Select();
+                    }
                 }
             }
             else

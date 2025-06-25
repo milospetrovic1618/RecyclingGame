@@ -10,6 +10,10 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 public class TrashManager : MonoBehaviour
 {
+
+    public SpriteRenderer holderJunkAreaRenderer;
+    public SpriteRenderer background;
+
     public static TrashManager Instance;
     public GameObject JunkArea;
     public SpriteRenderer junkAreaRenderer;
@@ -68,6 +72,7 @@ public class TrashManager : MonoBehaviour
     {
         Instance = this;
         offset = 0.3f;
+        //junkAreaRenderer.color = new Color(1, 1, 1, 0.25f);
         Bounds bounds = junkAreaRenderer.bounds;
         float junkAreaWidth = bounds.max.x - bounds.min.x;
         float screenWidth = BootMain.Instance.viewWidth;
@@ -84,6 +89,14 @@ public class TrashManager : MonoBehaviour
         minYJankArea = bounds.min.y + 1.5f * offset;
         maxXJankArea = bounds.max.x - 1.5f * offset;
         maxYJankArea = bounds.max.y - 1.5f * offset;
+
+        background.transform.localScale = new Vector3(1.01f * BootMain.Instance.viewWidth / background.sprite.bounds.size.x, 1.01f * BootMain.Instance.viewHeight / background.sprite.bounds.size.y, 1f);
+        holderJunkAreaRenderer.transform.localScale = Vector3.one * Mathf.Min(BootMain.Instance.viewWidth / holderJunkAreaRenderer.sprite.bounds.size.x, BootMain.Instance.viewHeight / holderJunkAreaRenderer.sprite.bounds.size.y);
+
+        background.transform.position = Vector3.zero;
+        holderJunkAreaRenderer.transform.position = junkAreaRenderer.transform.position;
+
+
     }
     void Start()
     {
@@ -148,7 +161,7 @@ public class TrashManager : MonoBehaviour
         {
             if (!blockSpawn)
             {
-                BootGameplay.Instance.scoreHolder.SetActive(!BootGameplay.Instance.GameOverUI.activeSelf);//zasto ovo? zato sto ga stavljas na false  u nekom trenutku vidi u find
+                if (!BootGameplay.Instance.Quiz.activeSelf)BootGameplay.Instance.scoreHolder.SetActive(!BootGameplay.Instance.GameOverUI.activeSelf);//zasto ovo? zato sto ga stavljas na false  u nekom trenutku vidi u find
                 //Debug.Log("kkkkkkkkkk kkk kk");
                 if (timerForSpawn > actualSpawnInterval)
                 {
@@ -362,6 +375,8 @@ public class TrashManager : MonoBehaviour
             UpdateHealth();
         }
     }
+    int lastHealth = int.MaxValue;
+    bool warningPlaying = false;
     private void UpdateHealth()
     {
         /* bilo nekad float fill = (float)(maxTrash - trashList.Count) / maxTrash;
@@ -370,14 +385,33 @@ public class TrashManager : MonoBehaviour
 
         Color target = Color.white;
         int health = maxTrash - trashList.Count;
+
+        if (health == 2 && health < lastHealth)
+        {
+            if (!warningPlaying)
+            {
+                warningPlaying = true;
+                SoundManager.Instance.FieldFillUpWarning();
+            }
+        }
+        if (health >2)
+        {
+            if (warningPlaying)
+            {
+                warningPlaying = false;
+                SoundManager.Instance.sfxSource.Stop();
+            }
+        }
+
         if (health <= maxTrash/3f)//vece od dve trecine
         {
             //Debug.Log("tripitropi " + trashList.Count); 
             float t = health/(maxTrash / 3f);
             Color pink = new Color(1f, 0.5f, 0.5f, 1f);
-            target = Color.Lerp(pink,Color.white, t);
+            Color white = new Color(1f, 1f, 1f, 1f);
+            target = Color.Lerp(pink, white, t);
         }
-        if (target != junkAreaRenderer.color)
+        if (target != holderJunkAreaRenderer.color)
         {
             if (changingColorJunkArea != null)
             {
@@ -418,29 +452,31 @@ public class TrashManager : MonoBehaviour
                 }
             }
         }
+
+        lastHealth = health;
         //Debug.Log("uslo je " + color.ToString());
     }
     private Coroutine changingColorJunkArea;
     private IEnumerator GraduallyChangeColor(float time, Color target)
     {
-        Color startColor = junkAreaRenderer.color;
+        Color startColor = holderJunkAreaRenderer.color;
         float elapsed = 0f;
 
         while (elapsed < time)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / time;
-            junkAreaRenderer.color = Color.Lerp(startColor, target, t);
+            holderJunkAreaRenderer.color = Color.Lerp(startColor, target, t);
             yield return null;
         }
 
-        junkAreaRenderer.color = target; // ensure exact end color
+        holderJunkAreaRenderer.color = target; // ensure exact end color
     }
     public int TrashCount()
     {
         return trashList.Count;
     }
-
+#if UNITY_EDITOR
     //BOJAN: ovo ne mora da se kompajluje, tako da sakrij ga iza #IF UNITY_EDITOR, a realno ne bi uopste trebalo da stoji u TrashManageru :P
     [ContextMenu("ExportSimulation")]
     void ExportSimulation()
@@ -459,7 +495,12 @@ public class TrashManager : MonoBehaviour
         fullPath = Path.Combine(folderPath, fileName);
         File.WriteAllText(fullPath, output);
     }
-    
+    [ContextMenu("tEST1")]
+    void tEST1()
+    {
+        Debug.Log(BootGameplay.Instance.scoreHolder.activeSelf.ToString() + " ");
+    }
+#endif
 }
 
 

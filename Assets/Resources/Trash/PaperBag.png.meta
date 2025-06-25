@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: 2108417133584344668
     second: PaperBag_0
-  - first:
-      213: -4938817631449105585
-    second: PaperBag_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -54,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 200
+  spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -132,10 +129,10 @@ TextureImporter:
       name: PaperBag_0
       rect:
         serializedVersion: 2
-        x: 108
-        y: 68
-        width: 296
-        height: 376
+        x: 0
+        y: 4
+        width: 424
+        height: 508
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,28 +143,6 @@ TextureImporter:
       bones: []
       spriteID: c5664ad463a924d10800000000000000
       internalID: 2108417133584344668
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PaperBag_1
-      rect:
-        serializedVersion: 2
-        x: 195
-        y: 427
-        width: 22
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f4b3a0bf78bc57bb0800000000000000
-      internalID: -4938817631449105585
       vertices: []
       indices: 
       edges: []
@@ -185,7 +160,6 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       PaperBag_0: 2108417133584344668
-      PaperBag_1: -4938817631449105585
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

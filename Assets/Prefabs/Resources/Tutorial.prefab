@@ -264,8 +264,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Tutorial \nCompleted"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 24890adaf21b4384ab2af1d720bcec00, type: 2}
-  m_sharedMaterial: {fileID: -4906578668174956831, guid: 24890adaf21b4384ab2af1d720bcec00, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 71e0e2e62092e0d489b00e03fbd6efe5, type: 2}
+  m_sharedMaterial: {fileID: -1091045678901823331, guid: 71e0e2e62092e0d489b00e03fbd6efe5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

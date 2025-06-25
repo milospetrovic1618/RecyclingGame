@@ -47,7 +47,7 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         {
             if (trashCount < maxTrashCount)
             {
-                SoundManager.Instance.PlaySFX(SoundManager.Instance.enterBin);
+                SoundManager.Instance.Point();
                 TrashManager.Instance.AddNewPlayerInterval();
                 GameplayManager.Instance.ScoreIncrease(binType);
                 trashCount++;
@@ -55,16 +55,18 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
                 TrashManager.Instance.DeactivateTrash(trashItem);
                 if (trashCount == maxTrashCount)
                 {
-                    Shake();
+                    BinFull();
                 }
             }
             else
             {
+                SoundManager.Instance.BinWrong();
                 trashItem.ReturnToJunkArea();
             }
         }
         else
         {
+            SoundManager.Instance.BinWrong();
             trashItem.ReturnToJunkArea();
         }
     }
@@ -128,15 +130,16 @@ public class Bin : MonoBehaviour //za bin sam koristion prefab i prefab varijant
         yield return coroutineWithCallback;                // Wait for it to finish
         callback?.Invoke();                         // Then invoke callback
     }
-    public void Shake()
+    public void BinFull()
     {
+        SoundManager.Instance.BinFull();
         closed = true;
         spriteRenderer.sprite = Resources.Load<Sprite>("BinsClosed/" + binType.ToString());
         openLidRenderer.color = new Color(1,1,1,0);
         IEnumerator enumerator = MovementsCoroutines.Instance.ShakingIndefinitely(this.transform);
         AssignMovementCoroutine(enumerator);
     }
-    public void StopShaking()
+    public void EmptyBin()
     {
         closed = false;
         spriteRenderer.sprite = Resources.Load<Sprite>("Bins/" + binType.ToString());

@@ -258,6 +258,8 @@ public class Achievements : MonoBehaviour
     public TextMeshProUGUI nextTierTitle;
     public TextMeshProUGUI nextTier;
 
+    public RectTransform canvasRectTransform;
+
     public void CloseDescription ()
     {
         AchievementDescription.SetActive(false);
@@ -268,7 +270,7 @@ public class Achievements : MonoBehaviour
     }
     public void ReturnHome()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
     }
     void Start()
@@ -304,7 +306,7 @@ public class Achievements : MonoBehaviour
         //odnos ekrana
 
         //verticalLayoutGroup.spacing = (-40f * ( ((float)Screen.height / 2040f) / ((float)Screen.width/1080f)) ) * ((Screen.height / Screen.width)/(2040f/1080f)); 
-        verticalLayoutGroup.spacing = Mathf.Lerp(-60f, 40f, Mathf.Clamp01((float)Screen.height / Screen.width - 0.4333f) / (0.5625f - 0.4333f));
+        verticalLayoutGroup.spacing = Mathf.Lerp(-60f, 40f, Mathf.Clamp01((float)canvasRectTransform.rect.height / canvasRectTransform.rect.width - 0.4333f) / (0.5625f - 0.4333f));
 
 
         foreach (AchievementData achievementData in achievementDataList)
@@ -324,11 +326,19 @@ public class Achievements : MonoBehaviour
             };
             string[] descriptionArguments = GetDescriptionArguments(achievementData);
             AchievementPrefabInitialized.AddComponent<UnityEngine.UI.Button>().onClick.AddListener(() => { yourAction.Invoke(descriptionArguments); OpenDescription(); });
-            AchievementPrefabInitialized.transform.GetComponent<RectTransform>().localScale = new Vector2(((float)Screen.width) / 1080f, ((float)Screen.width) / 1080f);
+            AchievementPrefabInitialized.transform.GetComponent<RectTransform>().localScale = new Vector2(((float)canvasRectTransform.rect.width) / 1080f, ((float)canvasRectTransform.rect.width) / 1080f);
         }
         scrollVerical.value = 0.735f;
 
     }
+    public void LateUpdate()
+    {
+        if (scrollVerical.value > 0.735f)
+        {
+            scrollVerical.value = 0.735f;
+        }
+    }
+
     public string[] GetDescriptionArguments(AchievementData achievementData)
     {
         string[] arguments = new string[6];
@@ -340,11 +350,11 @@ public class Achievements : MonoBehaviour
                 arguments[0] = "Recycled trash";
                 arguments[1] = "EARN MULTIPLIERS!";
                 arguments[2] = "CURRENT MULTIPLIER";
-                arguments[3] = "+" + (((achievementData.rank-1) * 0.2f) * 100).ToString() + "%";
+                arguments[3] = "+" + (((achievementData.rank - 1) * 0.2f) * 100).ToString() + "%";
                 if (achievementData.rank != 6)
                 {
                     arguments[4] = "NEXT TIER";
-                    arguments[5] = "+"+((achievementData.rank * 0.2f) * 100).ToString()+"%";
+                    arguments[5] = "+" + ((achievementData.rank * 0.2f) * 100).ToString() + "%";
                 }
 
                 break;
@@ -354,7 +364,7 @@ public class Achievements : MonoBehaviour
             case "PaperCount":
             case "GlassCount":
                 string trashName = "";
-                switch(achievementData.name)
+                switch (achievementData.name)
                 {
                     case "ElectronicsBatteriesCount":
                         trashName = "Electronics"; //"Electronics & Batteries";//"Electronics";
@@ -379,33 +389,40 @@ public class Achievements : MonoBehaviour
                 if (achievementData.rank != 6)
                 {
                     arguments[4] = "NEXT TIER";
-                    arguments[5] = "+" + ((achievementData.rank+1)).ToString();
+                    arguments[5] = "+" + ((achievementData.rank + 1)).ToString();
                 }
                 break;
             case "CountChangeBins":
-                arguments[0] = "BIN MASTER!";
+                if (achievementData.rank != 6)
+                {
+                    arguments[0] = "BECOME A BIN MASTER!";
+                }
+                else
+                {
+                    arguments[0] = "BIN MASTER!";
+                }
                 arguments[1] = "Empty the bins, be responsible!";
-                arguments[2] = "Reward:";
+                //arguments[2] = "Reward:";
                 break;
             case "Trivia":
-                arguments[0] = "TRIVIA KING!";
+                if (achievementData.rank != 6)
+                {
+                    arguments[0] = "TRIVIA BEGINNER!";
+                }
+                else
+                {
+                    arguments[0] = "TRIVIA KING!";
+                }
                 arguments[1] = "Answer all trivia questions correctly!";
-                arguments[2] = "Reward:";
+                //arguments[2] = "Reward:";
                 break;
             case "CatchTrashMidAir":
                 arguments[0] = "MID AIR!";
                 arguments[1] = "Catch trash mid air to get this achievement!";
-                arguments[2] = "Reward:";
+                //arguments[2] = "Reward:";
                 break;
         }
 
         return arguments;
-    }
-    public void Update()
-    {
-        if (scrollVerical.value > 0.735f)
-        {
-            scrollVerical.value = 0.735f;
-        }
     }
 }

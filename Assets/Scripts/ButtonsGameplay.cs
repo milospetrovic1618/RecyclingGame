@@ -128,9 +128,8 @@ public class ButtonsGameplay : MonoBehaviour
     public string chosenQuestionKey;
     public void ContinueTry()
     {
-        Time.timeScale = 0f;
 
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         int randomIndex = UnityEngine.Random.Range(0, Quiz.quizData.Count);
         chosenQuestionKey = Quiz.quizData.Keys.ElementAt(randomIndex);
 
@@ -139,9 +138,11 @@ public class ButtonsGameplay : MonoBehaviour
 
         BootGameplay.Instance.PauseUI.SetActive(false);
         BootGameplay.Instance.GameOverUI.SetActive(false);
-        BootGameplay.Instance.Quiz.SetActive(true);
         BootGameplay.Instance.Quiz_Question.text = chosenQuestionKey;
         BootGameplay.Instance.scoreHolder.SetActive(false);
+        Debug.Log(BootGameplay.Instance.scoreHolder.activeSelf.ToString()+" ");
+        BootGameplay.Instance.Quiz.SetActive(true);
+        Time.timeScale = 0f;
         if (Quiz.quizData[chosenQuestionKey].answers.Length == 3)
         {
             BootGameplay.Instance.Quiz1.SetActive(true);
@@ -167,10 +168,12 @@ public class ButtonsGameplay : MonoBehaviour
         }
 
         //Destroy(BootGameplay.Instance.ContinueButton.gameObject);
+        Debug.Log(BootGameplay.Instance.scoreHolder.activeSelf.ToString() + " ");
     }
     public void QuizAnswer(TextMeshProUGUI TMP)
     {
-        SoundManager.Instance.PlayButtonClick();
+        Debug.Log("QuizAnswer");
+        SoundManager.Instance.Button();
         string answer = TMP.text;
         bool correct = Quiz.quizData[chosenQuestionKey].correctAnswer == answer;
 
@@ -180,6 +183,7 @@ public class ButtonsGameplay : MonoBehaviour
         TrashManager.Instance.blockSpawn = true;//zbog animacije correct incorect quizIndicator
         if (correct)
         {
+            SoundManager.Instance.QuizCorrect();
             SaveSystem.Instance.Player.AddHashMapTrivia(chosenQuestionKey);
 
             quizIndicator.Initialize(true, TMP.rectTransform.position);
@@ -190,6 +194,7 @@ public class ButtonsGameplay : MonoBehaviour
         }
         else
         {
+            SoundManager.Instance.QuizIncorrect();
             quizIndicator.Initialize(false, TMP.rectTransform.position);
             StartCoroutine(WaitAndDo(1, () => { GameOver(); TrashManager.Instance.blockSpawn = false; }));
             
@@ -236,7 +241,8 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void Continue()
     {
-        SoundManager.Instance.PlayButtonClick();
+        Debug.Log("Continue1");
+        SoundManager.Instance.Button();
         Time.timeScale = 1f;
         BootGameplay.Instance.Quiz.SetActive(false);
         BootGameplay.Instance.PauseButton.SetActive(true);
@@ -272,7 +278,7 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void TogglePause()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         bool pause = !BootGameplay.Instance.PauseUI.activeSelf;
         if (!SaveSystem.Instance.Player.TutorialFinished)
         {
@@ -287,18 +293,18 @@ public class ButtonsGameplay : MonoBehaviour
     }
     public void Home()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadSceneFromBoot(Scenes.Menu);
     }
     public void Retry()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);//ovo je najbolje resenje jer treba i za svaku kantu da vracam da nema moc itd... n eisplati mi se druga opcija bez pokretanja scene
         //TrashManager.Instance.GameOverUIScreenActivate(false);
     }
     public void Options()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadOptions();
 
     }

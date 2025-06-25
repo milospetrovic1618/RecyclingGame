@@ -151,9 +151,10 @@ public class BinsManager : MonoBehaviour
     }
     public void ReplaceBin(Bin bin)
     {
+        SoundManager.Instance.PlaySFX(SoundManager.Instance.pointSound);
         int positionIndex = GetPositionIndex(bin);
 
-        bin.StopShaking();
+        bin.EmptyBin();
         bin.Hide(hidePositions[positionIndex]);
 
         Bin nextBin = GetNextBin();

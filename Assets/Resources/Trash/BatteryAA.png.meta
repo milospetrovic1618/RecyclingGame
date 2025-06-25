@@ -129,10 +129,10 @@ TextureImporter:
       name: BatteryAA_0
       rect:
         serializedVersion: 2
-        x: 194
-        y: 40
-        width: 124
-        height: 430
+        x: 0
+        y: 0
+        width: 142
+        height: 496
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

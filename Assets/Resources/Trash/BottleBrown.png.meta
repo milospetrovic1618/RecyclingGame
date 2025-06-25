@@ -129,10 +129,10 @@ TextureImporter:
       name: BottleBrown_0
       rect:
         serializedVersion: 2
-        x: 191
-        y: 27
-        width: 130
-        height: 457
+        x: 0
+        y: 0
+        width: 142
+        height: 509
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

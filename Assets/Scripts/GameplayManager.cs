@@ -30,7 +30,7 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
     { TrashType.Cardboard, RecyclingType.Paper },
     { TrashType.Paper, RecyclingType.Paper },
     { TrashType.PaperBag, RecyclingType.Paper },
-    { TrashType.Paper3, RecyclingType.Paper },
+    { TrashType.PaperCup, RecyclingType.Paper },
 
     // Plastic & Metal
     { TrashType.BottlePlastic, RecyclingType.PlasticMetal },
@@ -63,7 +63,7 @@ public class GameplayManager: MonoBehaviour//ima podatke i funkcije koje se kori
             TrashType.Cardboard,
             TrashType.Paper,
             TrashType.PaperBag,
-            TrashType.Paper3
+            TrashType.PaperCup
         }
     },
 

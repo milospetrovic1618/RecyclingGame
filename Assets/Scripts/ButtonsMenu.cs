@@ -9,19 +9,19 @@ public class ButtonsMenu : MonoBehaviour
     //BOJAN: zato sto je preglednije kroz kod da trazis sta dugme radi, nego da sve povezujes kroz scene/prefabe
     public void LoadGameplay()
     {
-        SoundManager.Instance.PlayButtonClick();
-        BootMain.Instance.LoadSceneFromBoot(Scenes.Test);
+        SoundManager.Instance.Button();
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Gameplay);
     }
 
     public void LoadAchievements()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadSceneFromBoot(Scenes.Achievements);
     }
 
     public void Options()
     {
-        SoundManager.Instance.PlayButtonClick();
+        SoundManager.Instance.Button();
         BootMain.Instance.LoadOptions();
 
     }

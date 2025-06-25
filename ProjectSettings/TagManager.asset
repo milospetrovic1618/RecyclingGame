@@ -44,6 +44,12 @@ TagManager:
   - name: Pattern
     uniqueID: 3567381059
     locked: 0
+  - name: Background
+    uniqueID: 895651437
+    locked: 0
+  - name: JunkAreaHolder
+    uniqueID: 2432749303
+    locked: 0
   - name: JunkArea
     uniqueID: 952887163
     locked: 0

@@ -16,7 +16,7 @@ public enum TrashType
     Cardboard,
     Paper,
     PaperBag,
-    Paper3,
+    PaperCup,
 
     BottlePlastic,
     Yogurt,
