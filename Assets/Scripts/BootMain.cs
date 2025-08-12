@@ -18,6 +18,7 @@ public enum Scenes
     Achievements,
     Options,
     Unlocked,
+    Learn,
 }
 //redosled u executionOrder - prvo boot, pa Data, pa ostalo
 //binsManager pre TrashManager  jer se koristi za random

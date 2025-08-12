@@ -1,5 +1,5 @@
 # ninja log v5
-2	1684	7696938977582031	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	77d00d77ff6a2f3a
-1686	1951	7696938980198541	D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1u5k4j0q/obj/armeabi-v7a/libswappywrapper.so	741e34c2f050da1
-341	5497	7724600020708064	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	77d00d77ff6a2f3a
-5498	5853	7724600024527058	D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1u5k4j0q/obj/armeabi-v7a/libswappywrapper.so	741e34c2f050da1
+3	206	7731586354299345	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	a7ee5bf3de0223f3
+207	453	7731586356852577	D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1u5k4j0q/obj/armeabi-v7a/libswappywrapper.so	68a44ce9ca93aa5a
+50	4445	7731857427487862	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	a7ee5bf3de0223f3
+4446	6273	7731857445909709	D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1u5k4j0q/obj/armeabi-v7a/libswappywrapper.so	68a44ce9ca93aa5a

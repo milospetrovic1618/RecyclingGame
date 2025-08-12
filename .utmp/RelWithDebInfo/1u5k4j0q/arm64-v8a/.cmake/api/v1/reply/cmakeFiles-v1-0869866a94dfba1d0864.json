@@ -6,7 +6,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeSystem.cmake"
+			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/arm64-v8a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeSystem.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -36,11 +36,11 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
+			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/arm64-v8a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
+			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/arm64-v8a/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -187,18 +187,18 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/prefab/armeabi-v7a/prefab/lib/arm-linux-androideabi/cmake/games-frame-pacing/games-frame-pacingConfigVersion.cmake"
+			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/prefab/arm64-v8a/prefab/lib/aarch64-linux-android/cmake/games-frame-pacing/games-frame-pacingConfigVersion.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/prefab/armeabi-v7a/prefab/lib/arm-linux-androideabi/cmake/games-frame-pacing/games-frame-pacingConfig.cmake"
+			"path" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/prefab/arm64-v8a/prefab/lib/aarch64-linux-android/cmake/games-frame-pacing/games-frame-pacingConfig.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/armeabi-v7a",
-		"source" : "D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/src/main/cpp"
+		"build" : "D:/Programi/UnityHub/Projekti/RecyclingGame/.utmp/RelWithDebInfo/1u5k4j0q/arm64-v8a",
+		"source" : "D:/Programi/UnityHub/Projekti/RecyclingGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp"
 	},
 	"version" : 
 	{

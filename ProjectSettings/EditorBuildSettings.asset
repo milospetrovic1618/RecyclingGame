@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Unlocked.unity
     guid: 222b2247e5c15e6408cb0f03388c86bb
+  - enabled: 1
+    path: Assets/Scenes/Learn.unity
+    guid: 4b72af00e7272f041b1c2840fec4f8b0
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

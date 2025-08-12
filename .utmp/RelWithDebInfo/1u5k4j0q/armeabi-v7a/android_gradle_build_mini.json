@@ -1,7 +1,7 @@
 {
   "buildFiles": [
-    "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
-    "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt"
+    "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
+    "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
@@ -21,7 +21,7 @@
     "swappywrapper::@7e25bd1f32ce224db4e9": {
       "artifactName": "swappywrapper",
       "abi": "armeabi-v7a",
-      "output": "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\RelWithDebInfo\\1u5k4j0q\\obj\\armeabi-v7a\\libswappywrapper.so",
+      "output": "D:\\Programi\\UnityHub\\Projekti\\RecyclingGame\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\RelWithDebInfo\\1u5k4j0q\\obj\\armeabi-v7a\\libswappywrapper.so",
       "runtimeFiles": []
     }
   }

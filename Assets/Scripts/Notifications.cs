@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.XR;
 
 #if UNITY_ANDROID
 using Unity.Notifications.Android;
+using UnityEngine.Android;
 #endif
 
 #if UNITY_IOS
@@ -11,16 +14,24 @@ using Unity.Notifications.iOS;
 public class Notifications : MonoBehaviour
 {
     private const int NumberOfNotifications = 4;
-    private static readonly int[] NotificationDelaysInHours = { 1, 12, 24, 72 };
+    private static readonly int[] NotificationDelaysInHours = { 12, 24, 72 };
     private const string AndroidChannelId = "default_channel";
 
     void Start()
     {
 #if UNITY_ANDROID
+        if (!Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
+        {
+            Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
+        }
+
         RegisterAndroidChannel();
         CancelAndroidNotifications();
         ScheduleAndroidNotifications();
 #elif UNITY_IOS
+
+//You must set the usage description in Info.plist manually or via Unity settings:,Go to Edit > Project Settings > iOS > Notification Settings or manually edit the Info.plist:,xml,Copy,Edit<key>NSUserNotificationUsageDescription</key> <string>This app uses notifications to remind you to recycle!</string>
+
         RequestIOSAuthorization();
         CancelIOSNotifications();
         ScheduleIOSNotifications();
@@ -53,7 +64,7 @@ public class Notifications : MonoBehaviour
             var notification = new AndroidNotification()
             {
                 Title = "Time to Recycle!",
-                Text = $"It's been {hours} hours. Sort the trash and clean the planet.",
+                Text = "Stressed or bored? Clear your head in 1 minute and beat your high score!",//casual igre se igraju kad ti je dosatno ili si stresiran, obecamo igracu da ce da resi to za 1 min, ako mu se igra dalje nastavice
                 FireTime = System.DateTime.Now.AddHours(hours),
                 //LargeIcon = "icon_96", // Uncomment when icon is ready
             };
@@ -90,7 +101,7 @@ public class Notifications : MonoBehaviour
             {
                 Identifier = System.Guid.NewGuid().ToString(),
                 Title = "Time to Recycle!",
-                Body = $"It's been {hours} hours. Sort the trash and clean the planet.",
+                Body = "Stressed or bored? Clear your head in 1 minute and beat your high score!",
                 ShowInForeground = true,
                 ForegroundPresentationOption = PresentationOption.Alert | PresentationOption.Sound,
                 Trigger = trigger,

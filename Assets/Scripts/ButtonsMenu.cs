@@ -25,4 +25,10 @@ public class ButtonsMenu : MonoBehaviour
         BootMain.Instance.LoadOptions();
 
     }
+    public void Learn()
+    {
+        SoundManager.Instance.Button();
+        BootMain.Instance.LoadSceneFromBoot(Scenes.Learn);
+
+    }
 }

@@ -13,7 +13,7 @@ public static class Quiz
     new Dictionary<string, (string[] answers, string correctAnswer, string explanation)>()
 {
     {
-        "How long can it take a glass bottle to break down in a landfill?",
+        "How long can it take for a glass battle to break down in a landfill?",
         (
             new[] { "1 year", "100 years", "Over 1,000 years" },
             "Over 1,000 years",

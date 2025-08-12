@@ -227,6 +227,11 @@ public class Trash : MonoBehaviour
     }
     public void AssignMovementCoroutine(IEnumerator enumerator, Action callback = null)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("GameObject is inactive. Cannot start coroutine");
+            return;
+        }
         StopCoroutineMovement(); // Stop existing one
         string rawName = enumerator.GetType().Name;
         coroutineName = rawName.Substring(rawName.IndexOf('<') + 1, rawName.IndexOf('>') - rawName.IndexOf('<') - 1); ; //r
